@@ -1,0 +1,11 @@
+Free Pascal Compiler version 3.0.4 [2018/04/10] for x86_64
+Copyright (c) 1993-2017 by Florian Klaempfl and others
+Target OS: Linux for x86-64
+Compiling jdoodle.pas
+Linking jdoodle
+116 lines compiled, 0.1 sec
+1 5 9 12 16 21 25  
+3 7 12 13 14 15 16 19 20 26  
+1 3 5 7 9 12 12 13 14 15 16 16 19 20 21 25 26  
+
+/usr/sbin/ld: warning: link.res contains output sections; did you forget -T?

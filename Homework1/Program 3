@@ -1,0 +1,176 @@
+{ Program 3. }
+
+PROGRAM PresidentsPgm(output);
+
+USES sysutils;
+
+CONST
+  MAX_RECORDS   = 100;
+  NAME_SEPARATOR  = ' ';
+
+TYPE
+  CodeChar = 'A'..'Z';
+  CodeSet = SET OF CodeChar;
+
+  PresidentRec = RECORD
+    startYear : integer;
+    endYear : integer;
+    lastName : string;
+    firstName : string;
+    middleName : string;
+  END;
+
+VAR
+  presidentCount : integer;
+  presidents : ARRAY [1..MAX_RECORDS] OF PresidentRec;
+  scientistCodes, teacherCodes : CodeSet;  {initialized in main}
+
+{Read and return the job code.}
+FUNCTION ReadJobCode : CodeChar;
+
+VAR
+  ch : char;
+
+BEGIN
+  read(ch);  {skip blank}
+  read(ch);  {job code}
+  ReadJobCode := ch;
+END;
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+{Read a first middle or last name and return it by reference.}
+PROCEDURE ReadName(VAR name : string);
+
+VAR
+  i : integer;
+  ch : char;
+
+BEGIN
+  i := 0;
+  name := '';   {initialize to the empty string}
+
+
+  {Loop to read name characters until the field separator.}
+  REPEAT
+    IF NOT eoln THEN BEGIN
+      read(ch);  {name character}
+      writeln(' CHARACTER IS: ', ch);
+      IF ch <> NAME_SEPARATOR THEN name := name + ch;
+    END;
+  UNTIL eoln OR (ch = NAME_SEPARATOR);
+END;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+PROCEDURE ReadEmployees;
+
+VAR
+  i : integer;
+  count : integer;
+  ch: char;
+  blank :boolean = false;
+
+BEGIN
+  read(i);  {reads start year}
+
+  {Read to the end sentinel or until MAX_RECORDS have been read.}
+  WHILE (i > 0) AND (count < MAX_RECORDS) DO BEGIN
+    count := count + 1;
+
+    WITH presidents[count] DO BEGIN
+      startYear := i;
+      read(i);
+      endYear := i;
+      read(ch);
+      ReadName(firstName);
+      //writeln(' FIRST IS: ', firstName);
+      ReadName(middleName);
+      // writeln(' MID IS: ', middleName);
+      ReadName(lastName);
+       //writeln(' LAST IS: ', lastName);
+      IF(lastName = '') THEN
+      BEGIN
+        lastName := middleName;
+        middleName := '';
+        writeln(' WE ARE HERE: ');
+      
+      END
+      ELSE
+      BEGIN
+      END;
+    END;
+    
+
+    readln;   {finish input line}
+    read(i);  {next employee id}
+  END;
+
+  presidentCount := count;
+END;
+
+{Determine the employee's profession based on the job code.
+FUNCTION DetermineProfession(jobCode : CodeChar) : ProfessionEnum;
+
+BEGIN
+  IF jobCode IN scientistCodes THEN BEGIN
+    DetermineProfession := SCIENTIST;
+  END
+  ELSE IF jobCode IN teacherCodes THEN BEGIN
+    DetermineProfession := TEACHER;
+  END
+  ELSE BEGIN
+    DetermineProfession := UNKNOWN;
+  END;
+END;
+}
+{Read the employee records.}
+
+
+{Sort the employee records by employee ID.}
+PROCEDURE SortEmployees;
+
+VAR
+  i, j : integer;
+  temp : PresidentRec;
+
+BEGIN
+  FOR i := 1 TO presidentCount-1 DO BEGIN
+    FOR j := i+1 TO presidentCount DO BEGIN
+      IF presidents[i].startYear > presidents[j].startYear THEN BEGIN
+        temp         := presidents[i];
+        presidents[i] := presidents[j];
+        presidents[j] := temp;
+      END;
+    END;
+  END;
+END;
+
+{Print the employee records.}
+PROCEDURE PrintEmployees;
+
+VAR
+  i : integer;
+
+BEGIN
+  FOR i := 1 TO presidentCount DO BEGIN
+    writeln;
+
+    WITH presidents[i] DO BEGIN
+      writeln(' Start Year: ', startYear);
+      writeln('   End Year: ', endYear);
+      writeln('  Last name: ', lastName);
+      writeln('Middle name: ', middleName);
+      writeln(' First name: ', firstName);
+    END;
+  END;
+
+  writeln;
+  writeln(presidentCount:1, ' presidents read.');
+END;
+
+BEGIN {President Listings}
+
+  ReadEmployees;
+  //SortEmployees;
+  PrintEmployees;
+END.

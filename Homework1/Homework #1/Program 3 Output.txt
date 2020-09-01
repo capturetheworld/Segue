@@ -1,0 +1,44 @@
+FOR YEAR: 1975
+  Last name: Ford
+ First name: Gerald
+
+=======================================
+
+FOR YEAR: 1963
+  Last name: Kennedy
+ First name: John
+
+  Last name: Johnson
+ First name: Lyndon
+
+=======================================
+
+FOR YEAR: 1989
+  Last name: Reagan
+ First name: Ronald
+
+  Last name: Bush
+Middle name: H.W.
+ First name: George
+
+=======================================
+
+FOR YEAR: 2019
+no match
+=======================================
+
+FOR YEAR: 2001
+  Last name: Clinton
+ First name: Bill
+
+  Last name: Bush
+Middle name: W.
+ First name: George
+
+=======================================
+
+FOR YEAR: 2016
+  Last name: Obama
+ First name: Barack
+
+=======================================
