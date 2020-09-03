@@ -54,6 +54,8 @@ public class Token
         reservedWords.put("VAR", TokenType.VAR);
         reservedWords.put("PROCEDURE", TokenType.PROCEDURE);
         reservedWords.put("FUNCTION", TokenType.FUNCTION);
+
+        ////////////
         reservedWords.put("WHILE", TokenType.WHILE);
         reservedWords.put("DO", TokenType.DO);
         reservedWords.put("FOR", TokenType.FOR);

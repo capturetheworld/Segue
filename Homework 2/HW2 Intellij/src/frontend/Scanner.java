@@ -33,7 +33,9 @@ public class Scanner
         
         if (Character.isLetter(ch))     return Token.word(ch, source);
         else if (Character.isDigit(ch)) return Token.number(ch, source);
+        else if (ch == '{')             return Token.comment(ch, source);
         else if (ch == '\'')            return Token.string(ch, source);
         else                            return Token.specialSymbol(ch, source);
     }
 }
+
