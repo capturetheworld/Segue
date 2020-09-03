@@ -146,7 +146,11 @@ public class Token
             token.value = Double.parseDouble(token.text);
         }
 
-        else tokenError(token, "Invalid number");
+
+        else {
+            token.type  = TokenType.ERROR;
+            tokenError(token, "Invalid number");
+        }
 
         return token;
     }
@@ -189,8 +193,9 @@ public class Token
 //            token.type = TokenType.STRING;
 //            return token;
         }
-        
-        token.text += '\'';  // append the closing '
+        else {
+            token.text += '\'';  // append the closing '
+        }
         //source.nextChar();   // and consume it
 
         // Don't include the leading and trailing ' in the value.
@@ -199,6 +204,7 @@ public class Token
 
         if(temp.length() > 1) token.type = TokenType.STRING;
         else token.type = TokenType.CHARACTER;
+
         
         return token;
     }

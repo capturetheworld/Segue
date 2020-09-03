@@ -32,4 +32,3 @@ source lines.'
 3.14.15926
 What?
 'String ''not'' closed
-
