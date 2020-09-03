@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="5ab75013-c752-44a4-8779-e53e50097846" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../../Homework 2/ScannerTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Homework 2/src/Simple.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Homework 2/src/backend/Executor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Homework 2/src/frontend/Parser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Homework 2/src/frontend/Scanner.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Homework 2/src/frontend/Source.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Homework 2/src/frontend/Token.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Homework 2/src/intermediate/Node.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Homework 2/src/intermediate/ParseTreePrinter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Homework 2/src/intermediate/Symtab.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Homework 2/src/intermediate/SymtabEntry.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="ProjectId" id="1gz2WObPSc4oEWK2jM7tCgs113U" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src" />
+    </key>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5ab75013-c752-44a4-8779-e53e50097846" name="Default Changelist" comment="" />
+      <created>1599103130633</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1599103130633</updated>
+    </task>
+    <servers />
+  </component>
+</project>
