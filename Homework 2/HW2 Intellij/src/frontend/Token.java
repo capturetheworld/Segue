@@ -19,7 +19,7 @@ public class Token
 
 
         PERIOD, COMMA, COLON, COLON_EQUALS, SEMICOLON, PLUS, MINUS, STAR, SLASH, LPAREN, RPAREN,
-        EQUALS, NOT_EQUALS, LESS_THAN, LESS_EQUALS, GREATER_THAN, GREATER_EQUALS, DOT_DOT, APOSTROPHE, LEFT_BRACKET, RIGHT_BRACKET, CARET,
+        EQUALS, NOT_EQUALS, LESS_THAN, LESS_EQUALS, GREATER_THAN, GREATER_EQUALS, DOT_DOT, APOSTROPHE, LBRACKET, RBRACKET, CARET,
 
 
         IDENTIFIER, INTEGER, REAL, CHARACTER, STRING, END_OF_FILE, ERROR
@@ -220,8 +220,8 @@ public class Token
             case '(' : token.type = TokenType.LPAREN;     break;
             case ')' : token.type = TokenType.RPAREN;     break;
             case '\'' :  token.type = TokenType.APOSTROPHE; break;
-            case '[' : token.type =Token.TokenType.LEFT_BRACKET; break;
-            case ']' : token.type =Token.TokenType.RIGHT_BRACKET; break;
+            case '[' : token.type =Token.TokenType.LBRACKET; break;
+            case ']' : token.type =Token.TokenType.RBRACKET; break;
             case '^' : token.type =Token.TokenType.CARET; break;
             case ',' : token.type =Token.TokenType.COMMA; break;
 
@@ -309,7 +309,10 @@ public class Token
 
             case Source.EOF : token.type = TokenType.END_OF_FILE; break;
 
-            default: token.type = TokenType.ERROR;
+            default: {
+                tokenError(token, "Invalid token");
+                token.type = TokenType.ERROR;
+            }
         }
 
         source.nextChar();  // consume the special symbol
