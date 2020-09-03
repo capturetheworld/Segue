@@ -1,6 +1,6 @@
 /**
  * Token class for a simple interpreter.
- * 
+ *
  * (c) 2020 by Ronald Mak
  * Department of Computer Science
  * San Jose State University
@@ -24,7 +24,7 @@ public class Token
 
         IDENTIFIER, INTEGER, REAL, CHARACTER, STRING, END_OF_FILE, ERROR
     }
-    
+
     /**
      * The table (as a hashmap) of reserved words. Initialize the table.
      */
@@ -32,7 +32,7 @@ public class Token
     static
     {
         reservedWords = new HashMap<String, TokenType>();
-        
+
         reservedWords.put("PROGRAM", TokenType.PROGRAM);
         reservedWords.put("BEGIN",   TokenType.BEGIN);
         reservedWords.put("END",     TokenType.END);
@@ -54,8 +54,6 @@ public class Token
         reservedWords.put("VAR", TokenType.VAR);
         reservedWords.put("PROCEDURE", TokenType.PROCEDURE);
         reservedWords.put("FUNCTION", TokenType.FUNCTION);
-
-        ////////////
         reservedWords.put("WHILE", TokenType.WHILE);
         reservedWords.put("DO", TokenType.DO);
         reservedWords.put("FOR", TokenType.FOR);
@@ -71,12 +69,12 @@ public class Token
 
 
     }
-    
+
     public TokenType type;       // what type of token
     public int lineNumber = 0;   // source line number of the token
     public String text = "";     // text of the token
     public Object value = null;  // the value (if any) of the token
-    
+
     /**
      * Constructor.
      * @param firstChar the first character of the token.
@@ -85,7 +83,7 @@ public class Token
     {
         this.text += firstChar;
     }
-    
+
     /**
      * Construct a word token.
      * @param firstChar the first character of the token.
@@ -96,7 +94,7 @@ public class Token
     {
         Token token = new Token(firstChar);
         token.lineNumber = source.lineNumber();
-        
+
         // Loop to get the rest of the characters of the word token.
         // Append letters and digits to the token.
         for (char ch = source.nextChar();
@@ -105,14 +103,14 @@ public class Token
         {
             token.text += ch;
         }
-        
+
         // Is it a reserved word or an identifier?
         token.type = reservedWords.get(token.text.toUpperCase());
         if (token.type == null) token.type = TokenType.IDENTIFIER;
 
         return token;
     }
-    
+
     /**
      * Construct a number token and set its value.
      * @param firstChar the first character of the token.
@@ -123,7 +121,7 @@ public class Token
     {
         Token token = new Token(firstChar);
         int pointCount = 0;
-        
+
         // Loop to get the rest of the characters of the number token.
         // Append digits to the token.
         for (char ch = source.nextChar();
@@ -133,26 +131,26 @@ public class Token
             if (ch == '.') pointCount++;
             token.text += ch;
         }
-        
+
         // Integer constant.
-        if (pointCount == 0) 
+        if (pointCount == 0)
         {
             token.type  = TokenType.INTEGER;
             token.value = Long.parseLong(token.text);
         }
-        
+
         // Real constant.
-        else if (pointCount == 1) 
+        else if (pointCount == 1)
         {
             token.type  = TokenType.REAL;
             token.value = Double.parseDouble(token.text);
         }
-        
+
         else tokenError(token, "Invalid number");
-        
+
         return token;
     }
-    
+
     /**
      * Construct a string token and set its value.
      * @param firstChar the first character of the token.
@@ -169,18 +167,18 @@ public class Token
         {
             token.text += ch;
         }
-        
+
         token.text += '\'';  // append the closing '
         source.nextChar();   // and consume it
-        
+
         token.type = TokenType.STRING;
-        
+
         // Don't include the leading and trailing ' in the value.
         token.value = token.text.substring(1, token.text.length() - 1);
 
         return token;
     }
-    
+
     /**
      * Construct a special symbol token and set its value.
      * @param firstChar the first character of the token.
@@ -190,31 +188,40 @@ public class Token
     public static Token specialSymbol(char firstChar, Source source)
     {
         Token token = new Token(firstChar);
-        
+
         switch (firstChar)
         {
-            case '.' : token.type = TokenType.PERIOD;     break;
+            // case '.' : token.type = TokenType.PERIOD;     break;
             case ';' : token.type = TokenType.SEMICOLON;  break;
             case '+' : token.type = TokenType.PLUS;       break;
             case '-' : token.type = TokenType.MINUS;      break;
             case '*' : token.type = TokenType.STAR;       break;
             case '/' : token.type = TokenType.SLASH;      break;
             case '=' : token.type = TokenType.EQUALS;     break;
-            case '<' : token.type = TokenType.LESS_THAN;  break;
+            //  case '<' : token.type = TokenType.LESS_THAN;  break;
             case '(' : token.type = TokenType.LPAREN;     break;
             case ')' : token.type = TokenType.RPAREN;     break;
-            
-            case ':' : 
+            case '\'' :  token.type = TokenType.APOSTROPHE; break;
+            case '[' : token.type =Token.TokenType.LEFT_BRACKET; break;
+            case ']' : token.type =Token.TokenType.RIGHT_BRACKET; break;
+            case '^' : token.type =Token.TokenType.CARET; break;
+            case ',' : token.type =Token.TokenType.COMMA; break;
+
+
+            //  . , : := ; + - * / ( )
+            //   = <> < <= > >= .. ' [ ] ^
+            case ':' :
             {
                 char nextChar = source.nextChar();
                 token.text += nextChar;
-                
+
                 // Is it the := symbol?
-                if (nextChar == '=') 
+                if (nextChar == '=')
                 {
                     token.type = TokenType.COLON_EQUALS;
                 }
-                
+
+
                 // No, it's just the : symbol.
                 else
                 {
@@ -224,12 +231,69 @@ public class Token
 
                 break;
             }
-            
+
+            case '<':
+            {
+                char nextChar = source.nextChar();
+                token.text += nextChar;
+
+                // <>
+                if(nextChar == '>')
+                {
+                    token.type = TokenType.NOT_EQUALS;
+                }
+
+                else if(nextChar == '=') {
+                    token.type =TokenType.LESS_EQUALS;
+                }
+
+                else
+                {
+                    token.type = TokenType.LESS_THAN;
+                    return token;
+                }
+                break;
+            }
+
+            case '>':
+            {
+                char nextChar = source.nextChar();
+                token.text += nextChar;
+
+                if(nextChar == '=') {
+                    token.type =TokenType.GREATER_EQUALS;
+                }
+
+                else {
+                    token.type = TokenType.GREATER_THAN;
+                    return token;
+                }
+
+                break;
+            }
+
+            case '.':
+            {
+                char nextChar = source.nextChar();
+                token.text += nextChar;
+
+                if(nextChar == '.') {
+                    token.type = TokenType.DOT_DOT;
+                }
+
+                else {
+                    token.type =TokenType.PERIOD;
+                    return token;
+                }
+
+                break;
+            }
+
             case Source.EOF : token.type = TokenType.END_OF_FILE; break;
-            
+
             default: token.type = TokenType.ERROR;
         }
-        
+
         source.nextChar();  // consume the special symbol
         return token;
     }
@@ -241,7 +305,7 @@ public class Token
      */
     private static void tokenError(Token token, String message)
     {
-        System.out.println("TOKEN ERROR at line " + token.lineNumber 
-                           + ": " + message + " at '" + token.text + "'");
+        System.out.println("TOKEN ERROR at line " + token.lineNumber
+                + ": " + message + " at '" + token.text + "'");
     }
 }
