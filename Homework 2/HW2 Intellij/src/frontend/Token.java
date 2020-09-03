@@ -233,7 +233,7 @@ public class Token
         source.nextChar();  // consume the special symbol
         return token;
     }
-    
+
     /**
      * Handle a token error.
      * @param token the bad token.

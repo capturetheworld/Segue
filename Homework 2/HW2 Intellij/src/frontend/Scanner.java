@@ -28,12 +28,21 @@ public class Scanner
     {
         char ch = source.currentChar();
         
-        // Skip blanks and other whitespace characters.
-        while (Character.isWhitespace(ch)) ch = source.nextChar();
+        while (Character.isWhitespace(ch) || ch == '{') {
+            // Skip blanks and other whitespace characters.
+            while (Character.isWhitespace(ch)) ch = source.nextChar();
+            // Skip comments
+            while (ch == '{') {
+                while (ch != '}') {
+                    ch = source.nextChar();
+                
+                }
+                ch = source.nextChar();
+            }
+        }
         
         if (Character.isLetter(ch))     return Token.word(ch, source);
         else if (Character.isDigit(ch)) return Token.number(ch, source);
-        else if (ch == '{')             return Token.comment(ch, source);
         else if (ch == '\'')            return Token.string(ch, source);
         else                            return Token.specialSymbol(ch, source);
     }
