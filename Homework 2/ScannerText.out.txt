@@ -1,0 +1,71 @@
+Tokens:
+
+    IDENTIFIER : Two
+    IDENTIFIER : here
+    IDENTIFIER : Hello
+    IDENTIFIER : world
+         BEGIN : begin
+         BEGIN : BEGIN
+         BEGIN : Begin
+         BEGIN : BeGiN
+    IDENTIFIER : begins
+        STRING : 'Hello, world.'
+        STRING : 'It's Friday!'
+        STRING : ''
+     CHARACTER : 'A'
+     CHARACTER : 'x'
+     CHARACTER : '''
+        STRING : ' ' ' '
+        STRING : ''''
+        STRING : 'This string
+spans
+source lines.'
+          PLUS : +
+         MINUS : -
+          STAR : *
+         SLASH : /
+  COLON_EQUALS : :=
+        PERIOD : .
+         COMMA : ,
+     SEMICOLON : ;
+         COLON : :
+        EQUALS : =
+    NOT_EQUALS : <>
+     LESS_THAN : <
+   LESS_EQUALS : <=
+GREATER_EQUALS : >=
+  GREATER_THAN : >
+        LPAREN : (
+        RPAREN : )
+      LBRACKET : [
+      RBRACKET : ]
+TOKEN ERROR at line 24: Invalid token at '}'
+         ERROR : }
+         CARAT : ^
+       DOT_DOT : ..
+          PLUS : +
+         MINUS : -
+  COLON_EQUALS : :=
+    NOT_EQUALS : <>
+        EQUALS : =
+   LESS_EQUALS : <=
+        EQUALS : =
+       DOT_DOT : ..
+       DOT_DOT : ..
+        PERIOD : .
+       INTEGER : 0
+       INTEGER : 1
+       INTEGER : 20
+       INTEGER : 00000000000000000032
+       INTEGER : 31415926
+          REAL : 3.1415926
+          REAL : 3.1415926535897932384626433
+        PERIOD : .
+       INTEGER : 14
+TOKEN ERROR at line 32: Invalid number at '3.14.15926'
+         ERROR : 3.14.15926
+    IDENTIFIER : What
+TOKEN ERROR at line 33: Invalid token at '?'
+         ERROR : ?
+TOKEN ERROR at line 34: String not closed at ''String 'not' closed'
+        STRING : 'String 'not' closed
