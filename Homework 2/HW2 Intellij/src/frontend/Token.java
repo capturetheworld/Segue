@@ -163,21 +163,38 @@ public class Token
     {
         Token token = new Token(firstChar);  // the leading '
 
+        /*
         // Loop to append the rest of the characters of the string,
         // up to but not including the closing quote.
         for (char ch = source.nextChar(); ch != '\''; ch = source.nextChar())
         {
             token.text += ch;
         }
+        */
+
+        char ch;
+        while ((ch = source.nextChar()) != Source.EOF) {
+            if (ch == '\'') {
+                if (source.nextChar() == '\'') {
+                    token.text += ch;
+                } else {
+                    break;
+                }
+            } else {
+                token.text += ch;
+            }
+        }
         
         token.text += '\'';  // append the closing '
-        source.nextChar();   // and consume it
-        
-        token.type = TokenType.STRING;
+        //source.nextChar();   // and consume it
         
         // Don't include the leading and trailing ' in the value.
-        token.value = token.text.substring(1, token.text.length() - 1);
+        String temp = token.text.substring(1, token.text.length() - 1);
+        token.value = temp;
 
+        if(temp.length() > 1) token.type = TokenType.STRING;
+        else token.type = TokenType.CHARACTER;
+        
         return token;
     }
     
