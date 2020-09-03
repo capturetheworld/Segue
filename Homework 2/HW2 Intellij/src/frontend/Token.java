@@ -15,7 +15,7 @@ public class Token
     {
         PROGRAM, BEGIN, END, REPEAT, UNTIL, WRITE, WRITELN, DIV, MOD,
         AND, OR, NOT, CONST, TYPE, VAR, PROCEDURE, FUNCTION,
-        WHILE, DO, FOR, TO,DOWNTO, IF, THEN, ELSE, CASE, OF,
+        WHILE, DO, FOR, TO, DOWNTO, IF, THEN, ELSE, CASE, OF,
 
 
         PERIOD, COMMA, COLON, COLON_EQUALS, SEMICOLON, PLUS, MINUS, STAR, SLASH, LPAREN, RPAREN,
@@ -252,6 +252,7 @@ public class Token
                 // Is it the := symbol?
                 if (nextChar == '=')
                 {
+                    token.text += nextChar;
                     token.type = TokenType.COLON_EQUALS;
                 }
 
@@ -269,15 +270,16 @@ public class Token
             case '<':
             {
                 char nextChar = source.nextChar();
-                token.text += nextChar;
 
                 // <>
                 if(nextChar == '>')
                 {
+                    token.text += nextChar;
                     token.type = TokenType.NOT_EQUALS;
                 }
 
                 else if(nextChar == '=') {
+                    token.text += nextChar;
                     token.type =TokenType.LESS_EQUALS;
                 }
 
@@ -292,9 +294,9 @@ public class Token
             case '>':
             {
                 char nextChar = source.nextChar();
-                token.text += nextChar;
 
                 if(nextChar == '=') {
+                    token.text += nextChar;
                     token.type =TokenType.GREATER_EQUALS;
                 }
 
@@ -309,9 +311,9 @@ public class Token
             case '.':
             {
                 char nextChar = source.nextChar();
-                token.text += nextChar;
 
                 if(nextChar == '.') {
+                    token.text += nextChar;
                     token.type = TokenType.DOT_DOT;
                 }
 
