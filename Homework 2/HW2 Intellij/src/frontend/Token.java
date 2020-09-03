@@ -183,6 +183,12 @@ public class Token
                 token.text += ch;
             }
         }
+
+        if(ch == Source.EOF){
+            tokenError(token, "String not closed");
+//            token.type = TokenType.STRING;
+//            return token;
+        }
         
         token.text += '\'';  // append the closing '
         //source.nextChar();   // and consume it
