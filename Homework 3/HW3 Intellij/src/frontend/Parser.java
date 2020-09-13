@@ -87,6 +87,7 @@ public class Parser
         statementStarters.add(BEGIN);
         statementStarters.add(IDENTIFIER);
         statementStarters.add(REPEAT);
+        statementStarters.add(WHILE);
         statementStarters.add(Token.TokenType.WRITE);
         statementStarters.add(Token.TokenType.WRITELN);
         
@@ -117,6 +118,7 @@ public class Parser
             case IDENTIFIER : stmtNode = parseAssignmentStatement(); break;
             case BEGIN :      stmtNode = parseCompoundStatement();   break;
             case REPEAT :     stmtNode = parseRepeatStatement();     break;
+            case WHILE :     stmtNode = parseWhileStatement();     break;
             case WRITE :      stmtNode = parseWriteStatement();      break;
             case WRITELN :    stmtNode = parseWritelnStatement();    break;
             case SEMICOLON :  stmtNode = null; break;  // empty statement
@@ -221,6 +223,34 @@ public class Parser
             loopNode.adopt(testNode);
         }
         else syntaxError("Expecting UNTIL");
+        
+        return loopNode;
+    }
+
+    private Node parseWhileStatement()
+    {
+        // The current token should now be WHILE.
+        
+        // Create a LOOP node.
+        Node loopNode = new Node(LOOP);
+        currentToken = scanner.nextToken();  // consume WHILE
+        
+        // Create a TEST node. It adopts the test expression node.
+        Node testNode = new Node(TEST);
+        lineNumber = currentToken.lineNumber;
+        testNode.lineNumber = lineNumber;
+        
+        testNode.adopt(parseExpression());
+
+        if (currentToken.type == DO) 
+        {
+            currentToken = scanner.nextToken();  // consume DO
+            loopNode.adopt(parseStatement());
+
+            // The LOOP node adopts the TEST node as its final child.
+            loopNode.adopt(testNode);
+        }
+        else syntaxError("Expecting DO");
         
         return loopNode;
     }
