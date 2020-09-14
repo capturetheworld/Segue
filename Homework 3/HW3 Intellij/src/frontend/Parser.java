@@ -96,9 +96,15 @@ public class Parser
         statementFollowers.add(END);
         statementFollowers.add(UNTIL);
         statementFollowers.add(END_OF_FILE);
-        
+
         relationalOperators.add(EQUALS);
         relationalOperators.add(LESS_THAN);
+        relationalOperators.add(LESS_EQUALS);
+        relationalOperators.add(NOT_EQUALS);
+        relationalOperators.add(GREATER_EQUALS);
+        relationalOperators.add(GREATER_THAN);
+
+
         
         simpleExpressionOperators.add(PLUS);
         simpleExpressionOperators.add(MINUS);
@@ -239,18 +245,29 @@ public class Parser
         Node testNode = new Node(TEST);
         lineNumber = currentToken.lineNumber;
         testNode.lineNumber = lineNumber;
-        
-        testNode.adopt(parseExpression());
 
+        Node temp = parseExpression();
+
+        Node tempNot = new Node (Node.NodeType.NOT);
+        lineNumber = currentToken.lineNumber;
+        testNode.lineNumber = lineNumber;
+        tempNot.adopt(temp);
+        testNode.adopt(tempNot);
+
+
+       // System.out.println(currentToken.type + " while statement current token");
         if (currentToken.type == DO) 
         {
+
             currentToken = scanner.nextToken();  // consume DO
             loopNode.adopt(parseStatement());
 
             // The LOOP node adopts the TEST node as its final child.
             loopNode.adopt(testNode);
         }
-        else syntaxError("Expecting DO");
+        else {
+            syntaxError("Expecting DO");
+        }
         
         return loopNode;
     }
@@ -351,14 +368,21 @@ public class Parser
         Node exprNode = parseSimpleExpression();
         
         // The current token might now be a relational operator.
+        //System.out.println(currentToken.type + " current token");
         if (relationalOperators.contains(currentToken.type))
         {
+
             Token.TokenType tokenType = currentToken.type;
             Node opNode = tokenType == EQUALS    ? new Node(EQ)
                         : tokenType == LESS_THAN ? new Node(LT)
+                        : tokenType == LESS_EQUALS ? new Node(LE)
+                        : tokenType == NOT_EQUALS ? new Node(NE)
+                        : tokenType == GREATER_EQUALS ? new Node(GE)
+                        : tokenType == GREATER_THAN ? new Node(GT)
                         :                          null;
             
             currentToken = scanner.nextToken();  // consume relational operator
+
             
             // The relational operator node adopts the first simple expression
             // node as its first child and the second simple expression node

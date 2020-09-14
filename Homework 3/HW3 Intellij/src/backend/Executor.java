@@ -30,9 +30,14 @@ public class Executor
         singletons.add(INTEGER_CONSTANT);
         singletons.add(REAL_CONSTANT);
         singletons.add(STRING_CONSTANT);
+        singletons.add(NOT);
         
         relationals.add(EQ);
         relationals.add(LT);
+        relationals.add(NE);
+        relationals.add(GE);
+        relationals.add(GT);
+        relationals.add(LE);
     }
     
     public Executor(Symtab symtab)
@@ -192,6 +197,7 @@ public class Executor
                 case INTEGER_CONSTANT : return visitIntegerConstant(expressionNode);
                 case REAL_CONSTANT    : return visitRealConstant(expressionNode);
                 case STRING_CONSTANT  : return visitStringConstant(expressionNode);
+                case NOT              : return !(Boolean) visitExpression(expressionNode.children.get(0));
                 
                 default: return null;
             }
@@ -210,6 +216,10 @@ public class Executor
             {
                 case EQ : value = value1 == value2; break;
                 case LT : value = value1 <  value2; break;
+                case GT : value = value1 >  value2; break;
+                case GE : value = value1 >= value2; break;
+                case LE : value = value1 <= value2; break;
+                case NE : value = value1 != value2; break;
                 
                 default : break;
             }
