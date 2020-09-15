@@ -107,13 +107,15 @@ public class Parser
         relationalOperators.add(GREATER_EQUALS);
         relationalOperators.add(GREATER_THAN);
 
-
-
         simpleExpressionOperators.add(PLUS);
         simpleExpressionOperators.add(MINUS);
+        simpleExpressionOperators.add(OR);
 
         termOperators.add(STAR);
         termOperators.add(SLASH);
+        termOperators.add(Token.TokenType.DIV);
+        termOperators.add(Token.TokenType.MOD);
+        termOperators.add(Token.TokenType.AND);
     }
 
     private Node parseStatement()
@@ -211,7 +213,7 @@ public class Parser
         }
     }
 
- 
+
     
     private Node parseRepeatStatement()
     {
@@ -461,6 +463,7 @@ public class Parser
                     : tokenType == NOT_EQUALS ? new Node(NE)
                     : tokenType == GREATER_EQUALS ? new Node(GE)
                     : tokenType == GREATER_THAN ? new Node(GT)
+                    //: tokenType == Token.TokenType.NOT ? new Node(Node.NodeType.NOT)
                     :                          null;
 
             currentToken = scanner.nextToken();  // consume relational operator
@@ -546,8 +549,18 @@ public class Parser
         // is a * or / operator.
         while (termOperators.contains(currentToken.type))
         {
-            Node opNode = currentToken.type == STAR ? new Node(MULTIPLY)
-                    : new Node(DIVIDE);
+            Node opNode = null;
+
+            switch (currentToken.type)
+            {
+                case STAR :         opNode = new Node(MULTIPLY); break;
+                case SLASH :        opNode = new Node(DIVIDE);   break;
+                case DIV :          opNode = new Node(Node.NodeType.DIV);   break;
+                case MOD :          opNode = new Node(Node.NodeType.MOD);   break;
+                case AND :          opNode = new Node(Node.NodeType.AND);   break;
+
+                default : syntaxError("Unexpected token parse statement");
+            }
 
             currentToken = scanner.nextToken();  // consume the operator
 
@@ -570,6 +583,14 @@ public class Parser
         if      (currentToken.type == IDENTIFIER) return parseVariable();
         else if (currentToken.type == INTEGER)    return parseIntegerConstant();
         else if (currentToken.type == REAL)       return parseRealConstant();
+        else if (currentToken.type == Token.TokenType.NOT) {
+            currentToken = scanner.nextToken();  // consume "NOT"
+            Node temp = new Node(Node.NodeType.NOT);
+            lineNumber = currentToken.lineNumber;
+            temp.lineNumber = lineNumber;
+            temp.adopt(parseFactor());
+            return temp;
+        }
 
 
 //        else if (currentToken.type == MINUS)       {
