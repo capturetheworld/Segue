@@ -163,13 +163,13 @@ public class Parser
 
             Node loopNode = new Node(LOOP);
 
-            Node testNode = new Node(TEST);
+            Node testNode = new Node(TEST); //create a test node here
             lineNumber = currentToken.lineNumber;
             testNode.lineNumber = lineNumber;
 
             testNode.adopt(parseExpression());
 
-            loopNode.adopt(testNode);
+            loopNode.adopt(testNode); // adopt the test node
 
             loopNode.adopt(parseStatement());
 
@@ -259,7 +259,7 @@ public class Parser
     }
 
 
-    
+
     private Node parseRepeatStatement()
     {
         // The current token should now be REPEAT.
