@@ -132,7 +132,7 @@ public class Parser
             case REPEAT :     stmtNode = parseRepeatStatement();     break;
             case WHILE :     stmtNode = parseWhileStatement();     break;
             case IF :         stmtNode = parseIfStatement();     break;
-            // case FOR :     stmtNode = parseForStatement();     break;
+            case FOR :         stmtNode = parseForStatement();     break;
             // case CASE :     stmtNode = parseCaseStatement();     break;
             case WRITE :      stmtNode = parseWriteStatement();      break;
             case WRITELN :    stmtNode = parseWritelnStatement();    break;
@@ -143,6 +143,50 @@ public class Parser
 
         if (stmtNode != null) stmtNode.lineNumber = savedLineNumber;
         return stmtNode;
+    }
+
+
+    private Node parseForStatement()
+    {
+        Node compoundNode = new Node(COMPOUND);
+        currentToken = scanner.nextToken(); //consume FOR token
+
+        Node assignmentNode = parseAssignmentStatement();
+        lineNumber = currentToken.lineNumber;
+        assignmentNode.lineNumber = lineNumber;
+
+        compoundNode.adopt(assignmentNode);
+
+        if(currentToken.type == TO || currentToken.type == DOWNTO){
+            Token.TokenType reference = currentToken.type;
+            currentToken = scanner.nextToken(); //consume TO or DOWNTO token
+
+            Node loopNode = new Node(LOOP);
+
+            Node testNode = new Node(TEST);
+            lineNumber = currentToken.lineNumber;
+            testNode.lineNumber = lineNumber;
+
+            testNode.adopt(parseExpression());
+
+            loopNode.adopt(testNode);
+
+            loopNode.adopt(parseStatement());
+
+            if(reference == TO){
+
+            }
+            else{
+
+            }
+
+        }
+        else {
+            syntaxError("Expecting TO or DOWNTO");
+        }
+
+        return compoundNode;
+
     }
 
     private Node parseAssignmentStatement()
