@@ -128,7 +128,7 @@ public class Parser
             case BEGIN :      stmtNode = parseCompoundStatement();   break;
             case REPEAT :     stmtNode = parseRepeatStatement();     break;
             case WHILE :     stmtNode = parseWhileStatement();     break;
-            case IF :     stmtNode = parseIfStatement();     break;
+            case IF :         stmtNode = parseIfStatement();     break;
             // case FOR :     stmtNode = parseForStatement();     break;
             // case CASE :     stmtNode = parseCaseStatement();     break;
             case WRITE :      stmtNode = parseWriteStatement();      break;
@@ -211,34 +211,7 @@ public class Parser
         }
     }
 
-    
-    private Node parseIfStatement(){
-
-        Node ifNode = new Node(Node.NodeType.IF);
-        currentToken = scanner.nextToken();
-
-        ifNode.adopt(parseExpression());
-
-
-        if(currentToken.type == THEN)
-        {
-                ifNode.adopt(parseStatement());
-
-            }
-
-        else {
-            syntaxError("Expecting Then");
-        }
-
-        currentToken = scanner.nextToken();
-        if(currentToken.type == ELSE){
-                ifNode.adopt(parseStatement());
-
-            }
-
-            return ifNode;
-    }
-    
+ 
     
     private Node parseRepeatStatement()
     {
