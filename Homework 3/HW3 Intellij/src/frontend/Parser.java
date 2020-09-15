@@ -109,13 +109,14 @@ public class Parser
 
         simpleExpressionOperators.add(PLUS);
         simpleExpressionOperators.add(MINUS);
-        simpleExpressionOperators.add(OR);
+        simpleExpressionOperators.add(Token.TokenType.OR);
 
         termOperators.add(STAR);
         termOperators.add(SLASH);
         termOperators.add(Token.TokenType.DIV);
         termOperators.add(Token.TokenType.MOD);
         termOperators.add(Token.TokenType.AND);
+        termOperators.add(Token.TokenType.OR);
     }
 
     private Node parseStatement()
@@ -290,10 +291,11 @@ public class Parser
         lineNumber = currentToken.lineNumber;
         ifNode.lineNumber = lineNumber;
 
+
         Node condition = new Node(TEST);
         lineNumber = currentToken.lineNumber;
         condition.lineNumber = lineNumber;
-
+        ifNode.adopt(condition);
 
         condition.adopt(parseExpression());
         if(currentToken.type == THEN ){
@@ -558,6 +560,7 @@ public class Parser
                 case DIV :          opNode = new Node(Node.NodeType.DIV);   break;
                 case MOD :          opNode = new Node(Node.NodeType.MOD);   break;
                 case AND :          opNode = new Node(Node.NodeType.AND);   break;
+                case OR :          opNode = new Node(Node.NodeType.OR);   break;
 
                 default : syntaxError("Unexpected token parse statement");
             }

@@ -20,11 +20,14 @@ public class Executor
     
     private static HashSet<Node.NodeType> singletons;
     private static HashSet<Node.NodeType> relationals;
+    private static HashSet<Node.NodeType> booleans;
+
     
     static
     {
         singletons  = new HashSet<Node.NodeType>();
         relationals = new HashSet<Node.NodeType>();
+        booleans = new HashSet<Node.NodeType>();
         
         singletons.add(VARIABLE);
         singletons.add(INTEGER_CONSTANT);
@@ -38,6 +41,9 @@ public class Executor
         relationals.add(GE);
         relationals.add(GT);
         relationals.add(LE);
+
+        booleans.add(AND);
+        booleans.add(OR);
     }
     
     public Executor(Symtab symtab)
@@ -53,7 +59,11 @@ public class Executor
             
             case COMPOUND : 
             case ASSIGN :   
-            case LOOP : 
+            case LOOP :
+//            case FOR:
+            case IF:
+//            case CASE:
+
             case WRITE :
             case WRITELN :  return visitStatement(node);
             
@@ -80,6 +90,9 @@ public class Executor
             case LOOP :      return visitLoop(statementNode);
             case WRITE :     return visitWrite(statementNode);
             case WRITELN :   return visitWriteln(statementNode);
+            case IF :   return visitIf(statementNode);
+//            case CASE :   return visitWriteln(statementNode);
+//            case FOR :   return visitWriteln(statementNode);
             
             default :        return null;
         }
@@ -128,7 +141,19 @@ public class Executor
     
     private Object visitTest(Node testNode)
     {
+
         return (Boolean) visit(testNode.children.get(0));
+    }
+
+    private Object visitIf(Node testNode)
+    {
+        if((Boolean) visitTest(testNode.children.get(0))){
+            visitStatement(testNode.children.get(1));
+        }
+        else if(testNode.children.size() > 2){
+            visitStatement(testNode.children.get(2));
+        }
+        return null;
     }
     
     private Object visitWrite(Node writeNode)
@@ -204,54 +229,88 @@ public class Executor
         }
         
         // Binary expressions.
-        double value1 = (Double) visit(expressionNode.children.get(0));
-        double value2 = (Double) visit(expressionNode.children.get(1));
-        
-        // Relational expressions.
-        if (relationals.contains(expressionNode.type))
-        {
+        if(booleans.contains(expressionNode.type)){
+//            System.out.println("EXPRESSION NODE TYPE IS " + expressionNode.type);
+//            System.out.println(expressionNode.children.get(0).type);
+            boolean value1 = (boolean) visit(expressionNode.children.get(0));
+            boolean value2 = (boolean) visit(expressionNode.children.get(1));
             boolean value = false;
-            
-            switch (expressionNode.type)
-            {
-                case EQ : value = value1 == value2; break;
-                case LT : value = value1 <  value2; break;
-                case GT : value = value1 >  value2; break;
-                case GE : value = value1 >= value2; break;
-                case LE : value = value1 <= value2; break;
-                case NE : value = value1 != value2; break;
-                
-                default : break;
+            switch (expressionNode.type) {
+                case AND:
+                    value = value1 && value2;
+                    break;
+                case OR:
+                    value = value1 || value2;
+                    break;
+                default:
+                    break;
             }
-            
             return value;
-        }
-           
-        double value = 0.0;
-        
-        // Arithmetic expressions.
-        switch (expressionNode.type)
-        {
-            case ADD :      value = value1 + value2; break;
-            case SUBTRACT : value = value1 - value2; break;
-            case MULTIPLY : value = value1 * value2; break;
-                
-            case DIVIDE :
-            {
-                if (value2 != 0.0) value = value1/value2;
-                else
-                {
-                    runtimeError(expressionNode, "Division by zero");
-                    return 0.0;
+
+        }else {
+//            System.out.println("EXPRESSION NODE TYPE IS " + expressionNode.type);
+//            System.out.println(expressionNode.children.get(0).type);
+            double value1 = (Double) visit(expressionNode.children.get(0));
+            double value2 = (Double) visit(expressionNode.children.get(1));
+
+            // Relational expressions.
+            if (relationals.contains(expressionNode.type)) {
+                boolean value = false;
+
+                switch (expressionNode.type) {
+                    case EQ:
+                        value = value1 == value2;
+                        break;
+                    case LT:
+                        value = value1 < value2;
+                        break;
+                    case GT:
+                        value = value1 > value2;
+                        break;
+                    case GE:
+                        value = value1 >= value2;
+                        break;
+                    case LE:
+                        value = value1 <= value2;
+                        break;
+                    case NE:
+                        value = value1 != value2;
+                        break;
+                    case AND:
+                        value = value1 == value2;
+                        break;
+
+                    default:
+                        break;
                 }
-                
-                break;
+
+                return value;
             }
-            
-            default : break;
+
+            double value = 0.0;
+
+            // Arithmetic expressions.
+            switch (expressionNode.type) {
+                case ADD: value = value1 + value2; break;
+                case SUBTRACT: value = value1 - value2; break;
+                case MULTIPLY: value = value1 * value2; break;
+
+                case DIVIDE: {
+                    if (value2 != 0.0) value = value1 / value2;
+                    else {
+                        runtimeError(expressionNode, "Division by zero");
+                        return 0.0;
+                    }
+
+                    break;
+                }
+
+                default:
+                    break;
+            }
+
+            return Double.valueOf(value);
         }
-        
-        return Double.valueOf(value);
     }
     
     private Object visitVariable(Node variableNode)
