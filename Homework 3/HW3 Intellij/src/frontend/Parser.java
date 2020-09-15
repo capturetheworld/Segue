@@ -211,6 +211,35 @@ public class Parser
         }
     }
 
+    
+    private Node parseIfStatement(){
+
+        Node ifNode = new Node(Node.NodeType.IF);
+        currentToken = scanner.nextToken();
+
+        ifNode.adopt(parseExpression());
+
+
+        if(currentToken.type == THEN)
+        {
+                ifNode.adopt(parseStatement());
+
+            }
+
+        else {
+            syntaxError("Expecting Then");
+        }
+
+        currentToken = scanner.nextToken();
+        if(currentToken.type == ELSE){
+                ifNode.adopt(parseStatement());
+
+            }
+
+            return ifNode;
+    }
+    
+    
     private Node parseRepeatStatement()
     {
         // The current token should now be REPEAT.
