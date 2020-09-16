@@ -155,35 +155,79 @@ public class Parser
         lineNumber = currentToken.lineNumber;
         assignmentNode.lineNumber = lineNumber;
 
+        Node childNode = new Node(TEST);
+        lineNumber = currentToken.lineNumber;
+        childNode.lineNumber = lineNumber;
+        //childNode.adopt(assignmentNode.children.get(1)); //adopts k
+
         compoundNode.adopt(assignmentNode);
 
         if(currentToken.type == TO || currentToken.type == DOWNTO){
-            //Token.TokenType reference = currentToken.type;
+            Token.TokenType reference = currentToken.type;
             currentToken = scanner.nextToken(); //consume TO or DOWNTO token
 
             Node loopNode = new Node(LOOP);
 
-            Node testNode = new Node(TEST); //create a test node here
-            lineNumber = currentToken.lineNumber;
-            testNode.lineNumber = lineNumber;
-
-            testNode.adopt(parseSimpleExpression());
-            loopNode.adopt(testNode); // adopt the test node
+            Node constantNode = parseSimpleExpression(); //create a test node here
+//            lineNumber = currentToken.lineNumber;
+//            testNode.lineNumber = lineNumber;
+//
+//            testNode.adopt(parseSimpleExpression());
+//            loopNode.adopt(testNode); // adopt the test node
 
             if(currentToken.type == DO){
                 currentToken = scanner.nextToken();//consume do
+
+                loopNode.adopt(childNode);
+
                 loopNode.adopt(parseStatement()); //actually is adopt compound node
 
 
              //   loopNode.adopt(parseStatement());//how to increment or decrement
+                Node comparison = null;
+                if(reference == TO){
+                    comparison = new Node(GT);
+                }
+                else{
+                    comparison = new Node(LT);
+                }
+
+                childNode.adopt(comparison);
+                comparison.adopt(assignmentNode.children.get(0));
+                comparison.adopt(constantNode);
 
                 compoundNode.adopt(loopNode);
+
+                Node assign = new Node(ASSIGN);
+                lineNumber = currentToken.lineNumber;
+                assign.lineNumber = lineNumber;
+
+                assign.adopt(assignmentNode.children.get(0));
+
+                Node step = null;
+
+                if(reference == TO){
+                    step = new Node(ADD);
+//                    childNode.children.get(0).value = (long) childNode.children.get(0).value + 1;
+                }
+                else{
+                    step = new Node(SUBTRACT);
+//                    childNode.children.get(0).value = (long) childNode.children.get(0).value - 1;
+                }
+                step.adopt(assignmentNode.children.get(0));
+
+                Node one = new Node(INTEGER_CONSTANT);
+                one.value = 1L;
+
+                step.adopt(one);
+
+                assign.adopt(step);
+
+                loopNode.adopt(assign);
             }
             else{
                 syntaxError("Missing Do");
             }
-
-
         }
         else {
             syntaxError("Expecting TO or DOWNTO");
