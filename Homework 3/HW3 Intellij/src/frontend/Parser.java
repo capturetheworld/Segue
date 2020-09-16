@@ -138,7 +138,7 @@ public class Parser
             case WRITELN :    stmtNode = parseWritelnStatement();    break;
             case SEMICOLON :  stmtNode = null; break;  // empty statement
 
-            default : syntaxError("Unexpected token parse statement");
+            default : syntaxError("Unexpected token parse statement  1ps");
         }
 
         if (stmtNode != null) stmtNode.lineNumber = savedLineNumber;
@@ -147,7 +147,7 @@ public class Parser
 
 
     private Node parseForStatement()
-    {
+    { //current token is for
         Node compoundNode = new Node(COMPOUND);
         currentToken = scanner.nextToken(); //consume FOR token
 
@@ -158,7 +158,7 @@ public class Parser
         compoundNode.adopt(assignmentNode);
 
         if(currentToken.type == TO || currentToken.type == DOWNTO){
-            Token.TokenType reference = currentToken.type;
+            //Token.TokenType reference = currentToken.type;
             currentToken = scanner.nextToken(); //consume TO or DOWNTO token
 
             Node loopNode = new Node(LOOP);
@@ -167,18 +167,22 @@ public class Parser
             lineNumber = currentToken.lineNumber;
             testNode.lineNumber = lineNumber;
 
-            testNode.adopt(parseExpression());
-
+            testNode.adopt(parseSimpleExpression());
             loopNode.adopt(testNode); // adopt the test node
 
-            loopNode.adopt(parseStatement());
+            if(currentToken.type == DO){
+                currentToken = scanner.nextToken();//consume do
+                loopNode.adopt(parseStatement()); //actually is adopt compound node
 
-            if(reference == TO){
 
+             //   loopNode.adopt(parseStatement());//how to increment or decrement
+
+                compoundNode.adopt(loopNode);
             }
             else{
-
+                syntaxError("Missing Do");
             }
+
 
         }
         else {
@@ -606,7 +610,7 @@ public class Parser
                 case AND :          opNode = new Node(Node.NodeType.AND);   break;
                 case OR :          opNode = new Node(Node.NodeType.OR);   break;
 
-                default : syntaxError("Unexpected token parse statement");
+                default : syntaxError("Unexpected token parse statement 2pt");
             }
 
             currentToken = scanner.nextToken();  // consume the operator

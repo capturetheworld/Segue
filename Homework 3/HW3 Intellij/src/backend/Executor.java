@@ -1,6 +1,6 @@
 /**
  * Executor class for a simple interpreter.
- * 
+ *
  * (c) 2020 by Ronald Mak
  * Department of Computer Science
  * San Jose State University
@@ -17,24 +17,24 @@ public class Executor
 {
     private int lineNumber;
     private Symtab symtab;
-    
+
     private static HashSet<Node.NodeType> singletons;
     private static HashSet<Node.NodeType> relationals;
     private static HashSet<Node.NodeType> booleans;
 
-    
+
     static
     {
         singletons  = new HashSet<Node.NodeType>();
         relationals = new HashSet<Node.NodeType>();
         booleans = new HashSet<Node.NodeType>();
-        
+
         singletons.add(VARIABLE);
         singletons.add(INTEGER_CONSTANT);
         singletons.add(REAL_CONSTANT);
         singletons.add(STRING_CONSTANT);
         singletons.add(NOT);
-        
+
         relationals.add(EQ);
         relationals.add(LT);
         relationals.add(NE);
@@ -45,20 +45,20 @@ public class Executor
         booleans.add(AND);
         booleans.add(OR);
     }
-    
+
     public Executor(Symtab symtab)
     {
         this.symtab = symtab;
     }
-    
+
     public Object visit(Node node)
     {
         switch (node.type)
         {
             case PROGRAM :  return visitProgram(node);
-            
-            case COMPOUND : 
-            case ASSIGN :   
+
+            case COMPOUND :
+            case ASSIGN :
             case LOOP :
 //            case FOR:
             case IF:
@@ -66,23 +66,23 @@ public class Executor
 
             case WRITE :
             case WRITELN :  return visitStatement(node);
-            
+
             case TEST:      return visitTest(node);
-            
+
             default :       return visitExpression(node);
         }
     }
-    
+
     private Object visitProgram(Node programNode)
     {
         Node compoundNode = programNode.children.get(0);
         return visit(compoundNode);
     }
-    
+
     private Object visitStatement(Node statementNode)
     {
         lineNumber = statementNode.lineNumber;
-        
+
         switch (statementNode.type)
         {
             case COMPOUND :  return visitCompound(statementNode);
@@ -93,52 +93,52 @@ public class Executor
             case IF :   return visitIf(statementNode);
 //            case CASE :   return visitWriteln(statementNode);
 //            case FOR :   return visitWriteln(statementNode);
-            
+
             default :        return null;
         }
     }
-    
+
     private Object visitCompound(Node compoundNode)
     {
         for (Node statementNode : compoundNode.children) visit(statementNode);
-        
+
         return null;
     }
-    
+
     private Object visitAssign(Node assignNode)
     {
         Node lhs = assignNode.children.get(0);
         Node rhs = assignNode.children.get(1);
-        
+
         // Evaluate the right-hand-side expression;
         Double value = (Double) visit(rhs);
-        
+
         // Store the value into the variable's symbol table entry.
         String variableName = lhs.text;
         SymtabEntry variableId = symtab.lookup(variableName);
         variableId.setValue(value);
-        
+
         return null;
     }
-    
+
     private Object visitLoop(Node loopNode)
-    {        
+    {
         boolean b = false;
         do
         {
             for (Node node : loopNode.children)
             {
                 Object value = visit(node);  // statement or test
-                
+
                 // Evaluate the test condition. Stop looping if true.
                 b = (node.type == TEST) && ((boolean) value);
                 if (b) break;
             }
         } while (!b);
-        
+
         return null;
     }
-    
+
     private Object visitTest(Node testNode)
     {
 
@@ -155,18 +155,18 @@ public class Executor
         }
         return null;
     }
-    
+
     private Object visitWrite(Node writeNode)
     {
         printValue(writeNode.children);
         return null;
     }
-    
+
     private Object visitWriteln(Node writelnNode)
     {
         if (writelnNode.children.size() > 0) printValue(writelnNode.children);
         System.out.println();
-        
+
         return null;
     }
 
@@ -174,20 +174,20 @@ public class Executor
     {
         long fieldWidth    = -1;
         long decimalPlaces = 0;
-        
+
         // Use any specified field width and count of decimal places.
         if (children.size() > 1)
         {
             double fw = (Double) visit(children.get(1));
             fieldWidth = (long) fw;
-            
-            if (children.size() > 2) 
+
+            if (children.size() > 2)
             {
                 double dp = (Double) visit(children.get(2));
                 decimalPlaces = (long) dp;
             }
         }
-        
+
         // Print the value with a format.
         Node valueNode = children.get(0);
         if (valueNode.type == VARIABLE)
@@ -196,7 +196,7 @@ public class Executor
             if (fieldWidth >= 0)    format += fieldWidth;
             if (decimalPlaces >= 0) format += "." + decimalPlaces;
             format += "f";
-            
+
             Double value = (Double) visit(valueNode);
             System.out.printf(format, value);
         }
@@ -205,12 +205,16 @@ public class Executor
             String format = "%";
             if (fieldWidth > 0) format += fieldWidth;
             format += "s";
-            
+
             String value = (String) visit(valueNode);
             System.out.printf(format, value);
         }
     }
+     private Object visitFor(Node forNode){
 
+
+        return null;
+     }
     private Object visitExpression(Node expressionNode)
     {
         // Single-operand expressions.
@@ -223,11 +227,11 @@ public class Executor
                 case REAL_CONSTANT    : return visitRealConstant(expressionNode);
                 case STRING_CONSTANT  : return visitStringConstant(expressionNode);
                 case NOT              : return !(Boolean) visitExpression(expressionNode.children.get(0));
-                
+
                 default: return null;
             }
         }
-        
+
         // Binary expressions.
         if(booleans.contains(expressionNode.type)){
 //            System.out.println("EXPRESSION NODE TYPE IS " + expressionNode.type);
@@ -312,28 +316,28 @@ public class Executor
             return Double.valueOf(value);
         }
     }
-    
+
     private Object visitVariable(Node variableNode)
     {
         // Obtain the variable's value from its symbol table entry.
         String variableName = variableNode.text;
         SymtabEntry variableId = symtab.lookup(variableName);
         Double value = variableId.getValue();
-        
+
         return value;
     }
-    
+
     private Object visitIntegerConstant(Node integerConstantNode)
     {
         long value = (Long) integerConstantNode.value;
         return (double) value;
     }
-    
+
     private Object visitRealConstant(Node realConstantNode)
     {
         return (Double) realConstantNode.value;
     }
-    
+
     private Object visitStringConstant(Node stringConstantNode)
     {
         return (String) stringConstantNode.value;
@@ -341,7 +345,7 @@ public class Executor
 
     private void runtimeError(Node node, String message)
     {
-        System.out.printf("RUNTIME ERROR at line %d: %s: %s\n", 
+        System.out.printf("RUNTIME ERROR at line %d: %s: %s\n",
                           lineNumber, message, node.text);
         System.exit(-2);
     }
