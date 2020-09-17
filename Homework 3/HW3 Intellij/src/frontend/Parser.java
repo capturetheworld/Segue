@@ -119,7 +119,7 @@ public class Parser {
         Node stmtNode = null;
         int savedLineNumber = currentToken.lineNumber;
         lineNumber = savedLineNumber;
-
+        
         switch (currentToken.type) {
             case IDENTIFIER:
                 stmtNode = parseAssignmentStatement();
@@ -420,8 +420,6 @@ public class Parser {
                 lineNumber = currentToken.lineNumber;
                 nextIf.lineNumber = lineNumber;
 
-
-
                 testNode = new Node(TEST);
                 lineNumber = currentToken.lineNumber;
                 testNode.lineNumber = lineNumber;
@@ -429,19 +427,7 @@ public class Parser {
                 ArrayList<Node> nodeList = new ArrayList<>();
 
                 while (currentToken.type != END_OF_FILE) {
-
-                    switch (currentToken.type) {
-
-                        case INTEGER:
-                            nodeList.add(parseIntegerConstant());
-                            break;
-                        case STRING:
-                            nodeList.add(parseStringConstant());
-                            break;
-                        case REAL:
-                            nodeList.add(parseRealConstant());
-                            break;
-                    }
+                    nodeList.add(parseSimpleExpression());
                     if (currentToken.type == COMMA) {
 
                         currentToken = scanner.nextToken();
@@ -456,39 +442,51 @@ public class Parser {
 
                 }
 
-
-                Node headOr = null;
-                // boolean first = false;
-                Node currOr = null;
-
-                for (Node n : nodeList) {
-                    Node nextOr = new Node(Node.NodeType.OR);
-                    lineNumber = currentToken.lineNumber;
-                    nextOr.lineNumber = lineNumber;
-
+                if (nodeList.size() == 1) {
                     Node equal = new Node(EQ);
                     lineNumber = currentToken.lineNumber;
                     equal.lineNumber = lineNumber;
 
                     equal.adopt(expNode);
-                    equal.adopt(n);
-                    nextOr.adopt(equal);
+                    equal.adopt(nodeList.get(0));
+                    testNode.adopt(equal);
+                } else {
+                    Node headOr = null;
+                    // boolean first = false;
+                    Node currOr = null;
 
-                    if (headOr == null) {
-                        currOr = nextOr;
-                        headOr = currOr;
-                    } else {
-                        currOr.adopt(nextOr);
-                        currOr = nextOr;
+                    for (int i = 0; i < nodeList.size(); i++) {
+                        Node nextOr = new Node(Node.NodeType.OR);
+                        lineNumber = currentToken.lineNumber;
+                        nextOr.lineNumber = lineNumber;
+
+                        Node equal = new Node(EQ);
+                        lineNumber = currentToken.lineNumber;
+                        equal.lineNumber = lineNumber;
+
+                        equal.adopt(expNode);
+                        equal.adopt(nodeList.get(i));
+                        nextOr.adopt(equal);
+
+                        if (headOr == null) {
+                            currOr = nextOr;
+                            headOr = currOr;
+                        } else if (i == nodeList.size() - 1) {
+                            currOr.adopt(equal);
+                        } else {
+                            currOr.adopt(nextOr);
+                            currOr = nextOr;
+                        }
+
+
                     }
-
-
+                    testNode.adopt(headOr);
                 }
-
-                testNode.adopt(headOr);
+                
                 Node job = parseStatement();
-                nextIf.adopt(testNode); ///????
-                nextIf.adopt(job); ///????
+                if(currentToken.type == SEMICOLON) currentToken = scanner.nextToken();
+                nextIf.adopt(testNode);
+                nextIf.adopt(job);
 
                 if (headIf == null) {
                     currIf = nextIf;
@@ -498,10 +496,9 @@ public class Parser {
                     currIf.adopt(nextIf);
                     currIf = nextIf;
                 }
-
-
             }
-
+            currentToken = scanner.nextToken();
+            //if(currentToken.type == SEMICOLON) currentToken = scanner.nextToken();
 
         } else {
             syntaxError("Expecting OF");
@@ -509,45 +506,6 @@ public class Parser {
 
         return headIf;
     }
-//    private Node parseForStatement()
-//    {
-//        // The current token should now be WHILE.
-//
-//        // Create a LOOP node.
-//        Node loopNode = new Node(LOOP);
-//        currentToken = scanner.nextToken();  // consume WHILE
-//
-//        // Create a TEST node. It adopts the test expression node.
-//        Node testNode = new Node(TEST);
-//        lineNumber = currentToken.lineNumber;
-//        testNode.lineNumber = lineNumber;
-//
-//        Node temp = parseExpression();
-//
-//        Node tempNot = new Node (Node.NodeType.NOT);
-//        lineNumber = currentToken.lineNumber;
-//        testNode.lineNumber = lineNumber;
-//        tempNot.adopt(temp);
-//        testNode.adopt(tempNot);
-//
-//
-//        // System.out.println(currentToken.type + " while statement current token");
-//        if (currentToken.type == DO)
-//        {
-//
-//            currentToken = scanner.nextToken();  // consume DO
-//            loopNode.adopt(parseStatement());
-//
-//            // The LOOP node adopts the TEST node as its final child.
-//            loopNode.adopt(testNode);
-//        }
-//        else {
-//            syntaxError("Expecting DO");
-//        }
-//
-//        return loopNode;
-//    }
-
 
     private Node parseWriteStatement() {
         // The current token should now be WRITE.
