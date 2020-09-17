@@ -152,6 +152,7 @@ public class Parser {
                 stmtNode = null;
                 break;  // empty statement
 
+
             default:
                 syntaxError("Unexpected token parse statement  1ps");
         }
@@ -777,9 +778,16 @@ public class Parser {
 
     private Node parseIntegerConstant() {
         // The current token should now be a number.
-
+      //  System.out.println("WE ARE HERE 111111 !" + currentToken.value);
         Node integerNode = new Node(INTEGER_CONSTANT);
-        integerNode.value = currentToken.value;
+//        if(currentToken.type == MINUS){ //<<<<< PROBLEM
+//            //System.out.println("WE ARE HERE!");
+//            currentToken = scanner.nextToken();
+//            integerNode.value = (long)currentToken.value*-1;
+//        }else {
+//            //System.out.println("WE ARE HERE! 222222");
+            integerNode.value = currentToken.value;
+//        }
 
         currentToken = scanner.nextToken();  // consume the number
         return integerNode;
