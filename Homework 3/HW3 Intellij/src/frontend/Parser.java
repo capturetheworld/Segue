@@ -402,12 +402,10 @@ public class Parser {
 
 
     private Node parseCaseStatement() {
-        Node ifNode = new Node(Node.NodeType.IF);
+        Node currIf = null;
+        Node headIf = null;
+
         currentToken = scanner.nextToken(); //consumes the CASE
-        lineNumber = currentToken.lineNumber;
-        ifNode.lineNumber = lineNumber;
-
-
         Node expNode = parseExpression();
 
         if (currentToken.type == OF) {
@@ -415,10 +413,16 @@ public class Parser {
             currentToken = scanner.nextToken();  // consume OF
             Node testNode = null;
             //  Node.adopt(parseStatement());
-            
-            while (currentToken.type != END) {
 
-             testNode = new Node(TEST);
+            while (currentToken.type != END) {
+                Node nextIf = new Node(Node.NodeType.IF);
+
+                lineNumber = currentToken.lineNumber;
+                nextIf.lineNumber = lineNumber;
+
+
+
+                testNode = new Node(TEST);
                 lineNumber = currentToken.lineNumber;
                 testNode.lineNumber = lineNumber;
 
@@ -449,16 +453,18 @@ public class Parser {
                         syntaxError("Expecting colon or comma!");
                     }
 
+
                 }
 
-                Node head = null;
+
+                Node headOr = null;
                 // boolean first = false;
-                Node orNode = null;
+                Node currOr = null;
 
                 for (Node n : nodeList) {
-                    Node temp = new Node(Node.NodeType.OR);
+                    Node nextOr = new Node(Node.NodeType.OR);
                     lineNumber = currentToken.lineNumber;
-                    temp.lineNumber = lineNumber;
+                    nextOr.lineNumber = lineNumber;
 
                     Node equal = new Node(EQ);
                     lineNumber = currentToken.lineNumber;
@@ -466,29 +472,42 @@ public class Parser {
 
                     equal.adopt(expNode);
                     equal.adopt(n);
-                    temp.adopt(equal);
+                    nextOr.adopt(equal);
 
-                    if (head == null) {
-                        orNode = temp;
-                        head = orNode;
+                    if (headOr == null) {
+                        currOr = nextOr;
+                        headOr = currOr;
                     } else {
-                        orNode.adopt(temp);
-                        orNode = temp;
+                        currOr.adopt(nextOr);
+                        currOr = nextOr;
                     }
 
 
                 }
 
-                testNode.adopt(head);
-
+                testNode.adopt(headOr);
                 Node job = parseStatement();
+                nextIf.adopt(testNode); ///????
+                nextIf.adopt(job); ///????
+
+                if (headIf == null) {
+                    currIf = nextIf;
+                    headIf = currIf;
+                }
+                else{
+                    currIf.adopt(nextIf);
+                    currIf = nextIf;
+                }
+
 
             }
+
+
         } else {
             syntaxError("Expecting OF");
         }
 
-        return ifNode;
+        return headIf;
     }
 //    private Node parseForStatement()
 //    {
