@@ -119,7 +119,7 @@ public class Parser {
         Node stmtNode = null;
         int savedLineNumber = currentToken.lineNumber;
         lineNumber = savedLineNumber;
-
+        System.out.println(currentToken.type + "  PARSE STATEMENT's ToKeN TyPe");
         switch (currentToken.type) {
             case IDENTIFIER:
                 stmtNode = parseAssignmentStatement();
@@ -151,6 +151,7 @@ public class Parser {
             case SEMICOLON:
                 stmtNode = null;
                 break;  // empty statement
+
 
             default:
                 syntaxError("Unexpected token parse statement  1ps");
@@ -429,9 +430,9 @@ public class Parser {
                 ArrayList<Node> nodeList = new ArrayList<>();
 
                 while (currentToken.type != END_OF_FILE) {
-
+                    boolean tester = currentToken.type == INTEGER;
+                    System.out.println(currentToken.type + "    HERE IS THE CURRENT TOKEN BEFORE SWITCH" +tester );
                     switch (currentToken.type) {
-
                         case INTEGER:
                             nodeList.add(parseIntegerConstant());
                             break;
@@ -486,7 +487,7 @@ public class Parser {
                 }
 
                 testNode.adopt(headOr);
-                Node job = parseStatement();
+                Node job = parseStatement(); //<---------
                 nextIf.adopt(testNode); ///????
                 nextIf.adopt(job); ///????
 
@@ -499,7 +500,7 @@ public class Parser {
                     currIf = nextIf;
                 }
 
-
+            break;
             }
 
 
@@ -509,45 +510,6 @@ public class Parser {
 
         return headIf;
     }
-//    private Node parseForStatement()
-//    {
-//        // The current token should now be WHILE.
-//
-//        // Create a LOOP node.
-//        Node loopNode = new Node(LOOP);
-//        currentToken = scanner.nextToken();  // consume WHILE
-//
-//        // Create a TEST node. It adopts the test expression node.
-//        Node testNode = new Node(TEST);
-//        lineNumber = currentToken.lineNumber;
-//        testNode.lineNumber = lineNumber;
-//
-//        Node temp = parseExpression();
-//
-//        Node tempNot = new Node (Node.NodeType.NOT);
-//        lineNumber = currentToken.lineNumber;
-//        testNode.lineNumber = lineNumber;
-//        tempNot.adopt(temp);
-//        testNode.adopt(tempNot);
-//
-//
-//        // System.out.println(currentToken.type + " while statement current token");
-//        if (currentToken.type == DO)
-//        {
-//
-//            currentToken = scanner.nextToken();  // consume DO
-//            loopNode.adopt(parseStatement());
-//
-//            // The LOOP node adopts the TEST node as its final child.
-//            loopNode.adopt(testNode);
-//        }
-//        else {
-//            syntaxError("Expecting DO");
-//        }
-//
-//        return loopNode;
-//    }
-
 
     private Node parseWriteStatement() {
         // The current token should now be WRITE.
@@ -819,9 +781,16 @@ public class Parser {
 
     private Node parseIntegerConstant() {
         // The current token should now be a number.
-
+      //  System.out.println("WE ARE HERE 111111 !" + currentToken.value);
         Node integerNode = new Node(INTEGER_CONSTANT);
-        integerNode.value = currentToken.value;
+//        if(currentToken.type == MINUS){ //<<<<< PROBLEM
+//            //System.out.println("WE ARE HERE!");
+//            currentToken = scanner.nextToken();
+//            integerNode.value = (long)currentToken.value*-1;
+//        }else {
+//            //System.out.println("WE ARE HERE! 222222");
+            integerNode.value = currentToken.value;
+//        }
 
         currentToken = scanner.nextToken();  // consume the number
         return integerNode;
