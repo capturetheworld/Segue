@@ -1,0 +1,21 @@
+Execution:
+
+Visiting program
+Visiting compound statement
+Visiting statement list
+Line 4: Visiting assignment statement
+Visiting variable i
+Visiting expression
+Visiting number: got value 0
+Will assign value 0 to variable i
+Line 6: Visiting REPEAT statement
+Visiting statement list
+Line 7: Visiting assignment statement
+Visiting variable i
+Visiting expression
+Visiting variable i
+Visiting number: got value 1
+Will assign value 1 to variable i
+Line 8: Visiting WRITE statement
+Line 8: Visiting WRITE statement
+Line 9: Visiting WRITELN statement
