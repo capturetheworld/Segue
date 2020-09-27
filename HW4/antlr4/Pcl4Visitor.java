@@ -97,6 +97,12 @@ public interface Pcl4Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitForStatement(Pcl4Parser.ForStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Pcl4Parser#caseStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCaseStatement(Pcl4Parser.CaseStatementContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Pcl4Parser#lhs}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -222,6 +228,18 @@ public interface Pcl4Visitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitStringConstant(Pcl4Parser.StringConstantContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Pcl4Parser#constantList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitConstantList(Pcl4Parser.ConstantListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Pcl4Parser#constant}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitConstant(Pcl4Parser.ConstantContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Pcl4Parser#sign}.
 	 * @param ctx the parse tree

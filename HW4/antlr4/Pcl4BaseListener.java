@@ -186,6 +186,18 @@ public class Pcl4BaseListener implements Pcl4Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterCaseStatement(Pcl4Parser.CaseStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCaseStatement(Pcl4Parser.CaseStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterLhs(Pcl4Parser.LhsContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -421,6 +433,30 @@ public class Pcl4BaseListener implements Pcl4Listener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitStringConstant(Pcl4Parser.StringConstantContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterConstantList(Pcl4Parser.ConstantListContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitConstantList(Pcl4Parser.ConstantListContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterConstant(Pcl4Parser.ConstantContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitConstant(Pcl4Parser.ConstantContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

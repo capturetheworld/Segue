@@ -150,6 +150,16 @@ public interface Pcl4Listener extends ParseTreeListener {
 	 */
 	void exitForStatement(Pcl4Parser.ForStatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Pcl4Parser#caseStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterCaseStatement(Pcl4Parser.CaseStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Pcl4Parser#caseStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitCaseStatement(Pcl4Parser.CaseStatementContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Pcl4Parser#lhs}.
 	 * @param ctx the parse tree
 	 */
@@ -361,6 +371,26 @@ public interface Pcl4Listener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitStringConstant(Pcl4Parser.StringConstantContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Pcl4Parser#constantList}.
+	 * @param ctx the parse tree
+	 */
+	void enterConstantList(Pcl4Parser.ConstantListContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Pcl4Parser#constantList}.
+	 * @param ctx the parse tree
+	 */
+	void exitConstantList(Pcl4Parser.ConstantListContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Pcl4Parser#constant}.
+	 * @param ctx the parse tree
+	 */
+	void enterConstant(Pcl4Parser.ConstantContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Pcl4Parser#constant}.
+	 * @param ctx the parse tree
+	 */
+	void exitConstant(Pcl4Parser.ConstantContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Pcl4Parser#sign}.
 	 * @param ctx the parse tree
