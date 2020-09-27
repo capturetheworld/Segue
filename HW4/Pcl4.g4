@@ -17,6 +17,10 @@ statement : compoundStatement
           | writeStatement
           | writelnStatement
           | emptyStatement
+          | whileStatement
+          | ifStatement
+          | forStatement
+          | caseStatement
           ;
 
 compoundStatement : BEGIN statementList END ;
@@ -25,6 +29,10 @@ emptyStatement    : ;
 statementList       : statement ( ';' statement )* ;
 assignmentStatement : lhs ':=' rhs ;
 repeatStatement     : REPEAT statementList UNTIL expression ;
+whileStatement      : WHILE expression DO statement ;
+ifStatement         : IF expression THEN statement (ELSE statement)?;
+forStatement        : FOR IDENTIFIER ':=' expression (TO | DOWNTO) expression DO statement ;
+caseStatement       : CASE expression OF (CONST|)* END ;
 
 lhs : variable ;
 rhs : expression ;
