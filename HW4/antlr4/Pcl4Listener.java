@@ -1,4 +1,4 @@
-// Generated from c:\Users\mcnan\Documents\SJSU\Fall 2020\CS 153\CS153-Compiler-Design\HW4\Pcl4.g4 by ANTLR 4.8
+// Generated from /Users/ian/Documents/GitHub/CS153-Compiler-Design/HW4/Pcl4.g4 by ANTLR 4.8
 
     package antlr4;
 
@@ -119,6 +119,36 @@ public interface Pcl4Listener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitRepeatStatement(Pcl4Parser.RepeatStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Pcl4Parser#whileStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhileStatement(Pcl4Parser.WhileStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Pcl4Parser#whileStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhileStatement(Pcl4Parser.WhileStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Pcl4Parser#ifStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterIfStatement(Pcl4Parser.IfStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Pcl4Parser#ifStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitIfStatement(Pcl4Parser.IfStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Pcl4Parser#forStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterForStatement(Pcl4Parser.ForStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Pcl4Parser#forStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitForStatement(Pcl4Parser.ForStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Pcl4Parser#lhs}.
 	 * @param ctx the parse tree

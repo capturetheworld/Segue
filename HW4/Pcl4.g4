@@ -68,6 +68,8 @@ realConstant    : REAL;
 characterConstant : CHARACTER ;
 stringConstant    : STRING ;
 
+constant : characterConstant | stringConstant | number | IDENTIFIER  ;
+
 sign : '-' | '+' ;
        
 relOp : '=' | '<>' | '<' | '<=' | '>' | '>=' ;
