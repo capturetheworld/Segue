@@ -1,4 +1,4 @@
-// Generated from /Users/ian/Documents/GitHub/CS153-Compiler-Design/HW4/Pcl4.g4 by ANTLR 4.8
+// Generated from /Users/adanhernandez/Desktop/PRO/FALL 2020/CS 153/Assignment 2/CS153-Compiler-Design/HW4/Pcl4.g4 by ANTLR 4.8
 
     package antlr4;
 
@@ -265,6 +265,13 @@ public class Pcl4BaseVisitor<T> extends AbstractParseTreeVisitor<T> implements P
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitConstantList(Pcl4Parser.ConstantListContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitCaseList(Pcl4Parser.CaseListContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

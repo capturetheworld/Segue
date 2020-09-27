@@ -32,7 +32,7 @@ repeatStatement     : REPEAT statementList UNTIL expression ;
 whileStatement      : WHILE expression DO statement ;
 ifStatement         : IF expression THEN statement (ELSE statement)?;
 forStatement        : FOR IDENTIFIER ':=' expression (TO | DOWNTO) expression DO statement ;
-caseStatement       : CASE expression OF (constantList ':' statement) (';' constantList ':' statement)* END ;
+caseStatement       : CASE expression OF caseList? END ;
 
 lhs : variable ;
 rhs : expression ;
@@ -69,6 +69,8 @@ characterConstant : CHARACTER ;
 stringConstant    : STRING ;
 
 constantList        : constant (',' constant)* ;
+
+caseList        : (constantList ':' statement) (';' caseList)?;
 
 constant : characterConstant | stringConstant | number | IDENTIFIER ;
 

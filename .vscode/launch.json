@@ -9,29 +9,14 @@
             "name": "CodeLens (Launch) - Pcl4",
             "request": "launch",
             "mainClass": "Pcl4",
-            "projectName": "CS153-Compiler-Design_d08cd772"
-        },
-        {
-            "type": "java",
-            "name": "CodeLens (Launch) - Simple",
-            "request": "launch",
-            "mainClass": "Simple",
-            "projectName": "CS153-Compiler-Design_d08cd772"
-        },
-        {
-            "type": "java",
-            "name": "Debug (Launch) - Current File",
-            "request": "launch",
-            "mainClass": "${file}",
-            "args": "${command:SpecifyProgramArgs}",
-            "cwd": "C:/Users/mcnan/Documents/SJSU/Fall 2020/CS 153/CS153-Compiler-Design/Homework 3/HW3 Intellij/src"
+            "projectName": "CS153-Compiler-Design_4dba0699"
         },
         {
             "name": "Debug ANTLR4 grammar",
             "type": "antlr-debug",
             "request": "launch",
-            "input": "HW4\\HelloWorld.txt",
-            "grammar": "HW4\\Pcl4.g4",
+            "input": "HW4/TestCase.txt",
+            "grammar": "HW4/Pcl4.g4",
             "startRule": "program",
             "printParseTree": true,
             "visualParseTree": true

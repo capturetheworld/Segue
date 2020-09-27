@@ -1,4 +1,4 @@
-// Generated from /Users/ian/Documents/GitHub/CS153-Compiler-Design/HW4/Pcl4.g4 by ANTLR 4.8
+// Generated from /Users/adanhernandez/Desktop/PRO/FALL 2020/CS 153/Assignment 2/CS153-Compiler-Design/HW4/Pcl4.g4 by ANTLR 4.8
 
     package antlr4;
 
@@ -234,6 +234,12 @@ public interface Pcl4Visitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitConstantList(Pcl4Parser.ConstantListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Pcl4Parser#caseList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCaseList(Pcl4Parser.CaseListContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Pcl4Parser#constant}.
 	 * @param ctx the parse tree
