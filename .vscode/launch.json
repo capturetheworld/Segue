@@ -15,7 +15,7 @@
             "name": "Debug ANTLR4 grammar",
             "type": "antlr-debug",
             "request": "launch",
-            "input": "HW4/TestCase.txt",
+            "input": "HW4/TestFor.txt",
             "grammar": "HW4/Pcl4.g4",
             "startRule": "program",
             "printParseTree": true,
