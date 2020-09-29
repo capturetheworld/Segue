@@ -1,9 +1,14 @@
 package backend.interpreter;
 
 import antlr4.*;
+import antlr4.Pcl4Parser.AddOpContext;
+import antlr4.Pcl4Parser.CaseListContext;
+import antlr4.Pcl4Parser.ConstantContext;
+import antlr4.Pcl4Parser.ConstantListContext;
 import antlr4.Pcl4Parser.SignContext;
 import antlr4.Pcl4Parser.TermContext;
 import intermediate.symtab.Symtab;
+import intermediate.symtab.SymtabEntry;
 
 public class Executor extends Pcl4BaseVisitor<Object>
 {
@@ -73,40 +78,124 @@ public class Executor extends Pcl4BaseVisitor<Object>
         System.out.println("Visiting FOR statement");
 
         String variableName = ctx.IDENTIFIER().getText();
-
-        symtab.enter(variableName).setValue((Double) (visit(ctx.expression(0))));
-
+        SymtabEntry variable =  symtab.enter(variableName);
+       variable.setValue((Double) (visit(ctx.expression(0))));
+        int increment;
         if(ctx.TO() != null){
-            //come back to this
+            increment = 1;
+           
+        }
+
+        else{ //DOWNTO part
+            increment = -1;
+        }
+
+        while(!(symtab.lookup(variableName) == visit(ctx.expression(1)))){
+                visit(ctx.statement());
+                variable.setValue(variable.getValue()+increment);
+
         }
         return null;
     }
 
     public Object visitCaseStatement(Pcl4Parser.CaseStatementContext ctx)
     {
-        System.out.println("Visiting CASE statement");
-        return null;
+      Object value = visit(ctx.expression());
+
+
+       if( ctx.caseList() != null){
+        
+        CaseListContext current  =  ctx.caseList();
+        CaseListContext selected  =  null;
+        outerloop:
+
+
+     while(current != null){
+        ConstantListContext constants = current.constantList();
+        
+       for(ConstantContext c : constants.constant()) {
+            if(value.equals(c)){
+                selected = current;
+                break outerloop;
+            }
+       }
+        current = current.caseList();
+     }
+     if(selected != null){
+        visit(selected.statement());
+
+     }
+
+       }
+
+      return null;
     }
 
     public Object visitExpression(Pcl4Parser.ExpressionContext ctx)
     {
+
+        
         System.out.println("Visiting expression");
-        return visitChildren(ctx);
+
+        if(ctx.simpleExpression().size() > 1){
+                switch(ctx.relOp().getText()){
+
+                    case "=": return visit(ctx.simpleExpression(0)).equals(visit(ctx.simpleExpression(1)));
+                    case "<>": return !visit(ctx.simpleExpression(0)).equals(visit(ctx.simpleExpression(1)));
+
+                    case "<": return (double)visit(ctx.simpleExpression(0)) < (double)visit(ctx.simpleExpression(1));
+                    case "<=": return (double)visit(ctx.simpleExpression(0)) <= (double)visit(ctx.simpleExpression(1));
+                    case ">": return (double)visit(ctx.simpleExpression(0)) > (double)visit(ctx.simpleExpression(1));
+                    case ">=": return (double)visit(ctx.simpleExpression(0)) >= (double)visit(ctx.simpleExpression(1));
+                }
+        }
+
+        else{
+            return visit(ctx.simpleExpression(0));
+
+        }
+        return null;
+      
     }
 
     public Object visitSimpleExpression(Pcl4Parser.SimpleExpressionContext ctx)
     {
+     
         System.out.println("Visiting simple expression");
+        boolean orType;
+        if(ctx.addOp().size() > 0){
+           orType = (ctx.addOp(0).OR() != null);
+            for(AddOpContext c : ctx.addOp()){
 
-        SignContext signContext = ctx.sign();
-        
-        if(!signContext.isEmpty()){
-            String sign = signContext.getText();
-            if(sign.equals("-")){
-                TermContext termContext = ctx.term(1);
-                //Come back to this
+                boolean currentType = (c.OR() != null );
+
+                   if(orType != currentType) {
+                        return null;
+                   }
             }
         }
+
+
+        double valueNum;
+        SignContext signContext = ctx.sign();
+        int signNumber = 1;
+        if(signContext != null){
+            String sign = signContext.getText();
+           
+
+            if(sign.equals("-")){
+                
+                signNumber = -1;
+              
+            }
+        }
+        valueNum = (double)visit(ctx.term(0)) * signNumber;
+        if(ctx.term().size() > 1){
+            for(int i = 1; i < ctx.term().size(); i++){
+
+            }
+        }
+
 
         return null;
     }
