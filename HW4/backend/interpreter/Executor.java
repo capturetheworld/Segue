@@ -162,7 +162,7 @@ public class Executor extends Pcl4BaseVisitor<Object>
     {
      
         System.out.println("Visiting simple expression");
-        boolean orType;
+        boolean orType = false;
         if(ctx.addOp().size() > 0){
            orType = (ctx.addOp(0).OR() != null);
             for(AddOpContext c : ctx.addOp()){
@@ -174,28 +174,37 @@ public class Executor extends Pcl4BaseVisitor<Object>
                    }
             }
         }
+        //come back to this tomorrow
+        
+        if(orType){
 
-
-        double valueNum;
-        SignContext signContext = ctx.sign();
-        int signNumber = 1;
-        if(signContext != null){
-            String sign = signContext.getText();
-           
-
-            if(sign.equals("-")){
-                
-                signNumber = -1;
-              
-            }
         }
-        valueNum = (double)visit(ctx.term(0)) * signNumber;
-        if(ctx.term().size() > 1){
-            for(int i = 1; i < ctx.term().size(); i++){
+        else{
 
+            double valueNum;
+            SignContext signContext = ctx.sign();
+            int signNumber = 1;
+            if(signContext != null){
+                String sign = signContext.getText();
+               
+    
+                if(sign.equals("-")){
+                    
+                    signNumber = -1;
+                  
+                }
             }
+            valueNum = (double)visit(ctx.term(0)) * signNumber;
+            if(ctx.term().size() > 1){
+                for(int i = 1; i < ctx.term().size(); i++){
+    
+                }
+            }
+    
+
         }
 
+       
 
         return null;
     }
@@ -283,4 +292,18 @@ public class Executor extends Pcl4BaseVisitor<Object>
         
         return value;
     }
+
+    public Object visitNotFactor(Pcl4Parser.NotFactorContext ctx){
+
+        return null;
+    }
+    public Object visitStringFactor(Pcl4Parser.StringFactorContext ctx){
+      //ctx.getText() or directly return it??
+        return null;
+    }
+    public Object visitCharacterFactor(Pcl4Parser.CharacterFactorContext ctx){
+
+        return null;
+    }
+   
 }
