@@ -7,6 +7,7 @@ import antlr4.Pcl4Parser.ConstantContext;
 import antlr4.Pcl4Parser.ConstantListContext;
 import antlr4.Pcl4Parser.SignContext;
 import antlr4.Pcl4Parser.TermContext;
+import antlr4.Pcl4Parser.WriteArgumentContext;
 import intermediate.symtab.Symtab;
 import intermediate.symtab.SymtabEntry;
 
@@ -157,56 +158,81 @@ public class Executor extends Pcl4BaseVisitor<Object>
         return null;
       
     }
+/*
+    public Object visitSimpleExpression(Pcl4Parser.SimpleExpressionContext ctx) {
 
-    public Object visitSimpleExpression(Pcl4Parser.SimpleExpressionContext ctx)
-    {
-     
         System.out.println("Visiting simple expression");
         boolean orType = false;
-        if(ctx.addOp().size() > 0){
-           orType = (ctx.addOp(0).OR() != null);
-            for(AddOpContext c : ctx.addOp()){
+        if (ctx.addOp().size() > 0) {
+            orType = (ctx.addOp(0).OR() != null);
+            for (AddOpContext c : ctx.addOp()) {
 
-                boolean currentType = (c.OR() != null );
+                boolean currentType = (c.OR() != null);
 
-                   if(orType != currentType) {
-                        return null;
-                   }
+                if (orType != currentType) {
+                    return null;
+                }
             }
         }
-        //come back to this tomorrow
-        
-        if(orType){
+        // come back to this tomorrow
 
-        }
-        else{
+        if (orType) {
+
+        } else {
 
             double valueNum;
             SignContext signContext = ctx.sign();
             int signNumber = 1;
-            if(signContext != null){
+            if (signContext != null) {
                 String sign = signContext.getText();
-               
-    
-                if(sign.equals("-")){
-                    
+
+                if (sign.equals("-")) {
+
                     signNumber = -1;
-                  
+
                 }
             }
-            valueNum = (double)visit(ctx.term(0)) * signNumber;
-            if(ctx.term().size() > 1){
-                for(int i = 1; i < ctx.term().size(); i++){
-    
+            valueNum = (double) visit(ctx.term(0)) * signNumber;
+            if (ctx.term().size() > 1) {
+                for (int i = 1; i < ctx.term().size(); i++) {
+
                 }
             }
-    
 
         }
 
-       
-
         return null;
+    }
+    */
+    public Object visitSimpleExpression(Pcl4Parser.SimpleExpressionContext ctx) {
+        if (ctx.term().size() > 1) {
+            Object first = visit(ctx.term(0));
+            if (first instanceof String) {
+                String result = (String)first;
+                for (int i = 1; i < ctx.term().size(); i++) {
+                    result += (String)visit(ctx.term(i));
+                }
+                return result;
+            }
+            else if (first instanceof Double) {
+                double result = (double)first;
+                for (int i = 1; i < ctx.term().size(); i++) {
+                    double current = (double)visit(ctx.term(i));
+                    if (ctx.addOp(i - 1).getText().equals("+")) result += current;
+                    else result -= current;
+                }
+                return result;
+            } else {
+                boolean result = (boolean)first;
+                for (int i = 1; i < ctx.term().size(); i++) {
+                    boolean current = (boolean)visit(ctx.term(i));
+                    result = result || current;
+                }
+                return result;
+            }
+        } else {
+            return visit(ctx.term(0));
+        }
     }
 
     public Object visitTerm(Pcl4Parser.TermContext ctx)
@@ -235,7 +261,6 @@ public class Executor extends Pcl4BaseVisitor<Object>
         } else {
             return visit(ctx.factor(0));
         }
-        return null;
     }
 
     public Object visitParenthesizedExpression(Pcl4Parser.ParenthesizedExpressionContext ctx)
@@ -252,14 +277,14 @@ public class Executor extends Pcl4BaseVisitor<Object>
         return null;
     }
 
-    public Object visitIntegerConstant(Pcl4Parser.ExpressionContext ctx)
+    public Object visitIntegerConstant(Pcl4Parser.IntegerConstantContext ctx)
     {
-        return null;
+        return Double.parseDouble(ctx.INTEGER().getText());
     }
 
-    public Object visitRealConstant(Pcl4Parser.ExpressionContext ctx)
+    public Object visitRealConstant(Pcl4Parser.RealConstantContext ctx)
     {
-        return null;
+        return Double.parseDouble(ctx.REAL().getText());
     }
 
     //END OF INTRUCTIONS
@@ -297,13 +322,25 @@ public class Executor extends Pcl4BaseVisitor<Object>
     public Object visitWriteStatement(Pcl4Parser.WriteStatementContext ctx)
     {
         System.out.println("Visiting WRITE statement");
+        for (WriteArgumentContext c: ctx.writeArgumentsOn().writeArgumentListOn().writeArgumentList().writeArgument()) {
+            System.out.print(c);
+        }
         return null;
     }
     
     public Object visitWritelnStatement(Pcl4Parser.WritelnStatementContext ctx)
     {
         System.out.println("Visiting WRITELN statement");
+        for (WriteArgumentContext c: ctx.writeArgumentsLn().writeArgumentListLn().writeArgumentList().writeArgument()) {
+            System.out.print(c);
+        }
+        System.out.println();
         return null;
+    }
+
+    public Object visitWriteArgument(Pcl4Parser.WriteArgumentContext ctx)
+    {
+        return ctx.getText();
     }
     
     public Object visitNumber(Pcl4Parser.NumberContext ctx)
@@ -317,11 +354,9 @@ public class Executor extends Pcl4BaseVisitor<Object>
     }
 
     public Object visitNotFactor(Pcl4Parser.NotFactorContext ctx){
-
         return !(boolean)visit(ctx.factor());
     }
     public Object visitStringFactor(Pcl4Parser.StringFactorContext ctx){
-      //ctx.getText() or directly return it??
         String value = ctx.stringConstant().STRING().getText();
         return value.substring(1, value.length() - 1);
     }
