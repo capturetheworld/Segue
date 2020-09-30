@@ -304,8 +304,14 @@ public class Executor extends Pcl4BaseVisitor<Object>
     
     public Object visitNumber(Pcl4Parser.NumberContext ctx)
     {
-        //System.out.print("Visiting number: got value ");
-        String text = ctx.unsignedNumber().integerConstant().INTEGER().getText();
+        //System.out.println("Visiting number: got value ");
+        String text = "";
+        if(ctx.unsignedNumber().integerConstant() != null){
+            text = ctx.unsignedNumber().integerConstant().INTEGER().getText();
+        }
+        else{
+            text = ctx.unsignedNumber().realConstant().REAL().getText();
+        }
         Double value = Double.valueOf(text);
         //System.out.println(value);
         if (ctx.sign() != null) value *= (double)visit(ctx.sign());
