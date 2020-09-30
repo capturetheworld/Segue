@@ -209,23 +209,47 @@ public class Executor extends Pcl4BaseVisitor<Object>
         return null;
     }
 
-    public Object visitTerm(Pcl4Parser.ExpressionContext ctx)
+    public Object visitTerm(Pcl4Parser.TermContext ctx)
     {
+        if (ctx.factor().size() > 1) {
+            Object first = visit(ctx.factor(0));
+            if (first instanceof String) return first;
+            else if (first instanceof Double) {
+                double result = (double)first;
+                for (int i = 1; i < ctx.factor().size(); i++) {
+                    double current = (double)visit(ctx.factor(i));
+                    if (ctx.mulOp(i - 1).DIV() != null) result = (double)(int)(result / current);
+                    else if (ctx.mulOp(i - 1).MOD() != null) result = result % current;
+                    else if (ctx.mulOp(i - 1).getText().equals("*")) result = result * current;
+                    else result = result / current;
+                }
+                return result;
+            } else {
+                boolean result = (boolean)first;
+                for (int i = 1; i < ctx.factor().size(); i++) {
+                    boolean current = (boolean)visit(ctx.factor(i));
+                    result = result && current;
+                }
+                return result;
+            }
+        } else {
+            return visit(ctx.factor(0));
+        }
         return null;
     }
 
-    public Object visitParenthesizedExpression(Pcl4Parser.ExpressionContext ctx)
+    public Object visitParenthesizedExpression(Pcl4Parser.ParenthesizedExpressionContext ctx)
     {
-        return null;
+        return visit(ctx.expression());
     }
 
     public Object visitVariable(Pcl4Parser.VariableContext ctx)
     {
         System.out.print("Visiting variable ");
         String variableName = ctx.getText();
-        System.out.println(variableName);
-        
-        return null;  // should return the variable's value!
+        //System.out.println(variableName);
+        if(symtab.lookup(variableName) != null) return symtab.lookup(variableName).getValue();
+        return null;
     }
 
     public Object visitIntegerConstant(Pcl4Parser.ExpressionContext ctx)
@@ -285,25 +309,29 @@ public class Executor extends Pcl4BaseVisitor<Object>
     public Object visitNumber(Pcl4Parser.NumberContext ctx)
     {
         System.out.print("Visiting number: got value ");
-        String text = ctx.unsignedNumber().integerConstant()
-                                          .INTEGER().getText();
-        Integer value = Integer.valueOf(text);
-        System.out.println(value);
-        
+        String text = ctx.unsignedNumber().integerConstant().INTEGER().getText();
+        Double value = Double.valueOf(text);
+        //System.out.println(value);
+        if (ctx.sign() != null) value *= (double)visit(ctx.sign());
         return value;
     }
 
     public Object visitNotFactor(Pcl4Parser.NotFactorContext ctx){
 
-        return null;
+        return !(boolean)visit(ctx.factor());
     }
     public Object visitStringFactor(Pcl4Parser.StringFactorContext ctx){
       //ctx.getText() or directly return it??
-        return null;
+        String value = ctx.stringConstant().STRING().getText();
+        return value.substring(1, value.length() - 1);
     }
     public Object visitCharacterFactor(Pcl4Parser.CharacterFactorContext ctx){
 
-        return null;
+        return ctx.characterConstant().CHARACTER().getText();
+    }
+
+    public Object visitSign(Pcl4Parser.SignContext ctx){
+        return ctx.getText() == "+" ? 1 : -1;
     }
    
 }
