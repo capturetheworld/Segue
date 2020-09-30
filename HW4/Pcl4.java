@@ -18,6 +18,7 @@ public class Pcl4
 {
     public static void main(String args[])
     {
+        System.out.println("Working Directory = " + System.getProperty("user.dir"));
         if (args.length != 2)
         {
             System.out.println("Usage: simple -{execute, convert, compile} " +

@@ -6,7 +6,7 @@ BEGIN
     CASE i+1 OF
         1:       j := i;
         -8:      j := 8*i;
-        5, 7, 4: j := 574*i;
+        5, 7, 4: j := 574*i
     END;
     
     write('j = '); writeln(j);

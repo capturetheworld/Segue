@@ -9,7 +9,8 @@
             "name": "CodeLens (Launch) - Pcl4",
             "request": "launch",
             "mainClass": "Pcl4",
-            "projectName": "CS153-Compiler-Design_4dba0699"
+            "projectName": "CS153-Compiler-Design_d08cd772",
+            "args": "${command:SpecifyProgramArgs}"
         },
         {
             "name": "Debug ANTLR4 grammar",
