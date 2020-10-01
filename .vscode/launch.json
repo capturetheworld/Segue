@@ -6,6 +6,21 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - ExprLabeledMain",
+            "request": "launch",
+            "mainClass": "ExprLabeledJava.ExprLabeledMain",
+            "projectName": "CS153-Compiler-Design_e5b33a78"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Pcl4",
+            "request": "launch",
+            "mainClass": "Pcl4",
+            "projectName": "CS153-Compiler-Design_e5b33a78",
+            "args": "${command:SpecifyProgramArgs}"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - Pcl4",
             "request": "launch",
             "mainClass": "Pcl4",
@@ -16,7 +31,7 @@
             "name": "Debug ANTLR4 grammar",
             "type": "antlr-debug",
             "request": "launch",
-            "input": "HW4/TestFor.txt",
+            "input": "HW4/TestCase.txt",
             "grammar": "HW4/Pcl4.g4",
             "startRule": "program",
             "printParseTree": true,
