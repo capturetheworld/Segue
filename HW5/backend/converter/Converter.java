@@ -1198,7 +1198,8 @@ public class Converter extends PascalBaseVisitor<Object>
     }
 
      @Override public Object visitFunctionCall(PascalParser.FunctionCallContext ctx) {
-        code.emit(ctx.functionName().getText() + "(");
+         String result = "";
+        result += ctx.functionName().getText() + "(";
 
         String arguments = "";
 
@@ -1210,8 +1211,8 @@ public class Converter extends PascalBaseVisitor<Object>
             arguments = arguments.substring(0,arguments.length()-2);
          }
 
-        code.emit(arguments + ")");
-        return null; 
+        result += arguments + ")";
+        return result; 
         
     }
 }

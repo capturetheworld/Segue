@@ -69,15 +69,15 @@ public class TestProcedure
         System.out.printf("main:         i = %d, j = %d, x = %4.2f, y = %4.2f, p = %b\n", 
                           i, j, x, y, p);
         
-        public static void
+        alpha(6, i - 3, x + y/i, i, j, x, y, p);
         System.out.printf("main:         i = %d, j = %d, x = %4.2f, y = %4.2f, p = %b\n", 
                           i, j, x, y, p);
         
-        public static void
+        beta();
         System.out.printf("main:         i = %d, j = %d, x = %4.2f, y = %4.2f, p = %b\n", 
                           i, j, x, y, p);
         
-        public static void
+        gamma(i, j, i/x, i*j);
         System.out.printf("main:         i = %d, j = %d, x = %4.2f, y = %4.2f, p = %b\n", 
                           i, j, x, y, p);
 
