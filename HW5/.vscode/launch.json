@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - TestIf",
+            "request": "launch",
+            "mainClass": "TestIf",
+            "projectName": "HW5_c37b4ef"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - TestWhile",
             "request": "launch",
             "mainClass": "TestWhile",

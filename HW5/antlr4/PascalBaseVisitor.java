@@ -1,4 +1,4 @@
-// Generated from /Users/adanhernandez/Desktop/PRO/FALL 2020/CS 153/Assignment 2/CS153-Compiler-Design/HW5/Pascal.g4 by ANTLR 4.8
+// Generated from /Users/ian/Documents/GitHub/CS153-Compiler-Design/HW5/Pascal.g4 by ANTLR 4.8
 
     package antlr4;
     import java.util.HashMap;

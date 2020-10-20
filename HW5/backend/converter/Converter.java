@@ -3,6 +3,7 @@ package backend.converter;
 import java.util.Hashtable;
 
 import antlr4.*;
+import antlr4.PascalParser.ArgumentContext;
 import antlr4.PascalParser.CaseBranchContext;
 import antlr4.PascalParser.CaseConstantContext;
 import antlr4.PascalParser.CaseStatementContext;
@@ -338,24 +339,24 @@ public class Converter extends PascalBaseVisitor<Object>
     public Object visitRoutineDefinition(
                                     PascalParser.RoutineDefinitionContext ctx) 
     {
-        PascalParser.FunctionHeadContext  funcCtx = ctx.functionHead();
+        PascalParser.FunctionHeadContext  funcCtx = ctx.functionHead(); 
         PascalParser.ProcedureHeadContext procCtx = ctx.procedureHead();
         PascalParser.RoutineIdentifierContext idCtx = null;
         PascalParser.ParametersContext parmsCtx = null;
-        boolean functionDefinition = funcCtx != null;
+        boolean functionDefinition = funcCtx != null; //true if it is a function (returns value), false if procedure (void)
         String routineName;
         
         programVariables = false;
         code.emitLine();
         code.emitStart("static ");
         
-        if (functionDefinition)
+        if (functionDefinition) //if it is a function
         {
             idCtx = funcCtx.routineIdentifier();
             parmsCtx = funcCtx.parameters();
             visit(funcCtx.typeIdentifier());
         }
-        else
+        else //else it is a procedure
         {
             idCtx = procCtx.routineIdentifier();
             parmsCtx = procCtx.parameters();
@@ -1141,7 +1142,7 @@ public class Converter extends PascalBaseVisitor<Object>
         boolean isCompound = ctx.statement().getChild(0) instanceof PascalParser.CompoundStatementContext;
 
 
-       code.emitStart("for(int "+varName+" = ");
+       code.emitStart("for("+varName+" = ");
        code.emit(visit(ctx.expression(0)) + "; ");
        String conditionalBuilder = varName + (countsUp  ?   " <= " : " >= ") + visit(ctx.expression(1))+ "; ";
 
@@ -1154,6 +1155,7 @@ public class Converter extends PascalBaseVisitor<Object>
 
        if(!isCompound) code.indent();
        visit(ctx.statement());
+      
        if(!isCompound) code.dedent();
 
         return null;
@@ -1173,5 +1175,43 @@ public class Converter extends PascalBaseVisitor<Object>
         if (!isCompound) code.dedent();
 
         return null;
+    }
+
+     
+    @Override
+    public Object visitProcedureCallStatement(PascalParser.ProcedureCallStatementContext ctx) { 
+        code.emitStart(ctx.procedureName().getText() + "(");
+
+        String arguments = "";
+
+        if(ctx.argumentList() != null){
+            for(ArgumentContext c: ctx.argumentList().argument()){
+                arguments += ((String) visit(c) + ", ") ;
+            }
+
+            arguments = arguments.substring(0,arguments.length()-2);
+         }
+
+        code.emit(arguments + ");");
+        return null; 
+
+    }
+
+     @Override public Object visitFunctionCall(PascalParser.FunctionCallContext ctx) {
+        code.emit(ctx.functionName().getText() + "(");
+
+        String arguments = "";
+
+        if(ctx.argumentList() != null){
+            for(ArgumentContext c: ctx.argumentList().argument()){
+                arguments += ((String) visit(c) + ", ") ;
+            }
+
+            arguments = arguments.substring(0,arguments.length()-2);
+         }
+
+        code.emit(arguments + ")");
+        return null; 
+        
     }
 }
