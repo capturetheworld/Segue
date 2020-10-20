@@ -3,7 +3,10 @@ package backend.converter;
 import java.util.Hashtable;
 
 import antlr4.*;
-
+import antlr4.PascalParser.CaseBranchContext;
+import antlr4.PascalParser.CaseConstantContext;
+import antlr4.PascalParser.CaseStatementContext;
+import antlr4.PascalParser.IfStatementContext;
 import intermediate.symtab.*;
 import intermediate.type.*;
 import intermediate.type.Typespec.Form;
@@ -1062,6 +1065,113 @@ public class Converter extends PascalBaseVisitor<Object>
             if (i < size-1) code.emitStart();
         }
         
+        return null;
+    }
+
+    @Override
+    public Object visitIfStatement(IfStatementContext ctx)
+    {
+        code.emitStart("if (");
+        code.emit((String) visit(ctx.expression()));
+        code.emitEnd(")");
+      
+        code.emitLine("{");
+        code.indent();
+        code.emitStart();
+        visit(ctx.trueStatement());
+
+        code.dedent();
+        code.emitLine("}");
+        
+        if(ctx.falseStatement() != null){
+            code.emitStart("else");
+            code.emitLine("{");
+            code.indent();
+            code.emitStart();
+            
+            visit(ctx.falseStatement());
+
+            code.dedent();
+            code.emitLine("}");
+        }
+        return null;
+    }
+
+    @Override
+    public Object visitCaseStatement (CaseStatementContext ctx){
+    
+        code.emitStart("switch (");
+        code.emit((String) visit(ctx.expression()));
+        code.emitEnd(")");
+
+        code.emitLine("{");
+        code.indent();
+
+        String p = "";
+        int n = ctx.caseBranchList().caseBranch().size();
+        for(int i = 0; i < n; i++){
+            if(ctx.caseBranchList().caseBranch(i).caseConstantList() != null){
+                for(int j = 0; j < ctx.caseBranchList().caseBranch(i).caseConstantList().caseConstant().size(); j++){
+                    code.emitLine("case " + ctx.caseBranchList().caseBranch(i).caseConstantList().caseConstant(j).getText() + ":");
+                    code.indent();
+                    code.emitStart();
+                    visit(ctx.caseBranchList().caseBranch(i).statement());
+                    code.emitLine("break;");
+                    code.dedent();
+                    
+                }
+            }
+            
+        }
+
+        code.dedent();
+        code.emitLine("}");
+
+        return null;
+    }
+
+    @Override
+    public Object visitForStatement(PascalParser.ForStatementContext ctx) 
+    {
+
+        String varName = (String) visit(ctx.variable());
+        boolean countsUp = ctx.TO() != null; 
+        
+
+        boolean isCompound = ctx.statement().getChild(0) instanceof PascalParser.CompoundStatementContext;
+
+
+       code.emitStart("for(int "+varName+" = ");
+       code.emit(visit(ctx.expression(0)) + "; ");
+       String conditionalBuilder = varName + (countsUp  ?   " <= " : " >= ") + visit(ctx.expression(1))+ "; ";
+
+
+       if(countsUp) conditionalBuilder += (varName + "++")  ; 
+       else conditionalBuilder += (varName + "--");
+
+       code.emit(conditionalBuilder + ") ");
+   
+
+       if(!isCompound) code.indent();
+       visit(ctx.statement());
+       if(!isCompound) code.dedent();
+
+        return null;
+    }
+
+    @Override 
+    public Object visitWhileStatement(PascalParser.WhileStatementContext ctx) 
+    {
+        boolean isCompound = ctx.statement().getChild(0) instanceof PascalParser.CompoundStatementContext;
+        
+        code.emitStart("while (");
+        code.emit((String) visit(ctx.expression()));
+        code.emit(") ");
+
+        if (!isCompound) code.indent();
+        visit(ctx.statement());
+        if (!isCompound) code.dedent();
+
         return null;
     }
 }

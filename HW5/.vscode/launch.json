@@ -1,0 +1,84 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - TestWhile",
+            "request": "launch",
+            "mainClass": "TestWhile",
+            "projectName": "HW5_3dc98890"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - TestCase",
+            "request": "launch",
+            "mainClass": "TestCase",
+            "projectName": "HW5_3dc98890"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - TestIf",
+            "request": "launch",
+            "mainClass": "TestIf",
+            "projectName": "HW5_3dc98890"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - TestFor",
+            "request": "launch",
+            "mainClass": "TestFor",
+            "projectName": "HW5_3dc98890"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Pascal",
+            "request": "launch",
+            "mainClass": "Pascal",
+            "projectName": "HW5_3dc98890"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - TestFor",
+            "request": "launch",
+            "mainClass": "TestFor",
+            "projectName": "HW5_c37b4ef"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Newton3",
+            "request": "launch",
+            "mainClass": "Newton3",
+            "projectName": "HW5_c37b4ef"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch) - Current File",
+            "request": "launch",
+            "mainClass": "${file}",
+            "args": "${command:SpecifyProgramArgs}"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Pascal< HW5_3dc98890>",
+            "request": "launch",
+            "mainClass": "Pascal",
+            "projectName": "HW5_c37b4ef",
+            "args": "${command:SpecifyProgramArgs}"
+        },
+        {
+            "name": "Debug ANTLR4 grammar",
+            "type": "antlr-debug",
+            "request": "launch",
+            "input": "TestCase.pas",
+            "grammar": "Pascal.g4",
+            "startRule": "program",
+            "printParseTree": true,
+            "visualParseTree": true
+        }
+    ]
+ }
+ 
+ 
