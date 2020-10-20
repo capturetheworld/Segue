@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - TestCase",
+            "request": "launch",
+            "mainClass": "TestCase",
+            "projectName": "HW5_ea250b1d"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - TestIf",
+            "request": "launch",
+            "mainClass": "TestIf",
+            "projectName": "HW5_ea250b1d"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - TestProcedure",
             "request": "launch",
             "mainClass": "TestProcedure",
