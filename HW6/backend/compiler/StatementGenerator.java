@@ -89,6 +89,33 @@ public class StatementGenerator extends CodeGenerator
      */
     public void emitIf(PascalParser.IfStatementContext ctx)
     {
+        Label nextLabel = new Label();
+      //  Label thenLabel = new Label();
+        Label falseLabel = null;
+
+
+       // emitLabel(ifLabel);
+        compiler.visit(ctx.expression());
+        if(ctx.ELSE() != null){
+            falseLabel = new Label();
+            emit(IFEQ, falseLabel);
+        }
+        else{
+            emit(IFEQ, nextLabel);
+        }
+        compiler.visit(ctx.trueStatement());
+        if(ctx.ELSE() != null){
+            emit(GOTO, nextLabel);
+            emitLabel(falseLabel);
+            compiler.visit(ctx.falseStatement());
+            emitLabel(nextLabel);
+        }
+        else{
+          //  emit(IFEQ, nextLabel);
+            emitLabel(nextLabel);
+        }
+       
+
         /***** Complete this method. *****/
     }
     
@@ -127,6 +154,14 @@ public class StatementGenerator extends CodeGenerator
     public void emitWhile(PascalParser.WhileStatementContext ctx)
     {
         /***** Complete this method. *****/
+        Label loopLabel = new Label();
+        Label nextLabel = new Label();
+        emitLabel(loopLabel);
+        compiler.visit(ctx.expression());
+        emit(IFNE, nextLabel);
+        compiler.visit(ctx.statement());
+        emit(GOTO, loopLabel);
+        //emitLabel(nextLabel);
     }
     
     /**
