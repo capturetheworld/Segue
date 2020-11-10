@@ -64,7 +64,11 @@ L001:
 L003:
 	iconst_1
 L004:
+<<<<<<< HEAD
 	ifeq	L002
+=======
+	ifne	L002
+>>>>>>> 9ba083d773dc84f2797095f7569bdf75754a7574
 ;
 ; 009 writeln('i = ',i)
 ;
@@ -86,7 +90,10 @@ L004:
 	iconst_1
 	iadd
 	putstatic	TestWhile/i I
+<<<<<<< HEAD
 	goto	L001
+=======
+>>>>>>> 9ba083d773dc84f2797095f7569bdf75754a7574
 L002:
 ;
 ; 013 writeln
@@ -110,7 +117,11 @@ L005:
 L007:
 	iconst_1
 L008:
+<<<<<<< HEAD
 	ifeq	L006
+=======
+	ifne	L006
+>>>>>>> 9ba083d773dc84f2797095f7569bdf75754a7574
 ;
 ; 017 j:=10
 ;
@@ -128,7 +139,11 @@ L009:
 L011:
 	iconst_1
 L012:
+<<<<<<< HEAD
 	ifeq	L010
+=======
+	ifne	L010
+>>>>>>> 9ba083d773dc84f2797095f7569bdf75754a7574
 ;
 ; 020 writeln('i = ',i,', j = ',j)
 ;
@@ -155,7 +170,10 @@ L012:
 	bipush	10
 	iadd
 	putstatic	TestWhile/j I
+<<<<<<< HEAD
 	goto	L009
+=======
+>>>>>>> 9ba083d773dc84f2797095f7569bdf75754a7574
 L010:
 ;
 ; 024 i:=i+1
@@ -164,7 +182,10 @@ L010:
 	iconst_1
 	iadd
 	putstatic	TestWhile/i I
+<<<<<<< HEAD
 	goto	L005
+=======
+>>>>>>> 9ba083d773dc84f2797095f7569bdf75754a7574
 L006:
 
 	invokestatic	java/time/Instant/now()Ljava/time/Instant;

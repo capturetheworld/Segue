@@ -55,7 +55,7 @@ public class TestCase
         }
         System.out.printf("str = '%c'\n", str);
         
-        for(int i = -5; i <= 15; i++) {
+        for(i = -5; i <= 15; i++) {
             
             switch (i)
             {

@@ -12,24 +12,24 @@ public class TestFor
 
 
         
-        for(int i = 1; i <= 5; i++) System.out.printf("i = %d\n", 
-                                                      i);
+        for(i = 1; i <= 5; i++) System.out.printf("i = %d\n", 
+                                                  i);
         System.out.println();
         
-        for(int i = 1; i <= 3; i++) {
+        for(i = 1; i <= 3; i++) {
             
-            for(int j = 4; j >= 1; j--) {
+            for(j = 4; j >= 1; j--) {
                 System.out.printf("i = %d, j = %d\n", i, j);
             }
         }
         System.out.println();
         
-        for(int ch = 'a'; ch <= 'z'; ch++) System.out.printf("%c", 
-                                                             ch);
+        for(ch = 'a'; ch <= 'z'; ch++) System.out.printf("%c", 
+                                                         ch);
         System.out.println();
         
-        for(int ch = 'Z'; ch >= 'A'; ch--) System.out.printf("%c", 
-                                                             ch);
+        for(ch = 'Z'; ch >= 'A'; ch--) System.out.printf("%c", 
+                                                         ch);
         System.out.println();
 
         java.time.Instant _end = java.time.Instant.now();

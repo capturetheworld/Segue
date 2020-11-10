@@ -46,7 +46,7 @@ public class Newton3
         
         for(number = 1; number <= 25; number++) {
             
-            print(root(number)number, null);
+            print(number, root(number));
         }
 
         java.time.Instant _end = java.time.Instant.now();

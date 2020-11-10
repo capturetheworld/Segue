@@ -6,59 +6,45 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - TestCase",
+            "request": "launch",
+            "mainClass": "TestCase",
+            "projectName": "HW5_ea250b1d"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - TestIf",
             "request": "launch",
             "mainClass": "TestIf",
-            "projectName": "HW5_c37b4ef"
+            "projectName": "HW5_ea250b1d"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - TestProcedure",
+            "request": "launch",
+            "mainClass": "TestProcedure",
+            "projectName": "HW5_ea250b1d"
         },
         {
             "type": "java",
             "name": "CodeLens (Launch) - TestWhile",
             "request": "launch",
             "mainClass": "TestWhile",
-            "projectName": "HW5_3dc98890"
-        },
-        {
-            "type": "java",
-            "name": "CodeLens (Launch) - TestCase",
-            "request": "launch",
-            "mainClass": "TestCase",
-            "projectName": "HW5_3dc98890"
-        },
-        {
-            "type": "java",
-            "name": "CodeLens (Launch) - TestIf",
-            "request": "launch",
-            "mainClass": "TestIf",
-            "projectName": "HW5_3dc98890"
+            "projectName": "HW5_ea250b1d"
         },
         {
             "type": "java",
             "name": "CodeLens (Launch) - TestFor",
             "request": "launch",
             "mainClass": "TestFor",
-            "projectName": "HW5_3dc98890"
-        },
-        {
-            "type": "java",
-            "name": "CodeLens (Launch) - Pascal",
-            "request": "launch",
-            "mainClass": "Pascal",
-            "projectName": "HW5_3dc98890"
-        },
-        {
-            "type": "java",
-            "name": "CodeLens (Launch) - TestFor",
-            "request": "launch",
-            "mainClass": "TestFor",
-            "projectName": "HW5_c37b4ef"
+            "projectName": "HW5_ea250b1d"
         },
         {
             "type": "java",
             "name": "CodeLens (Launch) - Newton3",
             "request": "launch",
             "mainClass": "Newton3",
-            "projectName": "HW5_c37b4ef"
+            "projectName": "HW5_ea250b1d"
         },
         {
             "type": "java",
@@ -69,17 +55,17 @@
         },
         {
             "type": "java",
-            "name": "Debug (Launch)-Pascal< HW5_3dc98890>",
+            "name": "Debug (Launch)-Pascal<HW5_ea250b1d>",
             "request": "launch",
             "mainClass": "Pascal",
-            "projectName": "HW5_c37b4ef",
+            "projectName": "HW5_ea250b1d",
             "args": "${command:SpecifyProgramArgs}"
         },
         {
             "name": "Debug ANTLR4 grammar",
             "type": "antlr-debug",
             "request": "launch",
-            "input": "TestCase.pas",
+            "input": "TestCase.txt",
             "grammar": "Pascal.g4",
             "startRule": "program",
             "printParseTree": true,
