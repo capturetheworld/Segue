@@ -99,6 +99,8 @@ L002:
 ;
 ; 017 proc(5)
 ;
+	iconst_5
+	invokestatic	TestFor/proc(I)V
 ;
 ; 019 fori:=1to3dobeginforj:=4downto1dobeginwriteln('i = ',i,', j = ',j);E ...
 ;

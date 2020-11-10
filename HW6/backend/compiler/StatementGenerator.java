@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import antlr4.PascalParser;
+import antlr4.PascalParser.ArgumentContext;
 import antlr4.PascalParser.CaseBranchContext;
 import antlr4.PascalParser.CaseConstantContext;
 import intermediate.symtab.*;
@@ -296,6 +297,10 @@ public class StatementGenerator extends CodeGenerator
      */
     public void emitProcedureCall(PascalParser.ProcedureCallStatementContext ctx)
     {
+        PascalParser.ProcedureNameContext name = ctx.procedureName();
+        SymtabEntry routineId = name.entry;
+        
+        emitCall(routineId, ctx.argumentList());
         /***** Complete this method. *****/
     }
     
@@ -305,6 +310,10 @@ public class StatementGenerator extends CodeGenerator
      */
     public void emitFunctionCall(PascalParser.FunctionCallContext ctx)
     {
+        PascalParser.FunctionNameContext name = ctx.functionName();
+        SymtabEntry routineId = name.entry;
+        
+        emitCall(routineId, ctx.argumentList());
         /***** Complete this method. *****/
     }
     
@@ -316,6 +325,28 @@ public class StatementGenerator extends CodeGenerator
     private void emitCall(SymtabEntry routineId,
                           PascalParser.ArgumentListContext argListCtx)
     {
+
+        if(argListCtx != null){
+            for (ArgumentContext arg : argListCtx.argument()) {
+                compiler.visit(arg);
+            }
+        }
+        String name = routineId.getSymtab().getOwner().getName();
+
+        name += "/";
+        name += routineId.getName();
+        name += "(";
+
+        for (SymtabEntry entry : routineId.getRoutineParameters()) {
+            name += typeDescriptor(entry);
+        }
+
+        name += ")";
+
+        name += typeDescriptor(routineId);
+
+        emit(INVOKESTATIC, name);
+
         /***** Complete this method. *****/
     }
 
