@@ -151,6 +151,7 @@ public class StatementGenerator extends CodeGenerator
             if (k.caseConstantList() !=  null) {
                 emitLabel(v);
                 compiler.visit(k.statement());
+                emit(GOTO, defaultLabel);
             }
         });
 
@@ -192,7 +193,7 @@ public class StatementGenerator extends CodeGenerator
         emit(GOTO, loopLabel);
 
         emitLabel(nextLabel);
-        
+
         /***** Complete this method. *****/
     }
     

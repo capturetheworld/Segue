@@ -98,6 +98,7 @@ L001:
 ;
 	getstatic	TestCase/i I
 	putstatic	TestCase/j I
+	goto	L004
 L002:
 ;
 ; 013 j:=8*i
@@ -106,6 +107,7 @@ L002:
 	getstatic	TestCase/i I
 	imul
 	putstatic	TestCase/j I
+	goto	L004
 L003:
 ;
 ; 014 j:=574*i
@@ -114,6 +116,7 @@ L003:
 	getstatic	TestCase/i I
 	imul
 	putstatic	TestCase/j I
+	goto	L004
 L004:
 ;
 ; 017 writeln('j = ',j)
@@ -144,12 +147,14 @@ L005:
 ;
 	bipush	112
 	putstatic	TestCase/str C
+	goto	L007
 L006:
 ;
 ; 021 str:='q'
 ;
 	bipush	113
 	putstatic	TestCase/str C
+	goto	L007
 L007:
 ;
 ; 024 writeln('str = ''',str,'''')
@@ -204,12 +209,14 @@ L010:
 ;
 	getstatic	TestCase/i I
 	putstatic	TestCase/prime I
+	goto	L013
 L011:
 ;
 ; 029 even:=i
 ;
 	getstatic	TestCase/i I
 	putstatic	TestCase/even I
+	goto	L013
 L012:
 ;
 ; 030 CASEiOF-3,-1,1,9:odd:=i;2,3,5,7,11:prime:=i;END
@@ -232,13 +239,16 @@ L014:
 ;
 	getstatic	TestCase/i I
 	putstatic	TestCase/odd I
+	goto	L016
 L015:
 ;
 ; 032 prime:=i
 ;
 	getstatic	TestCase/i I
 	putstatic	TestCase/prime I
+	goto	L016
 L016:
+	goto	L013
 L013:
 ;
 ; 036 writeln('i = ',i,', even = ',even,', odd = ',odd,', prime = ',prime)
