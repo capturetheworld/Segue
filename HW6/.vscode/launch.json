@@ -9,7 +9,8 @@
             "name": "CodeLens (Launch) - Pascal",
             "request": "launch",
             "mainClass": "Pascal",
-            "projectName": "HW6_c37b4f0"
+            "projectName": "HW6_3dc98891",
+            "args": "${command:SpecifyProgramArgs}"
         },
         {
             "type": "java",

@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.Set;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import antlr4.PascalParser;
-
+import antlr4.PascalParser.CaseBranchContext;
+import antlr4.PascalParser.CaseConstantContext;
 import intermediate.symtab.*;
 import intermediate.type.*;
 import intermediate.type.Typespec.Form;
@@ -89,6 +91,28 @@ public class StatementGenerator extends CodeGenerator
      */
     public void emitIf(PascalParser.IfStatementContext ctx)
     {
+        Label nextLabel = new Label();            
+        Label falseLabel = null;
+
+        compiler.visit(ctx.expression());        
+        if(ctx.ELSE() != null){            
+            falseLabel = new Label();            
+            emit(IFEQ, falseLabel);        
+        }
+        else{
+            emit(IFEQ, nextLabel);
+        }
+        compiler.visit(ctx.trueStatement());
+
+        if(ctx.ELSE() != null){            
+            emit(GOTO, nextLabel);            
+            emitLabel(falseLabel);            
+            compiler.visit(ctx.falseStatement());            
+            emitLabel(nextLabel);        
+        }        
+        else{          
+            emitLabel(nextLabel);        
+        }
         /***** Complete this method. *****/
     }
     
@@ -98,6 +122,39 @@ public class StatementGenerator extends CodeGenerator
      */
     public void emitCase(PascalParser.CaseStatementContext ctx)
     {
+        LinkedHashMap<CaseBranchContext, Label> labelList = new LinkedHashMap<>();
+
+        for (CaseBranchContext c : ctx.caseBranchList().caseBranch()) {
+            if (c.caseConstantList() !=  null) labelList.put(c, new Label());
+        }
+
+        Label defaultLabel = new Label();
+
+        compiler.visit(ctx.expression());
+
+        emit(LOOKUPSWITCH);
+
+        TreeMap<Integer, Label> sortedLabels = new TreeMap<Integer,Label>();
+        labelList.forEach((k, v) -> {
+            if (k.caseConstantList() !=  null) {
+                for (CaseConstantContext c: k.caseConstantList().caseConstant()) {
+                    sortedLabels.put(c.value, v);
+                }
+            }
+        });
+
+        sortedLabels.forEach((k, v) -> emitLabel(k, v));
+
+        emitLabel("default", defaultLabel);
+
+        labelList.forEach((k, v) -> {
+            if (k.caseConstantList() !=  null) {
+                emitLabel(v);
+                compiler.visit(k.statement());
+            }
+        });
+
+        emitLabel(defaultLabel);
         /***** Complete this method. *****/
     }
 
@@ -126,6 +183,15 @@ public class StatementGenerator extends CodeGenerator
      */
     public void emitWhile(PascalParser.WhileStatementContext ctx)
     {
+        Label loopLabel = new Label();
+        Label nextLabel = new Label();
+        emitLabel(loopLabel);
+        compiler.visit(ctx.expression());
+        emit(IFEQ, nextLabel);
+        compiler.visit(ctx.statement());
+        emit(GOTO, loopLabel);
+
+        emitLabel(nextLabel);
         /***** Complete this method. *****/
     }
     
@@ -135,6 +201,90 @@ public class StatementGenerator extends CodeGenerator
      */
     public void emitFor(PascalParser.ForStatementContext ctx)
     {
+        Label loopLabel = new Label();
+        Label nextLabel = new Label();
+
+        // emitLabel(loopLabel);
+
+        PascalParser.VariableContext   varCtx  = ctx.variable();
+        PascalParser.ExpressionContext exprCtx = ctx.expression(0);
+        SymtabEntry varId = varCtx.entry;
+        Typespec varType  = varCtx.type;
+        Typespec exprType = exprCtx.type;
+
+        // The last modifier, if any, is the variable's last subscript or field.
+        int modifierCount = varCtx.modifier().size();
+        PascalParser.ModifierContext lastModCtx = modifierCount == 0
+                            ? null : varCtx.modifier().get(modifierCount - 1);
+
+        // The target variable has subscripts and/or fields.
+        if (modifierCount > 0) 
+        {
+            lastModCtx = varCtx.modifier().get(modifierCount - 1);
+            compiler.visit(varCtx);
+        }
+        
+        // Emit code to evaluate the expression.
+        compiler.visit(exprCtx);
+        
+        // float variable := integer constant
+        if (   (varType == Predefined.realType)
+            && (exprType.baseType() == Predefined.integerType)) emit(I2F);
+        
+        // Emit code to store the expression value into the target variable.
+        // The target variable has no subscripts or fields.
+        if (lastModCtx == null) emitStoreValue(varId, varId.getType());
+
+        // The target variable is a field.
+        else if (lastModCtx.field() != null)
+        {
+            emitStoreValue(lastModCtx.field().entry, lastModCtx.field().type);
+        }
+
+        // The target variable is an array element.
+        else
+        {
+            emitStoreValue(null, varType);
+        }
+
+        // compiler.visit(ctx.variable());
+        // compiler.visit(ctx.expression(0));
+
+        emitLabel(loopLabel);
+
+        emitLoadValue(varId);
+
+        compiler.visit(ctx.expression(1));
+
+        if(ctx.TO() != null){
+            emit(IF_ICMPGT, nextLabel);
+        }
+        else{
+            emit(IF_ICMPLT, nextLabel);
+        }
+
+        // compiler.visit(ctx.expression(1));
+
+        compiler.visit(ctx.statement());
+
+        // emit(IFNE, nextLabel);
+
+        emitLoadValue(varId);
+        emitLoadConstant(1);
+
+        if(ctx.TO() != null){
+            emit(IADD);
+        }
+        else{
+            emit(ISUB);
+        }
+
+        emitStoreValue(varId, varType);
+        
+        emit(GOTO, loopLabel);
+
+        emitLabel(nextLabel);
+
         /***** Complete this method. *****/
     }
     
