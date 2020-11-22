@@ -1,0 +1,1003 @@
+TestWhile.pas
+001 program TestWhile(input, output, error);
+002 
+003 var
+004     i, j : integer;
+005     
+006 begin
+007     i := 1;
+008     while i <= 5 do begin
+009         writeln('i = ', i);
+010         i := i + 1
+011     end;
+012     
+013     writeln;
+014     
+015     i := 1;
+016     while i <= 5 do begin
+017         j := 10;
+018         
+019         while j <= 30 do begin
+020             writeln('i = ', i, ', j = ', j);
+021             j := j + 10
+022         end;
+023         
+024         i := i + 1
+025     end
+026 end.
+
+PASS 1 Syntax: There were no syntax errors.
+
+PASS 2 Semantics:
+
+===== CROSS-REFERENCE TABLE =====
+
+*** PROGRAM TestWhile ***
+
+Identifier       Line numbers    Type specification
+----------       ------------    ------------------
+i                004 007 008 009 010 010 015 016 020 024 024
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: integer
+j                004 017 019 020 021 021
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: integer
+
+PASS 3 Execution:
+
+i = 1
+i = 2
+i = 3
+i = 4
+i = 5
+
+i = 1, j = 10
+i = 1, j = 20
+i = 1, j = 30
+i = 2, j = 10
+i = 2, j = 20
+i = 2, j = 30
+i = 3, j = 10
+i = 3, j = 20
+i = 3, j = 30
+i = 4, j = 10
+i = 4, j = 20
+i = 4, j = 30
+i = 5, j = 10
+i = 5, j = 20
+i = 5, j = 30
+
+                  85 statements executed.
+                   0 runtime errors.
+                   9 milliseconds execution time.
+Jasmin:
+bash-3.2$ java TestWhile
+i = 1
+i = 2
+i = 3
+i = 4
+i = 5
+
+i = 1, j = 10
+i = 1, j = 20
+i = 1, j = 30
+i = 2, j = 10
+i = 2, j = 20
+i = 2, j = 30
+i = 3, j = 10
+i = 3, j = 20
+i = 3, j = 30
+i = 4, j = 10
+i = 4, j = 20
+i = 4, j = 30
+i = 5, j = 10
+i = 5, j = 20
+i = 5, j = 30
+
+[4 milliseconds execution time.]
+TestIf.pas
+scal -execute TestIf.pas 
+001 program TestIf;
+002 
+003 var
+004     i, j, k : integer;
+005     x, y : real;
+006     p, q : boolean;
+007     str, txt : string;
+008     
+009 begin
+010     i := 1;
+011     j := 2;
+012     
+013     IF i = j THEN x := 3.14
+014              ELSE x := -5;
+015      
+016     IF i <> j THEN y := 3.14
+017               ELSE y := -5;
+018     
+019     writeln('i = ', i, ', j = ', j, ', x = ', x:5:2, ', y = ', y:5:2);
+020     
+021     IF i = j THEN BEGIN
+022         x := -7
+023     END 
+024     ELSE BEGIN
+025         x := 8;
+026     END;
+027      
+028     IF i <> j THEN BEGIN
+029         y := 14
+030     END 
+031     ELSE BEGIN
+032         y := -2;
+033     END;
+034     
+035     writeln('i = ', i, ', j = ', j, ', x = ', x:5:2, ', y = ', y:5:2);
+036     
+037     p := i = j;
+038     IF p THEN x := 55.55
+039          ELSE BEGIN
+040             x := 77.77;
+041             y := 88.88;
+042          END;
+043     
+044     writeln('i = ', i, ', j = ', j, ', x = ', x:5:2, ', y = ', y:5:2);
+045     
+046     q := i <= j;
+047     k := 10;
+048     
+049     if p then i := 33 else if not q then i := 44 else if i = j then i := 55 else i := 6;
+050     if not p then if q then j := 9 else j := -9;
+051     if p then if q then k := 11 else k := 12;
+052     
+053     writeln('i = ', i, ', j = ', j, ', x = ', x:5:2, ', y = ', y:5:2);
+054     writeln('k = ', k);
+055     
+056     writeln;
+057     if not p and q and (i <> j) and (x < y) then write('Good-bye');
+058     if not p then if q then if i <> j then if x < y then writeln(', world!');
+059 end.
+
+PASS 1 Syntax: There were no syntax errors.
+
+PASS 2 Semantics:
+
+===== CROSS-REFERENCE TABLE =====
+
+*** PROGRAM TestIf ***
+
+Identifier       Line numbers    Type specification
+----------       ------------    ------------------
+i                004 010 013 016 019 021 028 035 037 044 046 049 049 049 049 049 053 057 058
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: integer
+j                004 011 013 016 019 021 028 035 037 044 046 049 050 050 053 057 058
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: integer
+k                004 047 051 051 054
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: integer
+p                006 037 038 049 050 051 057 058
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: enumeration, Type id: boolean
+q                006 046 049 050 051 057 058
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: enumeration, Type id: boolean
+str              007
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: string
+txt              007
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: string
+x                005 013 014 019 022 025 035 038 040 044 053 057 058
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: real
+y                005 016 017 019 029 032 035 041 044 053 057 058
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: real
+
+PASS 3 Execution:
+
+i = 1, j = 2, x = -5.00, y =  3.14
+i = 1, j = 2, x =  8.00, y = 14.00
+i = 1, j = 2, x = 77.77, y = 88.88
+i = 6, j = 9, x = 77.77, y = 88.88
+k = 10
+
+Good-bye, world!
+
+                  43 statements executed.
+                   0 runtime errors.
+                  10 milliseconds execution time.
+Jasmin :
+bash-3.2$ java TestIf
+i = 1, j = 2, x = -5.00, y =  3.14
+i = 1, j = 2, x =  8.00, y = 14.00
+i = 1, j = 2, x = 77.77, y = 88.88
+i = 6, j = 9, x = 77.77, y = 88.88
+k = 10
+
+Good-bye, world!
+
+[6 milliseconds execution time.]
+
+
+TestFor.pas
+-execute TestFor.pas 
+001 program TestFor;
+002 
+003 var
+004     i, j : integer;
+005     ch : char;
+006     
+007 procedure proc(limit : integer);
+008     var
+009         i : integer;
+010         
+011     begin
+012         for i := 1 to limit do writeln('i = ', i);
+013         writeln;
+014     end;
+015     
+016 begin
+017     proc(5);
+018     
+019     for i := 1 to 3 do begin
+020         for j := 4 downto 1 do begin
+021             writeln('i = ', i, ', j = ', j);
+022         END
+023     end;
+024     
+025     writeln;
+026     
+027     for ch := 'a' to 'z' do write(ch);
+028     writeln;
+029     
+030     for ch := 'Z' DOWNto 'A' do write(ch);
+031     writeln;
+032 end.
+
+PASS 1 Syntax: There were no syntax errors.
+
+PASS 2 Semantics:
+
+===== CROSS-REFERENCE TABLE =====
+
+*** PROGRAM TestFor ***
+
+Identifier       Line numbers    Type specification
+----------       ------------    ------------------
+ch               005 027 027 030 030
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: char
+i                004 019 021
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: integer
+j                004 020 021
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: integer
+proc            
+                                 Kind: procedure
+                                 Scope nesting level: 1
+
+*** PROCEDURE proc ***
+
+Identifier       Line numbers    Type specification
+----------       ------------    ------------------
+i                009 012 012
+                                 Kind: variable
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: integer
+limit            007 012
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: integer
+
+PASS 3 Execution:
+
+i = 1
+i = 2
+i = 3
+i = 4
+i = 5
+
+i = 1, j = 4
+i = 1, j = 3
+i = 1, j = 2
+i = 1, j = 1
+i = 2, j = 4
+i = 2, j = 3
+i = 2, j = 2
+i = 2, j = 1
+i = 3, j = 4
+i = 3, j = 3
+i = 3, j = 2
+i = 3, j = 1
+
+abcdefghijklmnopqrstuvwxyz
+ZYXWVUTSRQPONMLKJIHGFEDCBA
+
+                 110 statements executed.
+                   0 runtime errors.
+                   9 milliseconds execution time.
+Jasmin:
+bash-3.2$ java TestFor
+i = 1
+i = 2
+i = 3
+i = 4
+i = 5
+
+i = 1, j = 4
+i = 1, j = 3
+i = 1, j = 2
+i = 1, j = 1
+i = 2, j = 4
+i = 2, j = 3
+i = 2, j = 2
+i = 2, j = 1
+i = 3, j = 4
+i = 3, j = 3
+i = 3, j = 2
+i = 3, j = 1
+
+abcdefghijklmnopqrstuvwxyz
+ZYXWVUTSRQPONMLKJIHGFEDCBA
+
+[6 milliseconds execution time.]
+
+TestCase.pas
+-execute TestCase.pas 
+001 PROGRAM TestCase;
+002 
+003 VAR
+004     i, j, even, odd, prime : integer;
+005     ch, str : char;
+006 
+007 BEGIN
+008     i := 3;  ch := 'b';
+009     even := -990; odd := -999; prime := 0;
+010 
+011     CASE i+1 OF
+012         1:       j := i;
+013         -8:      j := 8*i;
+014         5, 7, 4: j := 574*i;
+015     END;
+016     
+017     writeln('j = ', j);
+018 
+019     CASE ch OF
+020         'c', 'b' : str := 'p';
+021         'a'      : str := 'q'
+022     END;
+023 
+024     writeln('str = ''', str, '''');
+025 
+026     FOR i := -5 TO 15 DO BEGIN
+027         CASE i OF
+028             2: prime := i;
+029             -4, -2, 0, 4, 6, 8, 10, 12: even := i;
+030             -3, -1, 1, 3, 5, 7, 9, 11:  CASE i OF
+031                                             -3, -1, 1, 9:   odd := i;
+032                                             2, 3, 5, 7, 11: prime := i;
+033                                         END
+034         END;
+035 
+036         writeln('i = ', i, ', even = ', even, ', odd = ', odd,
+037                 ', prime = ', prime);
+038     END
+039 END.
+
+PASS 1 Syntax: There were no syntax errors.
+
+PASS 2 Semantics:
+
+===== CROSS-REFERENCE TABLE =====
+
+*** PROGRAM TestCase ***
+
+Identifier       Line numbers    Type specification
+----------       ------------    ------------------
+ch               005 008 019
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: char
+even             004 009 029 036
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: integer
+i                004 008 011 012 013 014 026 027 028 029 030 031 032 036
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: integer
+j                004 012 013 014 017
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: integer
+odd              004 009 031 036
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: integer
+prime            004 009 028 032 037
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: integer
+str              005 020 021 024
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: char
+
+PASS 3 Execution:
+
+j = 1722
+str = 'p'
+i = -5, even = -990, odd = -999, prime = 0
+i = -4, even = -4, odd = -999, prime = 0
+i = -3, even = -4, odd = -3, prime = 0
+i = -2, even = -2, odd = -3, prime = 0
+i = -1, even = -2, odd = -1, prime = 0
+i = 0, even = 0, odd = -1, prime = 0
+i = 1, even = 0, odd = 1, prime = 0
+i = 2, even = 0, odd = 1, prime = 2
+i = 3, even = 0, odd = 1, prime = 3
+i = 4, even = 4, odd = 1, prime = 3
+i = 5, even = 4, odd = 1, prime = 5
+i = 6, even = 6, odd = 1, prime = 5
+i = 7, even = 6, odd = 1, prime = 7
+i = 8, even = 8, odd = 1, prime = 7
+i = 9, even = 8, odd = 9, prime = 7
+i = 10, even = 10, odd = 9, prime = 7
+i = 11, even = 10, odd = 9, prime = 11
+i = 12, even = 12, odd = 9, prime = 11
+i = 13, even = 12, odd = 9, prime = 11
+i = 14, even = 12, odd = 9, prime = 11
+i = 15, even = 12, odd = 9, prime = 11
+
+                 121 statements executed.
+                   0 runtime errors.
+                  13 milliseconds execution time.
+Jasmin:
+java TestCase
+j = 1722
+str = 'p'
+i = -5, even = -990, odd = -999, prime = 0
+i = -4, even = -4, odd = -999, prime = 0
+i = -3, even = -4, odd = -3, prime = 0
+i = -2, even = -2, odd = -3, prime = 0
+i = -1, even = -2, odd = -1, prime = 0
+i = 0, even = 0, odd = -1, prime = 0
+i = 1, even = 0, odd = 1, prime = 0
+i = 2, even = 0, odd = 1, prime = 2
+i = 3, even = 0, odd = 1, prime = 3
+i = 4, even = 4, odd = 1, prime = 3
+i = 5, even = 4, odd = 1, prime = 5
+i = 6, even = 6, odd = 1, prime = 5
+i = 7, even = 6, odd = 1, prime = 7
+i = 8, even = 8, odd = 1, prime = 7
+i = 9, even = 8, odd = 9, prime = 7
+i = 10, even = 10, odd = 9, prime = 7
+i = 11, even = 10, odd = 9, prime = 11
+i = 12, even = 12, odd = 9, prime = 11
+i = 13, even = 12, odd = 9, prime = 11
+i = 14, even = 12, odd = 9, prime = 11
+i = 15, even = 12, odd = 9, prime = 11
+
+[6 milliseconds execution time.]
+
+TestProcedure.pas
+-execute TestProcedure.pas 
+001 PROGRAM TestProcedure(input, output);
+002 
+003 VAR
+004     i, j : integer;
+005     x, y : real;
+006     p : boolean;
+007 
+008 PROCEDURE alpha(m, n : integer; r : real; k, o : integer; 
+009                 w, z : real; q : boolean);
+010 
+011     VAR a, b, c : real;
+012         i : integer;
+013         
+014     BEGIN
+015         a := 1; b := 2;
+016         c := a*b - w/z;
+017          
+018         i := 3;
+019         k := k + i + j + n;
+020         q := not p or (i = j) and (w > 2) and (w/z = 1.5);
+021         z := r;
+022         
+023         writeln('alpha parms:  m = ', m, ', n = ', n, ', r = ', r:4:2, 
+024                 ', k = ', k, ', o = ', o, ', w = ', w:4:2, ', z = ', z:4:2, 
+025                 ', q = ', q); 
+026         writeln('alpha locals: a = ', a:4:2, ', b = ', b:4:2, ', c = ', c:4:2,
+027                 ', i = ', i);
+028     END;
+029    
+030 procedure beta;
+031 
+032     var i, j : real;
+033     
+034     begin
+035         i := 22; j := 44;
+036         writeln('beta locals:  Hello, world! ', i+j:4:2);
+037     end;
+038   
+039 PROCEDURE gamma(i, n : integer; x, r : real);
+040 
+041     VAR a, b, c : real;
+042 
+043     BEGIN
+044         a := i + n; 
+045         b := i*x + r;
+046         c := i;
+047         i := i + n;
+048         
+049         writeln('gamma parms:  i = ', i, ', n = ', n, ', x = ', x:4:2, ', r = ', r:4:2);
+050         writeln('gamma locals: a = ', a:4:2, ', b = ', b:4:2, ', c = ', c:4:2); 
+051                 
+052         
+053     END;    
+054   
+055 BEGIN
+056     i := 5; j := 7;
+057     x := 3; y := 2;
+058     p := false;
+059     writeln('main:         i = ', i, ', j = ', j, ', x = ', x:4:2, ', y = ', y:4:2, ', p = ', p);
+060 
+061     alpha(6, i - 3, 
+062           x + y/i, 
+063           i, j, 
+064           x, y, 
+065           p);
+066     writeln('main:         i = ', i, ', j = ', j, ', x = ', x:4:2, ', y = ', y:4:2, ', p = ', p);
+067 
+068     beta();
+069     writeln('main:         i = ', i, ', j = ', j, ', x = ', x:4:2, ', y = ', y:4:2, ', p = ', p);
+070 
+071     gamma(i, j, 
+072           i/x, i*j);
+073     writeln('main:         i = ', i, ', j = ', j, ', x = ', x:4:2, ', y = ', y:4:2, ', p = ', p);
+074 END.
+
+PASS 1 Syntax: There were no syntax errors.
+
+PASS 2 Semantics:
+
+===== CROSS-REFERENCE TABLE =====
+
+*** PROGRAM TestProcedure ***
+
+Identifier       Line numbers    Type specification
+----------       ------------    ------------------
+alpha           
+                                 Kind: procedure
+                                 Scope nesting level: 1
+beta            
+                                 Kind: procedure
+                                 Scope nesting level: 1
+gamma           
+                                 Kind: procedure
+                                 Scope nesting level: 1
+i                004 056 059 061 062 063 066 069 071 072 072 073
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: integer
+j                004 019 020 056 059 063 066 069 071 072 073
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: integer
+p                006 020 058 059 065 066 069 073
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: enumeration, Type id: boolean
+x                005 057 059 062 064 066 069 072 073
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: real
+y                005 057 059 062 064 066 069 073
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: real
+
+*** PROCEDURE alpha ***
+
+Identifier       Line numbers    Type specification
+----------       ------------    ------------------
+a                011 015 016 026
+                                 Kind: variable
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+b                011 015 016 026
+                                 Kind: variable
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+c                011 016 026
+                                 Kind: variable
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+i                012 018 019 020 027
+                                 Kind: variable
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: integer
+k                008 019 019 024
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: integer
+m                008 023
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: integer
+n                008 019 023
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: integer
+o                008 024
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: integer
+q                009 020 025
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: enumeration, Type id: boolean
+r                008 021 023
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+w                009 016 020 020 024
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+z                009 016 020 021 024
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+
+*** PROCEDURE beta ***
+
+Identifier       Line numbers    Type specification
+----------       ------------    ------------------
+i                032 035 036
+                                 Kind: variable
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+j                032 035 036
+                                 Kind: variable
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+
+*** PROCEDURE gamma ***
+
+Identifier       Line numbers    Type specification
+----------       ------------    ------------------
+a                041 044 050
+                                 Kind: variable
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+b                041 045 050
+                                 Kind: variable
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+c                041 046 050
+                                 Kind: variable
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+i                039 044 045 046 047 047 049
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: integer
+n                039 044 047 049
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: integer
+r                039 045 049
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+x                039 045 049
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+
+PASS 3 Execution:
+
+main:         i = 5, j = 7, x = 3.00, y = 2.00, p = false
+alpha parms:  m = 6, n = 2, r = 3.40, k = 17, o = 7, w = 3.00, z = 3.40, q = true
+alpha locals: a = 1.00, b = 2.00, c = 0.50, i = 3
+main:         i = 5, j = 7, x = 3.00, y = 2.00, p = false
+beta locals:  Hello, world! 66.00
+main:         i = 5, j = 7, x = 3.00, y = 2.00, p = false
+gamma parms:  i = 12, n = 7, x = 1.67, r = 35.00
+gamma locals: a = 12.00, b = 43.33, c = 5.00
+main:         i = 5, j = 7, x = 3.00, y = 2.00, p = false
+
+                  34 statements executed.
+                   0 runtime errors.
+                  18 milliseconds execution time.
+Jasmin:
+We got stack size problem. Here is the compile result and the error message
+-compile TestProcedure.pas 
+001 PROGRAM TestProcedure(input, output);
+002 
+003 VAR
+004     i, j : integer;
+005     x, y : real;
+006     p : boolean;
+007 
+008 PROCEDURE alpha(m, n : integer; r : real; k, o : integer; 
+009                 w, z : real; q : boolean);
+010 
+011     VAR a, b, c : real;
+012         i : integer;
+013         
+014     BEGIN
+015         a := 1; b := 2;
+016         c := a*b - w/z;
+017          
+018         i := 3;
+019         k := k + i + j + n;
+020         q := not p or (i = j) and (w > 2) and (w/z = 1.5);
+021         z := r;
+022         
+023         writeln('alpha parms:  m = ', m, ', n = ', n, ', r = ', r:4:2, 
+024                 ', k = ', k, ', o = ', o, ', w = ', w:4:2, ', z = ', z:4:2, 
+025                 ', q = ', q); 
+026         writeln('alpha locals: a = ', a:4:2, ', b = ', b:4:2, ', c = ', c:4:2,
+027                 ', i = ', i);
+028     END;
+029    
+030 procedure beta;
+031 
+032     var i, j : real;
+033     
+034     begin
+035         i := 22; j := 44;
+036         writeln('beta locals:  Hello, world! ', i+j:4:2);
+037     end;
+038   
+039 PROCEDURE gamma(i, n : integer; x, r : real);
+040 
+041     VAR a, b, c : real;
+042 
+043     BEGIN
+044         a := i + n; 
+045         b := i*x + r;
+046         c := i;
+047         i := i + n;
+048         
+049         writeln('gamma parms:  i = ', i, ', n = ', n, ', x = ', x:4:2, ', r = ', r:4:2);
+050         writeln('gamma locals: a = ', a:4:2, ', b = ', b:4:2, ', c = ', c:4:2); 
+051                 
+052         
+053     END;    
+054   
+055 BEGIN
+056     i := 5; j := 7;
+057     x := 3; y := 2;
+058     p := false;
+059     writeln('main:         i = ', i, ', j = ', j, ', x = ', x:4:2, ', y = ', y:4:2, ', p = ', p);
+060 
+061     alpha(6, i - 3, 
+062           x + y/i, 
+063           i, j, 
+064           x, y, 
+065           p);
+066     writeln('main:         i = ', i, ', j = ', j, ', x = ', x:4:2, ', y = ', y:4:2, ', p = ', p);
+067 
+068     beta();
+069     writeln('main:         i = ', i, ', j = ', j, ', x = ', x:4:2, ', y = ', y:4:2, ', p = ', p);
+070 
+071     gamma(i, j, 
+072           i/x, i*j);
+073     writeln('main:         i = ', i, ', j = ', j, ', x = ', x:4:2, ', y = ', y:4:2, ', p = ', p);
+074 END.
+
+PASS 1 Syntax: There were no syntax errors.
+
+PASS 2 Semantics:
+
+===== CROSS-REFERENCE TABLE =====
+
+*** PROGRAM TestProcedure ***
+
+Identifier       Line numbers    Type specification
+----------       ------------    ------------------
+alpha           
+                                 Kind: procedure
+                                 Scope nesting level: 1
+beta            
+                                 Kind: procedure
+                                 Scope nesting level: 1
+gamma           
+                                 Kind: procedure
+                                 Scope nesting level: 1
+i                004 056 059 061 062 063 066 069 071 072 072 073
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: integer
+j                004 019 020 056 059 063 066 069 071 072 073
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: integer
+p                006 020 058 059 065 066 069 073
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: enumeration, Type id: boolean
+x                005 057 059 062 064 066 069 072 073
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: real
+y                005 057 059 062 064 066 069 073
+                                 Kind: variable
+                                 Scope nesting level: 1
+                                 Type form: scalar, Type id: real
+
+*** PROCEDURE alpha ***
+
+Identifier       Line numbers    Type specification
+----------       ------------    ------------------
+a                011 015 016 026
+                                 Kind: variable
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+b                011 015 016 026
+                                 Kind: variable
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+c                011 016 026
+                                 Kind: variable
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+i                012 018 019 020 027
+                                 Kind: variable
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: integer
+k                008 019 019 024
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: integer
+m                008 023
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: integer
+n                008 019 023
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: integer
+o                008 024
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: integer
+q                009 020 025
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: enumeration, Type id: boolean
+r                008 021 023
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+w                009 016 020 020 024
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+z                009 016 020 021 024
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+
+*** PROCEDURE beta ***
+
+Identifier       Line numbers    Type specification
+----------       ------------    ------------------
+i                032 035 036
+                                 Kind: variable
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+j                032 035 036
+                                 Kind: variable
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+
+*** PROCEDURE gamma ***
+
+Identifier       Line numbers    Type specification
+----------       ------------    ------------------
+a                041 044 050
+                                 Kind: variable
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+b                041 045 050
+                                 Kind: variable
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+c                041 046 050
+                                 Kind: variable
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+i                039 044 045 046 047 047 049
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: integer
+n                039 044 047 049
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: integer
+r                039 045 049
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+x                039 045 049
+                                 Kind: value parameter
+                                 Scope nesting level: 2
+                                 Type form: scalar, Type id: real
+
+PASS 3 Compilation: Object file "TestProcedure.j" created.
+bash-3.2$ java -jar /Users/tony/Downloads/jasmin-2.4/jasmin.jar /Users/tony/CS153/proj-repository/CS153-Compiler-Design/HW6/TestProcedure.jGenerated: TestProcedure.classbash-3.2$ java TestProcedure
+Error: A JNI error has occurred, please check your installation and try again
+Exception in thread "main" java.lang.VerifyError: (class: TestProcedure, method: main signature: ([Ljava/lang/String;)V) Stack size too large
+        at java.lang.Class.getDeclaredMethods0(Native Method)
+        at java.lang.Class.privateGetDeclaredMethods(Class.java:2701)
+        at java.lang.Class.privateGetMethodRecursive(Class.java:3048)
+        at java.lang.Class.getMethod0(Class.java:3018)
+        at java.lang.Class.getMethod(Class.java:1784)
+        at sun.launcher.LauncherHelper.validateMainClass(LauncherHelper.java:544)
+        at sun.launcher.LauncherHelper.checkAndLoadMain(LauncherHelper.java:526)
+
+Newton3.pas
+PASS 3 Execution:
+
+The square root of    1 is   1.0000
+The square root of    2 is   1.4142
+The square root of    3 is   1.7321
+The square root of    4 is   2.0000
+The square root of    5 is   2.2361
+The square root of    6 is   2.4495
+The square root of    7 is   2.6458
+The square root of    8 is   2.8284
+The square root of    9 is   3.0000
+The square root of   10 is   3.1623
+The square root of   11 is   3.3166
+The square root of   12 is   3.4641
+The square root of   13 is   3.6056
+The square root of   14 is   3.7417
+The square root of   15 is   3.8730
+The square root of   16 is   4.0000
+The square root of   17 is   4.1231
+The square root of   18 is   4.2426
+The square root of   19 is   4.3589
+The square root of   20 is   4.4721
+The square root of   21 is   4.5826
+The square root of   22 is   4.6904
+The square root of   23 is   4.7958
+The square root of   24 is   4.8990
+The square root of   25 is   5.0000
+
+                 960 statements executed.
+                   0 runtime errors.
+                  38 milliseconds execution time.
+Jasmin
+
+java -jar /Users/tony/Downloads/jasmin-2.4/jasmin.jar /Users/tony/CS153/proj-repository/CS153-Compiler-Design/HW6/Newton3.jGenerated: Newton3.classbash-3.2$ java Newton3
+Error: A JNI error has occurred, please check your installation and try again
+Exception in thread "main" java.lang.VerifyError: (class: Newton3, method: main signature: ([Ljava/lang/String;)V) Expecting to find float on stack
+        at java.lang.Class.getDeclaredMethods0(Native Method)
+        at java.lang.Class.privateGetDeclaredMethods(Class.java:2701)
+        at java.lang.Class.privateGetMethodRecursive(Class.java:3048)
+        at java.lang.Class.getMethod0(Class.java:3018)
+        at java.lang.Class.getMethod(Class.java:1784)
+        at sun.launcher.LauncherHelper.validateMainClass(LauncherHelper.java:544)
+        at sun.launcher.LauncherHelper.checkAndLoadMain(LauncherHelper.java:526)
