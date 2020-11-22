@@ -1,0 +1,6 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "/Users/ian/.vscode/extensions/mike-lischke.vscode-antlr4-2.2.4/antlr/antlr-4.8-complete.jar"
+    ]
+}
