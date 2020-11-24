@@ -8,45 +8,60 @@ grammar Segfault;
 }
 
 
-STARTPGM : '{' ;
-program           : STARTPGM statement+ ENDPGM ;
-ENDPGM : '}' ;
-programHeader     : programIdentifier programParameters? ';' ; 
-programParameters : '(' IDENTIFIER ( ',' IDENTIFIER )* ')' ;   //not sure about this part
+//STARTPGM : '{' ;
+program           :  statement+  ;
 
-programIdentifier   locals [ SymtabEntry entry = null ]
-    : IDENTIFIER ;
+
+// ENDPGM : '}' ;
+//programHeader     : programIdentifier programParameters? ';' ; 
+//programParameters : '(' IDENTIFIER ( ',' IDENTIFIER )* ')' ;   //not sure about this part
+
+//rogramIdentifier   locals [ SymtabEntry entry = null ]
+    //: IDENTIFIER ;
+
+
+	// ♪♬(1)
+	// music: '♬' | NOTE;
+	// NOTE: N O T E;
+
+	// A: 'a' | 'A';
+	// EXPRESSION: E|e X|x P|p R E S S I O N;
 
 
 
 statement:  assignmentStatement
-            |ifstatement
-            |whilestatement
-            |printlnstatement;
-ifstatement:  expression '(' truestatement ')' (else falsestatement)?;
+            |ifStatement
+            |whileStatement
+            |printStatement
+            |commentStatement
+            ;
+
 assignmentStatement :  left':=' expression | booleanConstant ;// $x =
-expression: ; // TODO
-truestatement : statement;
-falsestatement : statement;
-
-whilestatement : WHILE '(' expression ')' statement;
-
+ifStatement:  ;
+whileStatement : ;
+printStatement : ;
 
 
 left locals [Typespec type = null] : var;
-
-printlnstatement : ; //todo
 var            locals [ Typespec type = null, SymtabEntry entry = null ] 
     : '$' varIdentifier expression ;  // e.g. $x = 4 
 varIdentifier : IDENTIFIER;
 
 
-number          : sign? unsignedNumber ;
-unsignedNumber  : doubleConstant ;
-doubleConstant : DOUBLE ;
+numberConstant  : sign? unsignedNumber ;
+unsignedNumber  : unsignedDouble | unsignedInteger ;
+unsignedDouble  : DOUBLE; //see double values
+unsignedInteger : INTEGER; //see integer values
+booleanConstant: BOOLEAN ; //see boolean values
 
 
-booleanConstant: true | false ; // boolean type is optional
+/////////////////VALUES///////////////////
+IDENTIFIER : [a-zA-Z][a-zA-Z0-9]* ;
+LETTER     : [a-zA-Z]*;
+INTEGER    : [0-9]+ ;
+DOUBLE     : [0.00-9.99]+ ;// format?
+BOOLEAN    : [true|false];  
+
 
 
 relOp : '=' | '<>' | '<' | '<=' | '>' | '>=' ;
@@ -86,6 +101,8 @@ fragment X : ('x' | 'X') ;
 fragment Y : ('y' | 'Y') ;
 fragment Z : ('z' | 'Z') ;
 
+
+
 PROGRAM   : P R O G R A M ;
 CONST     : C O N S T ;
 TYPE      : T Y P E ;
@@ -110,9 +127,8 @@ PROCEDURE : P R O C E D U R E ;
 FUNCTION  : F U N C T I O N ;
 WHILE  : W H I L E ;
 
-IDENTIFIER : [a-zA-Z][a-zA-Z0-9]* ;
-//INTEGER    : [0-9]+ ;
-DOUBLE : [0.00-9.99]+ ;// format?
+
+
 //BOOLEAN : // ?
 
 //QUOTE     : '\'' ;
