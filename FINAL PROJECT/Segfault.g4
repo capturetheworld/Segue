@@ -9,7 +9,7 @@ grammar Segfault;
 
 
 STARTPGM : '{' ;
-program           : STARTPGM programHeader ENDPGM ;
+program           : STARTPGM statement+ ENDPGM ;
 ENDPGM : '}' ;
 programHeader     : programIdentifier programParameters? ';' ; 
 programParameters : '(' IDENTIFIER ( ',' IDENTIFIER )* ')' ;   //not sure about this part
@@ -18,21 +18,19 @@ programIdentifier   locals [ SymtabEntry entry = null ]
     : IDENTIFIER ;
 
 
-statement: compoundstatement // may not need this one 
-            |assignmentStatement
+
+statement:  assignmentStatement
             |ifstatement
             |whilestatement
-            |truestatement
-            |falsestatement
-            |printlnstatement
-            ;
+            |printlnstatement;
 ifstatement:  expression '(' truestatement ')' (else falsestatement)?;
 assignmentStatement :  left':=' expression | booleanConstant ;// $x =
 expression: ; // TODO
 truestatement : statement;
 falsestatement : statement;
 
-whilestatement : while '(' expression ')' statement;
+whilestatement : WHILE '(' expression ')' statement;
+
 
 
 left locals [Typespec type = null] : var;
@@ -44,12 +42,12 @@ varIdentifier : IDENTIFIER;
 
 
 number          : sign? unsignedNumber ;
-unsignedNumber  : doubleConstant | realConstant ;
+unsignedNumber  : doubleConstant ;
 doubleConstant : DOUBLE ;
-realConstant    : REAL;
+
 
 booleanConstant: true | false ; // boolean type is optional
-stringConstant: STRING;
+
 
 relOp : '=' | '<>' | '<' | '<=' | '>' | '>=' ;
 //addOp : '+' | '-' | ;  // basic arithmatic operations
@@ -110,22 +108,23 @@ DO        : D O ;
 println   : P R I N T L N;
 PROCEDURE : P R O C E D U R E ;
 FUNCTION  : F U N C T I O N ;
+WHILE  : W H I L E ;
 
 IDENTIFIER : [a-zA-Z][a-zA-Z0-9]* ;
 //INTEGER    : [0-9]+ ;
-DOUBLE : [0.00-9.99]+ // format?
-BOOLEAN : // ?
+DOUBLE : [0.00-9.99]+ ;// format?
+//BOOLEAN : // ?
 
-QUOTE     : '\'' ;
+//QUOTE     : '\'' ;
 
-STRING    : QUOTE STRING_CHAR* QUOTE ;
+//STRING    : QUOTE STRING_CHAR* QUOTE ;
 
-fragment CHARACTER_CHAR : ~('\'')   // any non-quote character
-                        ;
+// fragment CHARACTER_CHAR : ~('\'')   // any non-quote character
+//                         ;
 
-fragment STRING_CHAR : QUOTE QUOTE  // two consecutive quotes
-                     | ~('\'')      // any non-quote character
-                     ;
+// fragment STRING_CHAR : QUOTE QUOTE  // two consecutive quotes
+//                      | ~('\'')      // any non-quote character
+//                      ;
 
 COMMENT : '{' COMMENT_CHARACTER* '}' -> skip ;// todo: change the symbol to "~"
 
