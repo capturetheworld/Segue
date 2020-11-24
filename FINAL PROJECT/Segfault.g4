@@ -36,7 +36,7 @@ statement:  assignmentStatement
             |commentStatement
             ;
 
-assignmentStatement :  left':=' expression | booleanConstant ;// $x =
+assignmentStatement :  booleanassignment |  doubleassignment; 
 ifStatement:  ;
 whileStatement : ;
 printStatement : ;
@@ -56,11 +56,12 @@ booleanConstant: BOOLEAN ; //see boolean values
 
 
 /////////////////VALUES///////////////////
-IDENTIFIER : [a-zA-Z][a-zA-Z0-9]* ;
-LETTER     : [a-zA-Z]*;
+IDENTIFIER : [a-zA-Z][a-zA-Z0-9]+ ;
+LETTER     : [a-zA-Z]+;
 INTEGER    : [0-9]+ ;
-DOUBLE     : [0.00-9.99]+ ;// format?
+DOUBLE     : [0-9]*'.'[0-9]+ ;// format? 9.991.23
 BOOLEAN    : [true|false];  
+VARTYPE    : '$' | '#';
 
 
 
