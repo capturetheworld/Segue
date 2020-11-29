@@ -12,17 +12,23 @@ grammar Segfault;
 program           :  statement+  ;
 
 statement:  assignmentStatement
-            // |ifStatement
-            // |whileStatement
+            
+            | ifStatement
+           |  whileStatement
             // |printStatement
             // |commentStatement
             ;
 
 assignmentStatement locals [ Typespec type = null, SymtabEntry entry = null ] 
                     :  boolSymbol IDENTIFIER '=' booleanConstant | doubleSymbol IDENTIFIER '=' numberConstant; 
-ifStatement:  ;
-whileStatement : ;
+ifStatement:   IF '(' expression ')' '{' truestatement'}' ELSE '{'falsestatement '}'; // or ()
+whileStatement : WHILE '(' expression ')' '{' statement'}';
 printStatement : ;
+
+truestatement:statement | ;
+falsestatement: statement ;
+
+//expression: ;
 
 
 // left locals [Typespec type = null] : var;
@@ -94,9 +100,9 @@ DIV       : D I V ; // ?
 AND       : A N D ;
 OR        : O R ;
 NOT       : N O T ;
-// if        : I F  ;
+ IF        : I F  ;
 THEN      : T H E N ;
-// else      : E L S E ;
+ELSE      : E L S E ;
 UNTIL     : U N T I L ;
 // while     : W H I L E ;
 TRUE      : T R U E;
