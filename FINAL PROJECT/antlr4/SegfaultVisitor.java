@@ -22,35 +22,11 @@ public interface SegfaultVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitProgram(SegfaultParser.ProgramContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#programHeader}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitProgramHeader(SegfaultParser.ProgramHeaderContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#programParameters}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitProgramParameters(SegfaultParser.ProgramParametersContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#programIdentifier}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitProgramIdentifier(SegfaultParser.ProgramIdentifierContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link SegfaultParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitStatement(SegfaultParser.StatementContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#ifstatement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIfstatement(SegfaultParser.IfstatementContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SegfaultParser#assignmentStatement}.
 	 * @param ctx the parse tree
@@ -58,59 +34,35 @@ public interface SegfaultVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAssignmentStatement(SegfaultParser.AssignmentStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#expression}.
+	 * Visit a parse tree produced by {@link SegfaultParser#ifStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitExpression(SegfaultParser.ExpressionContext ctx);
+	T visitIfStatement(SegfaultParser.IfStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#truestatement}.
+	 * Visit a parse tree produced by {@link SegfaultParser#whileStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitTruestatement(SegfaultParser.TruestatementContext ctx);
+	T visitWhileStatement(SegfaultParser.WhileStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#falsestatement}.
+	 * Visit a parse tree produced by {@link SegfaultParser#printStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFalsestatement(SegfaultParser.FalsestatementContext ctx);
+	T visitPrintStatement(SegfaultParser.PrintStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#whilestatement}.
+	 * Visit a parse tree produced by {@link SegfaultParser#booleanConstant}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitWhilestatement(SegfaultParser.WhilestatementContext ctx);
+	T visitBooleanConstant(SegfaultParser.BooleanConstantContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#left}.
+	 * Visit a parse tree produced by {@link SegfaultParser#numberConstant}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitLeft(SegfaultParser.LeftContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#printlnstatement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPrintlnstatement(SegfaultParser.PrintlnstatementContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#var}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitVar(SegfaultParser.VarContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#varIdentifier}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitVarIdentifier(SegfaultParser.VarIdentifierContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#number}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNumber(SegfaultParser.NumberContext ctx);
+	T visitNumberConstant(SegfaultParser.NumberConstantContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SegfaultParser#unsignedNumber}.
 	 * @param ctx the parse tree
@@ -118,17 +70,29 @@ public interface SegfaultVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitUnsignedNumber(SegfaultParser.UnsignedNumberContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#doubleConstant}.
+	 * Visit a parse tree produced by {@link SegfaultParser#unsignedintegerConstant}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDoubleConstant(SegfaultParser.DoubleConstantContext ctx);
+	T visitUnsignedintegerConstant(SegfaultParser.UnsignedintegerConstantContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#booleanConstant}.
+	 * Visit a parse tree produced by {@link SegfaultParser#unsigneddoubleConstant}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitBooleanConstant(SegfaultParser.BooleanConstantContext ctx);
+	T visitUnsigneddoubleConstant(SegfaultParser.UnsigneddoubleConstantContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#boolSymbol}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBoolSymbol(SegfaultParser.BoolSymbolContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#doubleSymbol}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDoubleSymbol(SegfaultParser.DoubleSymbolContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SegfaultParser#relOp}.
 	 * @param ctx the parse tree
@@ -147,36 +111,6 @@ public interface SegfaultVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitSign(SegfaultParser.SignContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#if}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIf(SegfaultParser.IfContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#else}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitElse(SegfaultParser.ElseContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#while}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitWhile(SegfaultParser.WhileContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#true}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTrue(SegfaultParser.TrueContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#false}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFalse(SegfaultParser.FalseContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SegfaultParser#println}.
 	 * @param ctx the parse tree

@@ -1,0 +1,16 @@
+#x = 4
+#y=7.445
+#z=.97267
+#ASDFJKL = 4
+$Y = false
+$sOme111 = true
+$thisoneisCORRECTALLCAPS = TRUE
+
+
+$notaboolean = iojidj
+$notaboolean2 = 0
+$notaboolean3 = 33
+
+#thisisBADWRONGSYMBOL = true
+#thisisBADWRONGSYMBOL2 = false
+#thisisBADWRONGSYMBOL3 = TRUE

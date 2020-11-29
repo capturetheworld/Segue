@@ -11,58 +11,37 @@ grammar Segfault;
 //STARTPGM : '{' ;
 program           :  statement+  ;
 
-
-// ENDPGM : '}' ;
-//programHeader     : programIdentifier programParameters? ';' ; 
-//programParameters : '(' IDENTIFIER ( ',' IDENTIFIER )* ')' ;   //not sure about this part
-
-//rogramIdentifier   locals [ SymtabEntry entry = null ]
-    //: IDENTIFIER ;
-
-
-	// ♪♬(1)
-	// music: '♬' | NOTE;
-	// NOTE: N O T E;
-
-	// A: 'a' | 'A';
-	// EXPRESSION: E|e X|x P|p R E S S I O N;
-
-
-
 statement:  assignmentStatement
-            |ifStatement
-            |whileStatement
-            |printStatement
-            |commentStatement
+            // |ifStatement
+            // |whileStatement
+            // |printStatement
+            // |commentStatement
             ;
 
-assignmentStatement :  booleanassignment |  doubleassignment; 
+assignmentStatement locals [ Typespec type = null, SymtabEntry entry = null ] 
+                    :  boolSymbol IDENTIFIER '=' booleanConstant | doubleSymbol IDENTIFIER '=' numberConstant; 
 ifStatement:  ;
 whileStatement : ;
 printStatement : ;
 
 
-left locals [Typespec type = null] : var;
-var            locals [ Typespec type = null, SymtabEntry entry = null ] 
-    : '$' varIdentifier expression ;  // e.g. $x = 4 
-varIdentifier : IDENTIFIER;
+// left locals [Typespec type = null] : var;
+// var            locals [ Typespec type = null, SymtabEntry entry = null ] 
+//     : '$' varIdentifier expression ;  // e.g. $x = 4 
 
 
+
+booleanConstant: TRUE | FALSE ; //see boolean values
 numberConstant  : sign? unsignedNumber ;
-unsignedNumber  : unsignedDouble | unsignedInteger ;
-unsignedDouble  : DOUBLE; //see double values
-unsignedInteger : INTEGER; //see integer values
-booleanConstant: BOOLEAN ; //see boolean values
+unsignedNumber  : unsignedintegerConstant | unsigneddoubleConstant ;
+unsignedintegerConstant : INTEGER ;
+unsigneddoubleConstant    : DOUBLE;
 
 
-/////////////////VALUES///////////////////
-IDENTIFIER : [a-zA-Z][a-zA-Z0-9]+ ;
-LETTER     : [a-zA-Z]+;
-INTEGER    : [0-9]+ ;
-DOUBLE     : [0-9]*'.'[0-9]+ ;// format? 9.991.23
-BOOLEAN    : [true|false];  
-VARTYPE    : '$' | '#';
 
+
+boolSymbol    : '$';
+doubleSymbol    : '#';
 
 
 relOp : '=' | '<>' | '<' | '<=' | '>' | '>=' ;
@@ -115,13 +94,13 @@ DIV       : D I V ; // ?
 AND       : A N D ;
 OR        : O R ;
 NOT       : N O T ;
-if        : I F  ;
+// if        : I F  ;
 THEN      : T H E N ;
-else      : E L S E ;
+// else      : E L S E ;
 UNTIL     : U N T I L ;
-while     : W H I L E ;
-true      : T R U E; //for booleanConstant
-false   : F A L S E;//for booleanConstant
+// while     : W H I L E ;
+TRUE      : T R U E;
+FALSE     : F A L S E;
 DO        : D O ;
 println   : P R I N T L N;
 PROCEDURE : P R O C E D U R E ;
@@ -129,6 +108,21 @@ FUNCTION  : F U N C T I O N ;
 WHILE  : W H I L E ;
 
 
+
+// ENDPGM : '}' ;
+//programHeader     : programIdentifier programParameters? ';' ; 
+//programParameters : '(' IDENTIFIER ( ',' IDENTIFIER )* ')' ;   //not sure about this part
+
+//programIdentifier   locals [ SymtabEntry entry = null ]
+    //: IDENTIFIER ;
+
+
+	// ♪♬(1)
+	// music: '♬' | NOTE;
+	// NOTE: N O T E;
+
+	// A: 'a' | 'A';
+	// EXPRESSION: E|e X|x P|p R E S S I O N;
 
 //BOOLEAN : // ?
 
@@ -146,3 +140,10 @@ WHILE  : W H I L E ;
 COMMENT : '{' COMMENT_CHARACTER* '}' -> skip ;// todo: change the symbol to "~"
 
 fragment COMMENT_CHARACTER : ~('}') ;
+
+
+/////////////////VALUES///////////////////
+IDENTIFIER : [a-zA-Z][a-zA-Z0-9]* ;
+LETTER     : [a-zA-Z]+;
+INTEGER    : [0-9]+ ;
+DOUBLE     : [0-9]*'.'[0-9]+ ;// format? 9.991.23 or try INTEGER '.' INTEGER
