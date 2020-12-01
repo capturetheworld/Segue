@@ -9,7 +9,7 @@ grammar Segfault;
 
 
 //STARTPGM : '{' ;
-program           :  statement+  ;
+program           :  (statement NEWLINE+)+  ;
 
 statement:  assignmentStatement
             
@@ -136,5 +136,5 @@ LETTER     : [a-zA-Z]+;
 INTEGER    : [0-9]+ ;
 DOUBLE     : [0-9]*'.'[0-9]+ ;// format? 9.991.23 or try INTEGER '.' INTEGER
 
-NEWLINE : '\r'? '\n' -> skip  ;
+NEWLINE : '\r'? '\n';
 WS      : [ \t]+ -> skip ;
