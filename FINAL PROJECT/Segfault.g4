@@ -20,45 +20,44 @@ statement:  assignmentStatement
             ;
 
 assignmentStatement locals [ Typespec type = null, SymtabEntry entry = null ] 
-                    :  boolSymbol IDENTIFIER '=' booleanConstant | doubleSymbol IDENTIFIER '=' numberConstant; 
-ifStatement:   IF '(' expression ')' '{' truestatement'}' ELSE '{'falsestatement '}'; // or ()
-whileStatement : WHILE '(' expression ')' '{' statement'}';
-printStatement : ;
-
-truestatement:statement | ;
-falsestatement: statement ;
-
-//expression: ;
-
-
-// left locals [Typespec type = null] : var;
-// var            locals [ Typespec type = null, SymtabEntry entry = null ] 
-//     : '$' varIdentifier expression ;  // e.g. $x = 4 
+                    :  boolIdentifier '=' booleanExpression | numIdentifier '=' numericalExpression; 
+ifStatement:   IF '(' booleanExpression ')' '{' statement+ '}' ELSE '{' statement+ '}'; // or ()
+whileStatement : WHILE '(' booleanExpression ')' '{' statement'}';
+//printStatement : ;
 
 
 
-booleanConstant: TRUE | FALSE ; //see boolean values
-numberConstant  : sign? unsignedNumber ;
-unsignedNumber  : unsignedintegerConstant | unsigneddoubleConstant ;
-unsignedintegerConstant : INTEGER ;
-unsigneddoubleConstant    : DOUBLE;
+numericalExpression : term (addOp term)*;
+term : factor (mulOp factor)*;
+factor : '(' numericalExpression ')' | numberConstant | numIdentifier;
+
+numIdentifier : numSymbol IDENTIFIER;
+numSymbol    : '#';
 
 
+booleanExpression : booleanTerm (boolOp booleanTerm)?
+                    | numericalExpression relOp numericalExpression;
 
+booleanTerm: '(' booleanExpression ')' | booleanSingleton;
 
+booleanSingleton :  notSymbol booleanExpression
+                    | boolIdentifier
+                    | booleanConstant;
+
+boolIdentifier : boolSymbol IDENTIFIER;
 boolSymbol    : '$';
-doubleSymbol    : '#';
+
+notSymbol : '!';
+orSymbol : '|';
+andSymbol : '&';
 
 
-relOp : '=' | '<>' | '<' | '<=' | '>' | '>=' ;
-//addOp : '+' | '-' | ;  // basic arithmatic operations
-//mulOp : '*' | '/' | ; // basic arithmatic operations
 
+relOp : '==' | '<>' | '<' | '<=' | '>' | '>=' ;
+boolOp : andSymbol | orSymbol;
 
-op:'+' | '-' |'*' | '/' ;
-
-
-sign: '-';// do we need +?
+addOp : '+' | '-' | ;  // basic arithmatic operations
+mulOp : '*' | '/' | ; // basic arithmatic operations
 
 fragment A : ('a' | 'A') ;
 fragment B : ('b' | 'B') ;
@@ -108,40 +107,14 @@ UNTIL     : U N T I L ;
 TRUE      : T R U E;
 FALSE     : F A L S E;
 DO        : D O ;
-println   : P R I N T L N;
+PRINTLN   : P R I N T L N;
 PROCEDURE : P R O C E D U R E ;
 FUNCTION  : F U N C T I O N ;
 WHILE  : W H I L E ;
 
 
 
-// ENDPGM : '}' ;
-//programHeader     : programIdentifier programParameters? ';' ; 
-//programParameters : '(' IDENTIFIER ( ',' IDENTIFIER )* ')' ;   //not sure about this part
 
-//programIdentifier   locals [ SymtabEntry entry = null ]
-    //: IDENTIFIER ;
-
-
-	// ♪♬(1)
-	// music: '♬' | NOTE;
-	// NOTE: N O T E;
-
-	// A: 'a' | 'A';
-	// EXPRESSION: E|e X|x P|p R E S S I O N;
-
-//BOOLEAN : // ?
-
-//QUOTE     : '\'' ;
-
-//STRING    : QUOTE STRING_CHAR* QUOTE ;
-
-// fragment CHARACTER_CHAR : ~('\'')   // any non-quote character
-//                         ;
-
-// fragment STRING_CHAR : QUOTE QUOTE  // two consecutive quotes
-//                      | ~('\'')      // any non-quote character
-//                      ;
 
 COMMENT : '{' COMMENT_CHARACTER* '}' -> skip ;// todo: change the symbol to "~"
 
@@ -149,7 +122,19 @@ fragment COMMENT_CHARACTER : ~('}') ;
 
 
 /////////////////VALUES///////////////////
+
+booleanConstant: TRUE | FALSE ; //see boolean values
+numberConstant  : sign? unsignedNumber ;
+unsignedNumber  : unsignedintegerConstant | unsigneddoubleConstant ;
+unsignedintegerConstant : INTEGER ;
+unsigneddoubleConstant    : DOUBLE;
+
+sign: '-';// do we need +?
+
 IDENTIFIER : [a-zA-Z][a-zA-Z0-9]* ;
 LETTER     : [a-zA-Z]+;
 INTEGER    : [0-9]+ ;
 DOUBLE     : [0-9]*'.'[0-9]+ ;// format? 9.991.23 or try INTEGER '.' INTEGER
+
+NEWLINE : '\r'? '\n' -> skip  ;
+WS      : [ \t]+ -> skip ;
