@@ -1,0 +1,33 @@
+
+
+//Declaration block
+Double #i = 1; 
+Double #j = 8;
+Double #x = 0;
+Double #t = 0;
+
+
+#x = 4.0
+
+
+If (#i == #j) {
+ #x =  100;
+}
+Else{
+#x = -100;
+}
+
+If (#i == #j) {
+ #x =  100;
+
+if(#i < #j){
+#x = 2020;
+}
+Else{
+#t = 2020;
+}
+}
+Else{
+#x = -100;
+}
+
