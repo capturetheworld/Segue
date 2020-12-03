@@ -9,20 +9,23 @@ grammar Segfault;
 
 
 //STARTPGM : '{' ;
-program           :  statement+  ;
+program           :  (line)+  ;
+
+line: statement NEWLINE;
 
 statement:  assignmentStatement
             | ifStatement
             | whileStatement
             | printStatement
+            | synthStatement
             ;
 
 assignmentStatement locals [ Typespec type = null, SymtabEntry entry = null ] 
                     :  boolIdentifier '=' booleanExpression | numIdentifier '=' numericalExpression; 
-ifStatement:   IF '(' booleanExpression ')' '{' statement+ '}' ELSE '{' statement+ '}'; // or ()
-whileStatement : WHILE '(' booleanExpression ')' '{' statement'}';
+ifStatement:   IF '(' booleanExpression ')' '{' line+ '}' ELSE '{' line+ '}'; // or ()
+whileStatement : WHILE '(' booleanExpression ')' '{' line+'}';
 printStatement : PRINT printArguments;
-printArguments : '(' statement+')';
+printArguments : '(' line+')';
 synthStatement : SYNTH '.' synthFunction;
 synthFunction : synthSetFunction
                 | synthChannelFunction
@@ -156,5 +159,5 @@ LETTER     : [a-zA-Z]+;
 INTEGER    : [0-9]+ ;
 DOUBLE     : [0-9]*'.'[0-9]+ ;// format? 9.991.23 or try INTEGER '.' INTEGER
 
-NEWLINE : '\r'? '\n' -> skip  ;
+NEWLINE : ('\r' | '\n')+;
 WS      : [ \t]+ -> skip ;
