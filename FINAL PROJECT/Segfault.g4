@@ -12,18 +12,24 @@ grammar Segfault;
 program           :  (statement NEWLINE+)+  ;
 
 statement:  assignmentStatement
-            
             | ifStatement
-           |  whileStatement
-            // |printStatement
-            // |commentStatement
+            | whileStatement
+            | printStatement
             ;
 
 assignmentStatement locals [ Typespec type = null, SymtabEntry entry = null ] 
                     :  boolIdentifier '=' booleanExpression | numIdentifier '=' numericalExpression; 
 ifStatement:   IF '(' booleanExpression ')' '{' statement+ '}' ELSE '{' statement+ '}'; // or ()
 whileStatement : WHILE '(' booleanExpression ')' '{' statement'}';
-//printStatement : ;
+printStatement : PRINT printArguments;
+printArguments : '(' statement+')';
+synthStatement : SYNTH '.' synthFunction;
+synthFunction : synthSetFunction
+                | synthChannelFunction
+                | synthNoteFunction
+                | synthStartFunction;
+
+
 
 
 
@@ -50,6 +56,20 @@ boolSymbol    : '$';
 notSymbol : '!';
 orSymbol : '|';
 andSymbol : '&';
+
+
+synthSetFunction : SET '(' numericalExpression ')';
+synthChannelFunction : CHANNEL '[' numericalExpression ']' '.' SET '(' numericalExpression ')';
+synthNoteFunction : NOTE '[' numericalExpression ']' '.' (synthNoteSet | synthNoteLerp);
+synthStartFunction : START '(' ')';
+synthNoteSet : SET '(' (numericalExpression ',')? numericalExpression (',' synthPointStatement)? ')';
+synthNoteLerp : LERP '(' numericalExpression (',' synthPointStatement)? ')';
+synthPointStatement: '{' (synthMidiPitch | numericalExpression)? (',' synthVolume)?  (',' synthVibratoAmplitude)? (',' synthVibratoFrequency)? '}';
+synthMidiPitch : 'm' numericalExpression;
+synthVolume : 'v' numericalExpression;
+synthVibratoAmplitude : 'a' numericalExpression;
+synthVibratoFrequency : 'f' numericalExpression;
+
 
 
 
@@ -88,14 +108,11 @@ fragment Z : ('z' | 'Z') ;
 
 
 
-PROGRAM   : P R O G R A M ;
-CONST     : C O N S T ;
+
+
 TYPE      : T Y P E ;
 OF        : O F ;
 VAR       : V A R ;
-BEGIN     : B E G I N ;
-END       : E N D ;
-DIV       : D I V ; // ?
 AND       : A N D ;
 OR        : O R ;
 NOT       : N O T ;
@@ -103,14 +120,17 @@ NOT       : N O T ;
 THEN      : T H E N ;
 ELSE      : E L S E ;
 UNTIL     : U N T I L ;
-// while     : W H I L E ;
 TRUE      : T R U E;
 FALSE     : F A L S E;
-DO        : D O ;
-PRINTLN   : P R I N T L N;
-PROCEDURE : P R O C E D U R E ;
-FUNCTION  : F U N C T I O N ;
+PRINT   : P R I N T;
+FUNC  : F U N C ;
 WHILE  : W H I L E ;
+SYNTH : S Y N T H;
+SET : S E T;
+CHANNEL : C H A N N E L;
+NOTE : N O T E;
+LERP : L E R P;
+START : S T A R T;
 
 
 
@@ -135,6 +155,7 @@ IDENTIFIER : [a-zA-Z][a-zA-Z0-9]* ;
 LETTER     : [a-zA-Z]+;
 INTEGER    : [0-9]+ ;
 DOUBLE     : [0-9]*'.'[0-9]+ ;// format? 9.991.23 or try INTEGER '.' INTEGER
+
 
 NEWLINE : '\r'? '\n';
 WS      : [ \t]+ -> skip ;

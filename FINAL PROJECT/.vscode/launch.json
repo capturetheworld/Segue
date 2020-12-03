@@ -20,12 +20,6 @@
             "request": "launch",
             "mainClass": "${file}"
         },
-        {
-            "type": "java",
-            "name": "Debug (Launch)-Main<FINAL PROJECT_a3ba12d8>",
-            "request": "launch",
-            "mainClass": "Main",
-            "projectName": "FINAL PROJECT_a3ba12d8"
-        }
+        
     ]
 }

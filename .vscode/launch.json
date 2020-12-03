@@ -6,25 +6,31 @@
     "configurations": [
         {
             "type": "java",
-            "name": "CodeLens (Launch) - ExprLabeledMain",
+            "name": "CodeLens (Launch) - TestFor",
             "request": "launch",
-            "mainClass": "ExprLabeledJava.ExprLabeledMain",
+            "mainClass": "TestFor",
             "projectName": "CS153-Compiler-Design_e5b33a78"
         },
         {
             "type": "java",
-            "name": "CodeLens (Launch) - Pcl4",
+            "name": "CodeLens (Launch) - Newton3",
             "request": "launch",
-            "mainClass": "Pcl4",
-            "projectName": "CS153-Compiler-Design_e5b33a78",
+            "mainClass": "Newton3",
+            "projectName": "HW5_c37b4ef"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch) - Current File",
+            "request": "launch",
+            "mainClass": "${file}",
             "args": "${command:SpecifyProgramArgs}"
         },
         {
             "type": "java",
-            "name": "CodeLens (Launch) - Pcl4",
+            "name": "Debug (Launch)-Pascal<HW5_c37b4ef>",
             "request": "launch",
-            "mainClass": "Pcl4",
-            "projectName": "CS153-Compiler-Design_d08cd772",
+            "mainClass": "Pascal",
+            "projectName": "HW5_c37b4ef",
             "args": "${command:SpecifyProgramArgs}"
         },
         {
@@ -38,4 +44,5 @@
             "visualParseTree": true
         }
     ]
-}
+ }
+ 

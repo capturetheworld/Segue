@@ -1,4 +1,4 @@
-// Generated from c:\Users\mcnan\Documents\SJSU\Fall 2020\CS 153\CS153-Compiler-Design\FINAL PROJECT\Segfault.g4 by ANTLR 4.8
+// Generated from /Users/ian/Documents/Github/CS153-Compiler-Design/FINAL PROJECT/Segfault.g4 by ANTLR 4.8
 
     package antlr4;
     import java.util.HashMap;
@@ -45,6 +45,30 @@ public interface SegfaultVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitWhileStatement(SegfaultParser.WhileStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#printStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPrintStatement(SegfaultParser.PrintStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#printArguments}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPrintArguments(SegfaultParser.PrintArgumentsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#synthStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSynthStatement(SegfaultParser.SynthStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#synthFunction}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSynthFunction(SegfaultParser.SynthFunctionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SegfaultParser#numericalExpression}.
 	 * @param ctx the parse tree
@@ -123,6 +147,72 @@ public interface SegfaultVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitAndSymbol(SegfaultParser.AndSymbolContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#synthSetFunction}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSynthSetFunction(SegfaultParser.SynthSetFunctionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#synthChannelFunction}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSynthChannelFunction(SegfaultParser.SynthChannelFunctionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#synthNoteFunction}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSynthNoteFunction(SegfaultParser.SynthNoteFunctionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#synthStartFunction}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSynthStartFunction(SegfaultParser.SynthStartFunctionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#synthNoteSet}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSynthNoteSet(SegfaultParser.SynthNoteSetContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#synthNoteLerp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSynthNoteLerp(SegfaultParser.SynthNoteLerpContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#synthPointStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSynthPointStatement(SegfaultParser.SynthPointStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#synthMidiPitch}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSynthMidiPitch(SegfaultParser.SynthMidiPitchContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#synthVolume}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSynthVolume(SegfaultParser.SynthVolumeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#synthVibratoAmplitude}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSynthVibratoAmplitude(SegfaultParser.SynthVibratoAmplitudeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#synthVibratoFrequency}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSynthVibratoFrequency(SegfaultParser.SynthVibratoFrequencyContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SegfaultParser#relOp}.
 	 * @param ctx the parse tree
