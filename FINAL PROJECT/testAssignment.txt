@@ -14,3 +14,23 @@ $notaboolean3 = 33
 #thisisBADWRONGSYMBOL = true
 #thisisBADWRONGSYMBOL2 = false
 #thisisBADWRONGSYMBOL3 = TRUE
+
+#double = 5 * 4
+#double2 = 4 - 9
+
+#double3 = 7.00 + 24
+#double4 = #x - #Y
+
+$boolean2 = #x == 4
+$boolean3 = (#y == 7)
+$boolean4NOT = #x - #Y
+$boolean45 = (#x == 4)
+$boolean6 = (#y == 7.445)
+$boolean7 = (#y == -7.445)
+$boolean8 = (#y <> 0)
+$boolean2NE = #x <> 4
+
+
+
+
+
