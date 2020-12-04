@@ -9,7 +9,7 @@ grammar Segfault;
 
 
 //STARTPGM : '{' ;
-program           :  line+  ;
+program  :  BR? line+  ;
 
 line: statement (BR | EOF);
 
@@ -24,8 +24,8 @@ statement:  assignmentStatement
 
 assignmentStatement locals [ Typespec type = null, SymtabEntry entry = null ] 
                     :  boolIdentifier '=' booleanExpression | numIdentifier '=' numericalExpression; 
-ifStatement:   IF '(' booleanExpression ')' BR? '{' BR? line+ '}' BR? ELSE BR? '{' BR? line+ '}'; // or ()
-whileStatement : WHILE '(' booleanExpression ')' BR? '{' BR? line+'}';
+ifStatement:   IF '(' booleanExpression ')' BR* '{' BR* line+ '}' BR* ELSE BR* '{' BR* line+ '}'; // or ()
+whileStatement : WHILE '(' booleanExpression ')' BR* '{' BR* line+'}';
 printStatement : PRINT printArguments;
 printArguments : '(' line+')'; //TODO fix
 synthStatement : SYNTH '.' synthFunction;
@@ -81,8 +81,8 @@ synthVibratoFrequency : 'f' numericalExpression;
 
 
 
-relOp : '==' | '<>' | '<' | '<=' | '>' | '>=' ;
-boolOp : '&' | '|' | '==' | '<>' ;
+relOp : '==' | '!=' | '<' | '<=' | '>' | '>=' ;
+boolOp : '&' | '|' | '==' | '!=' ;
 
 addOp : '+' | '-' | ;  // basic arithmatic operations
 mulOp : '*' | '/' | ; // basic arithmatic operations
@@ -118,20 +118,14 @@ fragment Z : ('z' | 'Z') ;
 
 
 
-TYPE      : T Y P E ;
-OF        : O F ;
-VAR       : V A R ;
-AND       : A N D ;
-OR        : O R ;
-NOT       : N O T ;
- IF        : I F  ;
+
+
+IF        : I F  ;
 THEN      : T H E N ;
 ELSE      : E L S E ;
-UNTIL     : U N T I L ;
 TRUE      : T R U E;
 FALSE     : F A L S E;
 PRINT   : P R I N T;
-FUNC  : F U N C ;
 WHILE  : W H I L E ;
 SYNTH : S Y N T H;
 SET : S E T;
@@ -144,7 +138,7 @@ START : S T A R T;
 
 
 
-COMMENT : '~' COMMENT_CHARACTER* (BR | EOF) -> skip ;// todo: change the symbol to "~"
+COMMENT : '~' COMMENT_CHARACTER* -> skip ;// todo: change the symbol to "~"
 
 fragment COMMENT_CHARACTER : ~('\r' | '\n') ;
 
@@ -163,6 +157,7 @@ IDENTIFIER : [a-zA-Z][a-zA-Z0-9]* ;
 LETTER     : [a-zA-Z]+;
 INTEGER    : [0-9]+ ;
 DOUBLE     : [0-9]*'.'[0-9]+ ;// format? 9.991.23 or try INTEGER '.' INTEGER
+
 
 BR : ('\r' | '\n')+;
 WS      : [ \t]+ -> skip ;

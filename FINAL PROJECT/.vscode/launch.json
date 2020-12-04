@@ -8,7 +8,7 @@
             "name": "Debug ANTLR4 grammar",
             "type": "antlr-debug",
             "request": "launch",
-            "input": "testComment.txt",
+            "input": "test.txt",
             "grammar": "Segfault.g4",
             "startRule": "program",
             "printParseTree": false,
