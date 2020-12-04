@@ -1,0 +1,7 @@
+#x = 4  
+#y=7.445
+#z=.97267
+#ASDFJKL = 4
+$Y = false
+$sOme111 = true
+$thisoneisCORRECTALLCAPS = TRUE  

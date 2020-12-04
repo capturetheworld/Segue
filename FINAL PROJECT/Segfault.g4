@@ -9,7 +9,7 @@ grammar Segfault;
 
 
 //STARTPGM : '{' ;
-program           :  (line)+  ;
+program           :  line+  ;
 
 line: statement NEWLINE;
 
@@ -77,7 +77,7 @@ synthVibratoFrequency : 'f' numericalExpression;
 
 
 relOp : '==' | '<>' | '<' | '<=' | '>' | '>=' ;
-boolOp : andSymbol | orSymbol;
+boolOp : andSymbol | orSymbol| '=='|'<>';
 
 addOp : '+' | '-' | ;  // basic arithmatic operations
 mulOp : '*' | '/' | ; // basic arithmatic operations
@@ -139,9 +139,9 @@ START : S T A R T;
 
 
 
-COMMENT : '{' COMMENT_CHARACTER* '}' -> skip ;// todo: change the symbol to "~"
+//COMMENT : '{' COMMENT_CHARACTER* '}' -> skip ;// todo: change the symbol to "~"
 
-fragment COMMENT_CHARACTER : ~('}') ;
+//fragment COMMENT_CHARACTER : ~('}') ;
 
 
 /////////////////VALUES///////////////////
