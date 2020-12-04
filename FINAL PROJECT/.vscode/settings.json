@@ -10,7 +10,8 @@
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
         "/Users/ian/.vscode/extensions/mike-lischke.vscode-antlr4-2.2.4/antlr/antlr-4.8-complete.jar",
-        "/Users/tony/.vscode/extensions/mike-lischke.vscode-antlr4-2.2.4/antlr/antlr-4.8-complete.jar"
+        "/Users/tony/.vscode/extensions/mike-lischke.vscode-antlr4-2.2.4/antlr/antlr-4.8-complete.jar",
+        "c:\\Users\\mcnan\\.vscode\\extensions\\mike-lischke.vscode-antlr4-2.2.4\\antlr\\antlr-4.8-complete.jar"
     ],
     "antlr4.format": {
     

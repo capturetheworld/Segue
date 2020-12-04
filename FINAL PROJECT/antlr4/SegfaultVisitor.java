@@ -1,4 +1,4 @@
-// Generated from /Users/tony/CS153/proj-repository/CS153-Compiler-Design/FINAL PROJECT/Segfault.g4 by ANTLR 4.8
+// Generated from c:\Users\mcnan\Documents\SJSU\Fall 2020\CS 153\CS153-Compiler-Design\FINAL PROJECT\Segfault.g4 by ANTLR 4.8
 
     package antlr4;
     import java.util.HashMap;
@@ -21,6 +21,12 @@ public interface SegfaultVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitProgram(SegfaultParser.ProgramContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#line}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLine(SegfaultParser.LineContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SegfaultParser#statement}.
 	 * @param ctx the parse tree
@@ -88,6 +94,18 @@ public interface SegfaultVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFactor(SegfaultParser.FactorContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#prefixOp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPrefixOp(SegfaultParser.PrefixOpContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#suffixOp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSuffixOp(SegfaultParser.SuffixOpContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link SegfaultParser#numIdentifier}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -118,6 +136,12 @@ public interface SegfaultVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBooleanSingleton(SegfaultParser.BooleanSingletonContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#notSymbol}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNotSymbol(SegfaultParser.NotSymbolContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link SegfaultParser#boolIdentifier}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -129,24 +153,6 @@ public interface SegfaultVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitBoolSymbol(SegfaultParser.BoolSymbolContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#notSymbol}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNotSymbol(SegfaultParser.NotSymbolContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#orSymbol}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitOrSymbol(SegfaultParser.OrSymbolContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#andSymbol}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAndSymbol(SegfaultParser.AndSymbolContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SegfaultParser#synthSetFunction}.
 	 * @param ctx the parse tree

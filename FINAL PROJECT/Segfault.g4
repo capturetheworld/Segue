@@ -11,21 +11,23 @@ grammar Segfault;
 //STARTPGM : '{' ;
 program           :  line+  ;
 
-line: statement NEWLINE;
+line: statement (BR | EOF);
 
 statement:  assignmentStatement
             | ifStatement
             | whileStatement
             | printStatement
             | synthStatement
+            | prefixOp
+            | suffixOp
             ;
 
 assignmentStatement locals [ Typespec type = null, SymtabEntry entry = null ] 
                     :  boolIdentifier '=' booleanExpression | numIdentifier '=' numericalExpression; 
-ifStatement:   IF '(' booleanExpression ')' '{' line+ '}' ELSE '{' line+ '}'; // or ()
-whileStatement : WHILE '(' booleanExpression ')' '{' line+'}';
+ifStatement:   IF '(' booleanExpression ')' BR? '{' BR? line+ '}' BR? ELSE BR? '{' BR? line+ '}'; // or ()
+whileStatement : WHILE '(' booleanExpression ')' BR? '{' BR? line+'}';
 printStatement : PRINT printArguments;
-printArguments : '(' line+')';
+printArguments : '(' line+')'; //TODO fix
 synthStatement : SYNTH '.' synthFunction;
 synthFunction : synthSetFunction
                 | synthChannelFunction
@@ -38,7 +40,10 @@ synthFunction : synthSetFunction
 
 numericalExpression : term (addOp term)*;
 term : factor (mulOp factor)*;
-factor : '(' numericalExpression ')' | numberConstant | numIdentifier;
+factor : '(' numericalExpression ')' | numberConstant | numIdentifier | prefixOp | suffixOp;
+
+prefixOp : ('++' | '--') numIdentifier;
+suffixOp : numIdentifier ('++' | '--');
 
 numIdentifier : numSymbol IDENTIFIER;
 numSymbol    : '#';
@@ -52,13 +57,13 @@ booleanTerm: '(' booleanExpression ')' | booleanSingleton;
 booleanSingleton :  notSymbol booleanExpression
                     | boolIdentifier
                     | booleanConstant;
+                    
+notSymbol : '!';
 
 boolIdentifier : boolSymbol IDENTIFIER;
 boolSymbol    : '$';
 
-notSymbol : '!';
-orSymbol : '|';
-andSymbol : '&';
+
 
 
 synthSetFunction : SET '(' numericalExpression ')';
@@ -77,7 +82,7 @@ synthVibratoFrequency : 'f' numericalExpression;
 
 
 relOp : '==' | '<>' | '<' | '<=' | '>' | '>=' ;
-boolOp : andSymbol | orSymbol| '=='|'<>';
+boolOp : '&' | '|' | '==' | '<>' ;
 
 addOp : '+' | '-' | ;  // basic arithmatic operations
 mulOp : '*' | '/' | ; // basic arithmatic operations
@@ -139,9 +144,9 @@ START : S T A R T;
 
 
 
-//COMMENT : '{' COMMENT_CHARACTER* '}' -> skip ;// todo: change the symbol to "~"
+COMMENT : '~' COMMENT_CHARACTER* (BR | EOF) -> skip ;// todo: change the symbol to "~"
 
-//fragment COMMENT_CHARACTER : ~('}') ;
+fragment COMMENT_CHARACTER : ~('\r' | '\n') ;
 
 
 /////////////////VALUES///////////////////
@@ -159,5 +164,5 @@ LETTER     : [a-zA-Z]+;
 INTEGER    : [0-9]+ ;
 DOUBLE     : [0-9]*'.'[0-9]+ ;// format? 9.991.23 or try INTEGER '.' INTEGER
 
-NEWLINE : ('\r' | '\n')+;
+BR : ('\r' | '\n')+;
 WS      : [ \t]+ -> skip ;
