@@ -9,9 +9,9 @@ grammar Segfault;
 
 
 //STARTPGM : '{' ;
-program  :  BR? line+  ;
+program  :  BR* line* statement BR* EOF ;
 
-line: statement (BR | EOF);
+line: statement BR+;
 
 statement:  assignmentStatement
             | ifStatement

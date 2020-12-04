@@ -1,4 +1,4 @@
-// Generated from /Users/ian/Documents/Github/CS153-Compiler-Design/FINAL PROJECT/Segfault.g4 by ANTLR 4.8
+// Generated from c:\Users\mcnan\Documents\SJSU\Fall 2020\CS 153\CS153-Compiler-Design\FINAL PROJECT\Segfault.g4 by ANTLR 4.8
 
     package antlr4;
     import java.util.HashMap;
