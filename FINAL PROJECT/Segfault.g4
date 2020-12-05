@@ -22,6 +22,9 @@ statement:  assignmentStatement
             | suffixOp
             ;
 
+function:  functionID '(' argumentList? ')' (BR*) '{' BR* line+ BR* '}' ; 
+
+
 assignmentStatement locals [ Typespec type = null, SymtabEntry entry = null ] 
                     :  boolIdentifier '=' booleanExpression | numIdentifier '=' numericalExpression; 
 ifStatement:   IF '(' booleanExpression ')' BR* '{' BR* line+ '}' BR* ELSE BR* '{' BR* line+ '}'; // or ()
@@ -37,6 +40,13 @@ synthFunction : synthSetFunction
 
 
 
+functionID : functionSymbol IDENTIFIER;
+functionSymbol : '@';
+
+argumentList locals [ Typespec type = null, SymtabEntry entry = null ] 
+            : argument (',' argument)*;
+            
+argument: boolIdentifier | numIdentifier;
 
 numericalExpression : term (addOp term)*;
 term : factor (mulOp factor)*;
