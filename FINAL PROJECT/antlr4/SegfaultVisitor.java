@@ -1,4 +1,4 @@
-// Generated from c:\Users\mcnan\Documents\SJSU\Fall 2020\CS 153\CS153-Compiler-Design\FINAL PROJECT\Segfault.g4 by ANTLR 4.8
+// Generated from /Users/ian/Documents/Github/CS153-Compiler-Design/FINAL PROJECT/Segfault.g4 by ANTLR 4.8
 
     package antlr4;
     import java.util.HashMap;
@@ -33,6 +33,12 @@ public interface SegfaultVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitStatement(SegfaultParser.StatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#function}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunction(SegfaultParser.FunctionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SegfaultParser#assignmentStatement}.
 	 * @param ctx the parse tree
@@ -75,6 +81,30 @@ public interface SegfaultVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitSynthFunction(SegfaultParser.SynthFunctionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#functionID}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionID(SegfaultParser.FunctionIDContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#functionSymbol}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionSymbol(SegfaultParser.FunctionSymbolContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#argumentList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArgumentList(SegfaultParser.ArgumentListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#argument}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArgument(SegfaultParser.ArgumentContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SegfaultParser#numericalExpression}.
 	 * @param ctx the parse tree
