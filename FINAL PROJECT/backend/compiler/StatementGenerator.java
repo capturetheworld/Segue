@@ -7,10 +7,10 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import antlr4.PascalParser;
-import antlr4.PascalParser.ArgumentContext;
-import antlr4.PascalParser.CaseBranchContext;
-import antlr4.PascalParser.CaseConstantContext;
+import antlr4.SegueParser;
+import antlr4.SegueParser.ArgumentContext;
+import antlr4.SegueParser.CaseBranchContext;
+import antlr4.SegueParser.CaseConstantContext;
 import intermediate.symtab.*;
 import intermediate.type.*;
 import intermediate.type.Typespec.Form;
@@ -42,17 +42,17 @@ public class StatementGenerator extends CodeGenerator
      * Emit code for an assignment statement.
      * @param ctx the AssignmentStatementContext.
      */
-    public void emitAssignment(PascalParser.AssignmentStatementContext ctx)
+    public void emitAssignment(SegueParser.AssignmentStatementContext ctx)
     {
-        PascalParser.VariableContext   varCtx  = ctx.lhs().variable();
-        PascalParser.ExpressionContext exprCtx = ctx.rhs().expression();
+        SegueParser.VariableContext   varCtx  = ctx.lhs().variable();
+        SegueParser.ExpressionContext exprCtx = ctx.rhs().expression();
         SymtabEntry varId = varCtx.entry;
         Typespec varType  = varCtx.type;
         Typespec exprType = exprCtx.type;
 
         // The last modifier, if any, is the variable's last subscript or field.
         int modifierCount = varCtx.modifier().size();
-        PascalParser.ModifierContext lastModCtx = modifierCount == 0
+        SegueParser.ModifierContext lastModCtx = modifierCount == 0
                             ? null : varCtx.modifier().get(modifierCount - 1);
 
         // The target variable has subscripts and/or fields.
@@ -90,7 +90,7 @@ public class StatementGenerator extends CodeGenerator
      * Emit code for an IF statement.
      * @param ctx the IfStatementContext.
      */
-    public void emitIf(PascalParser.IfStatementContext ctx)
+    public void emitIf(SegueParser.IfStatementContext ctx)
     {
         Label nextLabel = new Label();            
         Label falseLabel = null;
@@ -121,7 +121,7 @@ public class StatementGenerator extends CodeGenerator
      * Emit code for a CASE statement.
      * @param ctx the CaseStatementContext.
      */
-    public void emitCase(PascalParser.CaseStatementContext ctx)
+    public void emitCase(SegueParser.CaseStatementContext ctx)
     {
         LinkedHashMap<CaseBranchContext, Label> labelList = new LinkedHashMap<>();
 
@@ -164,7 +164,7 @@ public class StatementGenerator extends CodeGenerator
      * Emit code for a REPEAT statement.
      * @param ctx the RepeatStatementContext.
      */
-    public void emitRepeat(PascalParser.RepeatStatementContext ctx)
+    public void emitRepeat(SegueParser.RepeatStatementContext ctx)
     {
         Label loopTopLabel  = new Label();
         Label loopExitLabel = new Label();
@@ -183,7 +183,7 @@ public class StatementGenerator extends CodeGenerator
      * Emit code for a WHILE statement.
      * @param ctx the WhileStatementContext.
      */
-    public void emitWhile(PascalParser.WhileStatementContext ctx)
+    public void emitWhile(SegueParser.WhileStatementContext ctx)
     {
         Label loopLabel = new Label();
         Label nextLabel = new Label();
@@ -202,22 +202,22 @@ public class StatementGenerator extends CodeGenerator
      * Emit code for a FOR statement.
      * @param ctx the ForStatementContext.
      */
-    public void emitFor(PascalParser.ForStatementContext ctx)
+    public void emitFor(SegueParser.ForStatementContext ctx)
     {
         Label loopLabel = new Label();
         Label nextLabel = new Label();
 
         // emitLabel(loopLabel);
 
-        PascalParser.VariableContext   varCtx  = ctx.variable();
-        PascalParser.ExpressionContext exprCtx = ctx.expression(0);
+        SegueParser.VariableContext   varCtx  = ctx.variable();
+        SegueParser.ExpressionContext exprCtx = ctx.expression(0);
         SymtabEntry varId = varCtx.entry;
         Typespec varType  = varCtx.type;
         Typespec exprType = exprCtx.type;
 
         // The last modifier, if any, is the variable's last subscript or field.
         int modifierCount = varCtx.modifier().size();
-        PascalParser.ModifierContext lastModCtx = modifierCount == 0
+        SegueParser.ModifierContext lastModCtx = modifierCount == 0
                             ? null : varCtx.modifier().get(modifierCount - 1);
 
         // The target variable has subscripts and/or fields.
@@ -295,9 +295,9 @@ public class StatementGenerator extends CodeGenerator
      * Emit code for a procedure call statement.
      * @param ctx the ProcedureCallStatementContext.
      */
-    public void emitProcedureCall(PascalParser.ProcedureCallStatementContext ctx)
+    public void emitProcedureCall(SegueParser.ProcedureCallStatementContext ctx)
     {
-        PascalParser.ProcedureNameContext name = ctx.procedureName();
+        SegueParser.ProcedureNameContext name = ctx.procedureName();
         SymtabEntry routineId = name.entry;
         
         emitCall(routineId, ctx.argumentList());
@@ -308,9 +308,9 @@ public class StatementGenerator extends CodeGenerator
      * Emit code for a function call statement.
      * @param ctx the FunctionCallContext.
      */
-    public void emitFunctionCall(PascalParser.FunctionCallContext ctx)
+    public void emitFunctionCall(SegueParser.FunctionCallContext ctx)
     {
-        PascalParser.FunctionNameContext name = ctx.functionName();
+        SegueParser.FunctionNameContext name = ctx.functionName();
         SymtabEntry routineId = name.entry;
         
         emitCall(routineId, ctx.argumentList());
@@ -323,7 +323,7 @@ public class StatementGenerator extends CodeGenerator
      * @param argListCtx the ArgumentListContext.
      */
     private void emitCall(SymtabEntry routineId,
-                          PascalParser.ArgumentListContext argListCtx)
+                          SegueParser.ArgumentListContext argListCtx)
     {
 
         if(argListCtx != null){
@@ -354,7 +354,7 @@ public class StatementGenerator extends CodeGenerator
      * Emit code for a WRITE statement.
      * @param ctx the WriteStatementContext.
      */
-    public void emitWrite(PascalParser.WriteStatementContext ctx)
+    public void emitWrite(SegueParser.WriteStatementContext ctx)
     {
         emitWrite(ctx.writeArguments(), false);
     }
@@ -363,7 +363,7 @@ public class StatementGenerator extends CodeGenerator
      * Emit code for a WRITELN statement.
      * @param ctx the WritelnStatementContext.
      */
-    public void emitWriteln(PascalParser.WritelnStatementContext ctx)
+    public void emitWriteln(SegueParser.WritelnStatementContext ctx)
     {
         emitWrite(ctx.writeArguments(), true);
     }
@@ -373,7 +373,7 @@ public class StatementGenerator extends CodeGenerator
      * @param argsCtx the WriteArgumentsContext.
      * @param needLF true if need a line feed.
      */
-    private void emitWrite(PascalParser.WriteArgumentsContext argsCtx,
+    private void emitWrite(SegueParser.WriteArgumentsContext argsCtx,
                            boolean needLF)
     {
         emit(GETSTATIC, "java/lang/System/out", "Ljava/io/PrintStream;");
@@ -420,14 +420,14 @@ public class StatementGenerator extends CodeGenerator
      * @param format the format string to create.
      * @return the count of expression arguments.
      */
-    private int createWriteFormat(PascalParser.WriteArgumentsContext argsCtx,
+    private int createWriteFormat(SegueParser.WriteArgumentsContext argsCtx,
                                   StringBuffer format, boolean needLF)
     {
         int exprCount = 0;
         format.append("\"");
         
         // Loop over the write arguments.
-        for (PascalParser.WriteArgumentContext argCtx : argsCtx.writeArgument())
+        for (SegueParser.WriteArgumentContext argCtx : argsCtx.writeArgument())
         {
             Typespec type = argCtx.expression().type;
             String argText = argCtx.getText();
@@ -444,7 +444,7 @@ public class StatementGenerator extends CodeGenerator
                 exprCount++;
                 format.append("%");
                 
-                PascalParser.FieldWidthContext fwCtx = argCtx.fieldWidth();              
+                SegueParser.FieldWidthContext fwCtx = argCtx.fieldWidth();              
                 if (fwCtx != null)
                 {
                     String sign = (   (fwCtx.sign() != null) 
@@ -453,7 +453,7 @@ public class StatementGenerator extends CodeGenerator
                     format.append(sign)
                           .append(fwCtx.integerConstant().getText());
                     
-                    PascalParser.DecimalPlacesContext dpCtx = 
+                    SegueParser.DecimalPlacesContext dpCtx = 
                                                         fwCtx.decimalPlaces();
                     if (dpCtx != null)
                     {
@@ -481,7 +481,7 @@ public class StatementGenerator extends CodeGenerator
      * @param argsCtx
      * @param exprCount
      */
-    private void emitArgumentsArray(PascalParser.WriteArgumentsContext argsCtx,
+    private void emitArgumentsArray(SegueParser.WriteArgumentsContext argsCtx,
                                     int exprCount)
     {
         // Create the arguments array.
@@ -491,11 +491,11 @@ public class StatementGenerator extends CodeGenerator
         int index = 0;
 
         // Loop over the write arguments to fill the arguments array.
-        for (PascalParser.WriteArgumentContext argCtx : 
+        for (SegueParser.WriteArgumentContext argCtx : 
                                                     argsCtx.writeArgument())
         {
             String argText = argCtx.getText();
-            PascalParser.ExpressionContext exprCtx = argCtx.expression();
+            SegueParser.ExpressionContext exprCtx = argCtx.expression();
             Typespec type = exprCtx.type.baseType();
             
             // Skip string constants, which were made part of
@@ -524,7 +524,7 @@ public class StatementGenerator extends CodeGenerator
      * Emit code for a READ statement.
      * @param ctx the ReadStatementContext.
      */
-    public void emitRead(PascalParser.ReadStatementContext ctx)
+    public void emitRead(SegueParser.ReadStatementContext ctx)
     {
         emitRead(ctx.readArguments(), false);
     }
@@ -533,7 +533,7 @@ public class StatementGenerator extends CodeGenerator
      * Emit code for a READLN statement.
      * @param ctx the ReadlnStatementContext.
      */
-    public void emitReadln(PascalParser.ReadlnStatementContext ctx)
+    public void emitReadln(SegueParser.ReadlnStatementContext ctx)
     {
         emitRead(ctx.readArguments(), true);
     }
@@ -543,7 +543,7 @@ public class StatementGenerator extends CodeGenerator
      * @param argsCtx the ReadArgumentsContext.
      * @param needSkip true if need to skip the rest of the input line.
      */
-    private void emitRead(PascalParser.ReadArgumentsContext argsCtx,
+    private void emitRead(SegueParser.ReadArgumentsContext argsCtx,
                           boolean needSkip)
     {
         int size = argsCtx.variable().size();
@@ -551,7 +551,7 @@ public class StatementGenerator extends CodeGenerator
         // Loop over read arguments.
         for (int i = 0; i < size; i++)
         {
-            PascalParser.VariableContext varCtx = argsCtx.variable().get(i);
+            SegueParser.VariableContext varCtx = argsCtx.variable().get(i);
             Typespec varType = varCtx.type;
             
             if (varType == Predefined.integerType)

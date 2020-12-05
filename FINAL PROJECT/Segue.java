@@ -70,6 +70,7 @@ public class Segue {
             System.out.println("Object file not created or modified.");
             return;
         }
+        
         // Pass 3: Compile the Pascal program.
         System.out.printf("\nPASS 3 Compilation: ");
         SymtabEntry programId = pass2.getProgramId();

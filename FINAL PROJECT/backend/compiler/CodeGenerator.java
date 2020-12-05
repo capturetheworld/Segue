@@ -1,9 +1,12 @@
+// We can reuse all of this!!!
+
+
 package backend.compiler;
 
 import java.io.FileWriter;
 import java.io.PrintWriter;
 
-import antlr4.SegfaultParser;
+import antlr4.SegueParser;
 
 import intermediate.symtab.*;
 import intermediate.symtab.SymtabEntry.Kind;
@@ -118,7 +121,7 @@ public class CodeGenerator
      * Emit a statement comment.
      * @param ctx the StatementContext.
      */
-    public void emitComment(SegfaultParser.StatementContext ctx)
+    public void emitComment(SegueParser.StatementContext ctx)
     {
         String text = String.format("%03d %s", ctx.getStart().getLine(), 
                                                ctx.getText());
