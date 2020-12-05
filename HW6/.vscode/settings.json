@@ -8,6 +8,7 @@
     "java.project.referencedLibraries": [
         "/Users/adanhernandez/.vscode/extensions/mike-lischke.vscode-antlr4-2.2.4/antlr/antlr-4.8-complete.jar",
         "/Users/adanhernandez/Desktop/PRO/FALL 2020/CS 153/Assignment 2/CS153-Compiler-Design/HW5/**/*.jar",
-        "/Users/ian/.vscode/extensions/mike-lischke.vscode-antlr4-2.2.4/antlr/antlr-4.8-complete.jar"
+        "/Users/ian/.vscode/extensions/mike-lischke.vscode-antlr4-2.2.4/antlr/antlr-4.8-complete.jar",
+        "c:\\Users\\mcnan\\.vscode\\extensions\\mike-lischke.vscode-antlr4-2.2.4\\antlr\\antlr-4.8-complete.jar"
     ]
 }
