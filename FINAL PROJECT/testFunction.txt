@@ -19,4 +19,4 @@
 
 #s =5
 #x = 6
-@SquareMinus(#s, #x)
+SquareMinus(#s, #x)
