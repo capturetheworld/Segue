@@ -3,9 +3,12 @@
     return 2*#in
 }
 
-@multiplyit (#in,#in2) { return #in2*#in }
+
+@multiplyit (#in,#in2) { return #in2*#in
+}
+
+print(@multiplyit(3,4))
+print(true)
 
 
 
-
-println(@multiplyit(3,4))
