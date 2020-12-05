@@ -1,21 +1,11 @@
-~THIS IS A COMMENT
+
+@doubleit (#in) {
+    return 2*#in
+}
+
+@multiplyit (#in,#in2) { return #in2*#in }
 
 
 
 
-
-#i++
-
-~THIS IS A COMMENT AT EOF
-#i++ 
-
-~THIS IS A COMMENT AT EOF
-
-~THIS IS A COMMENT AT EOF
-#i--
-
-
-
-
-
-
+println(@multiplyit(3,4))
