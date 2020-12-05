@@ -20,9 +20,13 @@ statement:  assignmentStatement
             | synthStatement
             | prefixOp
             | suffixOp
+            | functiondef
+            | returnStatement
+            | functioncall
             ;
 
-function:  functionID '(' argumentList? ')' (BR*) '{' BR* line+ BR* '}' ; 
+functiondef:  functionID '(' paramList? ')' (BR*) '{' BR* line+ BR* '}' ;
+functioncall:  functionID '(' argList? ')';
 
 
 assignmentStatement locals [ Typespec type = null, SymtabEntry entry = null ] 
@@ -30,23 +34,27 @@ assignmentStatement locals [ Typespec type = null, SymtabEntry entry = null ]
 ifStatement:   IF '(' booleanExpression ')' BR* '{' BR* line+ '}' BR* ELSE BR* '{' BR* line+ '}'; // or ()
 whileStatement : WHILE '(' booleanExpression ')' BR* '{' BR* line+'}';
 printStatement : PRINT printArguments;
-printArguments : '(' line+')'; //TODO fix
+printArguments : '(' (statement|arg) ')'; //TODO fix
 synthStatement : SYNTH '.' synthFunction;
 synthFunction : synthSetFunction
                 | synthChannelFunction
                 | synthNoteFunction
                 | synthStartFunction;
-
+returnStatement : RETURN (numericalExpression|booleanExpression);
 
 
 
 functionID : functionSymbol IDENTIFIER;
 functionSymbol : '@';
 
-argumentList locals [ Typespec type = null, SymtabEntry entry = null ] 
-            : argument (',' argument)*;
+paramList locals [ Typespec type = null, SymtabEntry entry = null ] 
+            : param (',' param)*;
             
-argument: boolIdentifier | numIdentifier;
+param: boolIdentifier | numIdentifier;
+
+argList locals [ Typespec type = null, SymtabEntry entry = null ] 
+            : arg (',' arg)*;
+arg: booleanExpression | numericalExpression;
 
 numericalExpression : term (addOp term)*;
 term : factor (mulOp factor)*;
@@ -143,7 +151,7 @@ CHANNEL : C H A N N E L;
 NOTE : N O T E;
 LERP : L E R P;
 START : S T A R T;
-
+RETURN : R E T U R N;
 
 
 
