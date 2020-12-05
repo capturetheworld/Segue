@@ -33,13 +33,17 @@ public class Semantics extends PascalBaseVisitor<Object>
         // Create and initialize the symbol table stack.
         this.symtabStack = new SymtabStack();
         Predefined.initialize(symtabStack);
-        
-        this.mode = mode;
-        this.error = new SemanticErrorHandler();
+        //Initialize Types, Constants, Standard Routines
+        //with TypeSpec //typespec is some properties of datatypes
+
+
+
+        this.mode = mode;//delete?
+        this.error = new SemanticErrorHandler();//delete entire file
     }
     
     public SymtabEntry getProgramId() { return programId; }
-    public int getErrorCount() { return error.getCount(); };
+    public int getErrorCount() { return error.getCount(); };//keep
     
     /**
      * Return the default value for a data type.
@@ -48,7 +52,7 @@ public class Semantics extends PascalBaseVisitor<Object>
      */
     public static Object defaultValue(Typespec type)
     {
-        type = type.baseType();
+        type = type.baseType(); //if it is a subrange, gets the type
 
         if      (type == Predefined.integerType) return Integer.valueOf(0);
         else if (type == Predefined.realType)    return Float.valueOf(0.0f);
@@ -65,7 +69,7 @@ public class Semantics extends PascalBaseVisitor<Object>
         visit(ctx.block().compoundStatement());
         
         // Print the cross-reference table.
-        CrossReferencer crossReferencer = new CrossReferencer();
+        CrossReferencer crossReferencer = new CrossReferencer(); //cross referencer only used in 1 place
         crossReferencer.print(symtabStack);
 
         return null;

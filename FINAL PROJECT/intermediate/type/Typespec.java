@@ -1,3 +1,4 @@
+//put a double
 package intermediate.type;
 
 import java.util.ArrayList;

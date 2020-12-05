@@ -84,7 +84,7 @@ public class Predefined
 
         // Type real.
         realId = symTabStack.enterLocal("real", TYPE);
-        realType = new Typespec(SCALAR);
+        realType = new Typespec(SCALAR); //typespec is some properties of datatypes
         realType.setIdentifier(realId);
         realId.setType(realType);
 
@@ -94,20 +94,6 @@ public class Predefined
         booleanType.setIdentifier(booleanId);
         booleanId.setType(booleanType);
 
-        // Type char.
-       // charId = symTabStack.enterLocal("char", TYPE);
-      //  charType = new Typespec(SCALAR);
-       // charType.setIdentifier(charId);
-       // charId.setType(charType);
-
-        // Type string.
-      //  stringId = symTabStack.enterLocal("string", TYPE);
-      //  stringType = new Typespec(SCALAR);
-      //  stringType.setIdentifier(stringId);
-       // stringId.setType(stringType);
-
-        // Undefined type.
-       // undefinedType = new Typespec(SCALAR);
     }
 
     /**
@@ -138,28 +124,28 @@ public class Predefined
      */
     private static void initializeStandardRoutines(SymtabStack symTabStack)
     {
-        readId    = enterStandard(symTabStack, PROCEDURE, "read",    READ);
-        readlnId  = enterStandard(symTabStack, PROCEDURE, "readln",  READLN);
-        writeId   = enterStandard(symTabStack, PROCEDURE, "write",   WRITE);
-        writelnId = enterStandard(symTabStack, PROCEDURE, "writeln", WRITELN);
+        // readId    = enterStandard(symTabStack, PROCEDURE, "read",    READ);
+        // readlnId  = enterStandard(symTabStack, PROCEDURE, "readln",  READLN);
+        // writeId   = enterStandard(symTabStack, PROCEDURE, "write",   WRITE);
+        // writelnId = enterStandard(symTabStack, PROCEDURE, "writeln", WRITELN);
 
-        absId    = enterStandard(symTabStack, FUNCTION, "abs",    ABS);
-        arctanId = enterStandard(symTabStack, FUNCTION, "arctan", ARCTAN);
-        chrId    = enterStandard(symTabStack, FUNCTION, "chr",    CHR);
-        cosId    = enterStandard(symTabStack, FUNCTION, "cos",    COS);
-        eofId    = enterStandard(symTabStack, FUNCTION, "eof",    EOF);
-        eolnId   = enterStandard(symTabStack, FUNCTION, "eoln",   EOLN);
+        // absId    = enterStandard(symTabStack, FUNCTION, "abs",    ABS);
+        // arctanId = enterStandard(symTabStack, FUNCTION, "arctan", ARCTAN);
+        // chrId    = enterStandard(symTabStack, FUNCTION, "chr",    CHR);
+        // cosId    = enterStandard(symTabStack, FUNCTION, "cos",    COS);
+        // eofId    = enterStandard(symTabStack, FUNCTION, "eof",    EOF);
+        // eolnId   = enterStandard(symTabStack, FUNCTION, "eoln",   EOLN);
         expId    = enterStandard(symTabStack, FUNCTION, "exp",    EXP);
         lnId     = enterStandard(symTabStack, FUNCTION, "ln",     LN);
-        oddId    = enterStandard(symTabStack, FUNCTION, "odd",    ODD);
-        ordId    = enterStandard(symTabStack, FUNCTION, "ord",    ORD);
-        predId   = enterStandard(symTabStack, FUNCTION, "pred",   PRED);
-        roundId  = enterStandard(symTabStack, FUNCTION, "round",  ROUND);
-        sinId    = enterStandard(symTabStack, FUNCTION, "sin",    SIN);
-        sqrId    = enterStandard(symTabStack, FUNCTION, "sqr",    SQR);
-        sqrtId   = enterStandard(symTabStack, FUNCTION, "sqrt",   SQRT);
-        succId   = enterStandard(symTabStack, FUNCTION, "succ",   SUCC);
-        truncId  = enterStandard(symTabStack, FUNCTION, "trunc",  TRUNC);
+        // oddId    = enterStandard(symTabStack, FUNCTION, "odd",    ODD);
+        // ordId    = enterStandard(symTabStack, FUNCTION, "ord",    ORD);
+        // predId   = enterStandard(symTabStack, FUNCTION, "pred",   PRED);
+        // roundId  = enterStandard(symTabStack, FUNCTION, "round",  ROUND);
+        // sinId    = enterStandard(symTabStack, FUNCTION, "sin",    SIN);
+        // sqrId    = enterStandard(symTabStack, FUNCTION, "sqr",    SQR);
+        // sqrtId   = enterStandard(symTabStack, FUNCTION, "sqrt",   SQRT);
+        // succId   = enterStandard(symTabStack, FUNCTION, "succ",   SUCC);
+        // truncId  = enterStandard(symTabStack, FUNCTION, "trunc",  TRUNC);
     }
 
     /**
