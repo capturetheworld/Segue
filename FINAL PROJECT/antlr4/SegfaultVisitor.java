@@ -34,11 +34,17 @@ public interface SegfaultVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStatement(SegfaultParser.StatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#function}.
+	 * Visit a parse tree produced by {@link SegfaultParser#functiondef}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFunction(SegfaultParser.FunctionContext ctx);
+	T visitFunctiondef(SegfaultParser.FunctiondefContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#functioncall}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctioncall(SegfaultParser.FunctioncallContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SegfaultParser#assignmentStatement}.
 	 * @param ctx the parse tree
@@ -82,6 +88,12 @@ public interface SegfaultVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSynthFunction(SegfaultParser.SynthFunctionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#returnStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitReturnStatement(SegfaultParser.ReturnStatementContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link SegfaultParser#functionID}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -94,17 +106,29 @@ public interface SegfaultVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFunctionSymbol(SegfaultParser.FunctionSymbolContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#argumentList}.
+	 * Visit a parse tree produced by {@link SegfaultParser#paramList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitArgumentList(SegfaultParser.ArgumentListContext ctx);
+	T visitParamList(SegfaultParser.ParamListContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SegfaultParser#argument}.
+	 * Visit a parse tree produced by {@link SegfaultParser#param}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitArgument(SegfaultParser.ArgumentContext ctx);
+	T visitParam(SegfaultParser.ParamContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#argList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArgList(SegfaultParser.ArgListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegfaultParser#arg}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArg(SegfaultParser.ArgContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SegfaultParser#numericalExpression}.
 	 * @param ctx the parse tree

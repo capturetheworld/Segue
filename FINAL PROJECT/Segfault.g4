@@ -20,9 +20,13 @@ statement:  assignmentStatement
             | synthStatement
             | prefixOp
             | suffixOp
+            | functiondef
+            | returnStatement
+            | functioncall
             ;
 
-function:  functionID '(' argumentList? ')' (BR*) '{' BR* line+ BR* '}' ; 
+functiondef:  functionID '(' paramList? ')' (BR*) '{' BR* line+ BR* '}' ;
+functioncall:  functionID '(' argList? ')';
 
 
 assignmentStatement locals [ Typespec type = null, SymtabEntry entry = null ] 
@@ -36,17 +40,21 @@ synthFunction : synthSetFunction
                 | synthChannelFunction
                 | synthNoteFunction
                 | synthStartFunction;
-
+returnStatement : RETURN (numericalExpression|booleanExpression);
 
 
 
 functionID : functionSymbol IDENTIFIER;
 functionSymbol : '@';
 
-argumentList locals [ Typespec type = null, SymtabEntry entry = null ] 
-            : argument (',' argument)*;
+paramList locals [ Typespec type = null, SymtabEntry entry = null ] 
+            : param (',' param)*;
             
-argument: boolIdentifier | numIdentifier;
+param: boolIdentifier | numIdentifier;
+
+argList locals [ Typespec type = null, SymtabEntry entry = null ] 
+            : arg (',' arg)*;
+arg: booleanExpression | numericalExpression;
 
 numericalExpression : term (addOp term)*;
 term : factor (mulOp factor)*;
@@ -143,7 +151,7 @@ CHANNEL : C H A N N E L;
 NOTE : N O T E;
 LERP : L E R P;
 START : S T A R T;
-
+RETURN : R E T U R N;
 
 
 
