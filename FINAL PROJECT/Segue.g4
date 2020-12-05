@@ -9,7 +9,8 @@ grammar Segue;
 
 
 //STARTPGM : '{' ;
-program  :  BR* line* statement BR* EOF ;
+program locals [ Typespec type = null, SymtabEntry entry = null ] 
+        :  BR* line* statement BR* EOF ;
 
 line: statement BR+;
 

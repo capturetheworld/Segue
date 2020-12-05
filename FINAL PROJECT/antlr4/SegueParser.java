@@ -131,6 +131,8 @@ public class SegueParser extends Parser {
 	}
 
 	public static class ProgramContext extends ParserRuleContext {
+		public Typespec type = null;
+		public SymtabEntry entry = null;
 		public StatementContext statement() {
 			return getRuleContext(StatementContext.class,0);
 		}

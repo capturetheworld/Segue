@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import antlr4.*;
-
+import antlr4.SegueParser.LineContext;
 import intermediate.symtab.*;
 import intermediate.symtab.SymtabEntry.Kind;
 import intermediate.type.*;
@@ -15,30 +15,27 @@ import static frontend.SemanticErrorHandler.Code.*;
 import static intermediate.symtab.SymtabEntry.Kind.*;
 import static intermediate.symtab.SymtabEntry.Routine.*;
 import static intermediate.type.Typespec.Form.*;
-import static intermediate.util.BackendMode.*;
 
 /**
  * Semantic operations.
  * Perform type checking and create symbol tables.
  */
-public class Semantics extends PascalBaseVisitor<Object>
+public class Semantics extends SegueBaseVisitor<Object>
 {
-    private BackendMode mode;
+    private String programName;
     private SymtabStack symtabStack;
     private SymtabEntry programId;
     private SemanticErrorHandler error;
     
-    public Semantics(BackendMode mode)
+    public Semantics(String name)
     {
+        programName = name;
         // Create and initialize the symbol table stack.
         this.symtabStack = new SymtabStack();
         Predefined.initialize(symtabStack);
         //Initialize Types, Constants, Standard Routines
         //with TypeSpec //typespec is some properties of datatypes
 
-
-
-        this.mode = mode;//delete?
         this.error = new SemanticErrorHandler();//delete entire file
     }
     
@@ -54,19 +51,25 @@ public class Semantics extends PascalBaseVisitor<Object>
     {
         type = type.baseType(); //if it is a subrange, gets the type
 
-        if      (type == Predefined.integerType) return Integer.valueOf(0);
-        else if (type == Predefined.realType)    return Float.valueOf(0.0f);
-        else if (type == Predefined.booleanType) return Boolean.valueOf(false);
-        else if (type == Predefined.charType)    return Character.valueOf('#');
-        else /* string */                        return String.valueOf("#");
+        if (type == Predefined.doubleType)    return Double.valueOf(0.0);
+        else /* boolean*/                     return Boolean.valueOf(false);
     }
 
     @Override 
-    public Object visitProgram(PascalParser.ProgramContext ctx) 
-    { 
-        visit(ctx.programHeader());
-        visit(ctx.block().declarations());
-        visit(ctx.block().compoundStatement());
+    public Object visitProgram(SegueParser.ProgramContext ctx) 
+    {
+        programId = symtabStack.enterLocal(programName, PROGRAM);
+        programId.setRoutineSymtab(symtabStack.push());
+        
+        symtabStack.setProgramId(programId);
+        symtabStack.getLocalSymtab().setOwner(programId);
+        
+        ctx.entry = programId;
+
+        if (ctx.line().size() > 0) {
+            for (LineContext line : ctx.line()) visit(line);
+        }
+        visit(ctx.statement());
         
         // Print the cross-reference table.
         CrossReferencer crossReferencer = new CrossReferencer(); //cross referencer only used in 1 place
@@ -74,34 +77,18 @@ public class Semantics extends PascalBaseVisitor<Object>
 
         return null;
     }
-    
-    @Override 
-    public Object visitProgramHeader(PascalParser.ProgramHeaderContext ctx) 
-    { 
-        PascalParser.ProgramIdentifierContext idCtx = ctx.programIdentifier();
-        String programName = idCtx.IDENTIFIER().getText();  // don't shift case
-        
-        programId = symtabStack.enterLocal(programName, PROGRAM);
-        programId.setRoutineSymtab(symtabStack.push());
-        
-        symtabStack.setProgramId(programId);
-        symtabStack.getLocalSymtab().setOwner(programId);
-        
-        idCtx.entry = programId;
-        return null;
-    }
-
+/*
     @Override 
     public Object visitConstantDefinition(
-                                PascalParser.ConstantDefinitionContext ctx) 
+                                SegueParser.ConstantDefinitionContext ctx) 
     { 
-        PascalParser.ConstantIdentifierContext idCtx = ctx.constantIdentifier();
+        SegueParser.ConstantIdentifierContext idCtx = ctx.constantIdentifier();
         String constantName = idCtx.IDENTIFIER().getText().toLowerCase();
         SymtabEntry constantId = symtabStack.lookupLocal(constantName);
         
         if (constantId == null)
         {
-            PascalParser.ConstantContext constCtx = ctx.constant();
+            SegueParser.ConstantContext constCtx = ctx.constant();
             Object constValue = visit(constCtx);
             
             constantId = symtabStack.enterLocal(constantName, CONSTANT);
@@ -122,9 +109,10 @@ public class Semantics extends PascalBaseVisitor<Object>
         constantId.appendLineNumber(ctx.getStart().getLine());        
         return null;
     }
-
+*/
+/*
     @Override 
-    public Object visitConstant(PascalParser.ConstantContext ctx) 
+    public Object visitConstant(SegueParser.ConstantContext ctx) 
     {
         if (ctx.IDENTIFIER() != null)
         {
@@ -180,22 +168,24 @@ public class Semantics extends PascalBaseVisitor<Object>
         
         return ctx.value;
     }
+    */
 
+    /*
     @Override 
-    public Object visitTypeDefinition(PascalParser.TypeDefinitionContext ctx) 
+    public Object visitTypeDefinition(SegueParser.TypeDefinitionContext ctx) 
     { 
-        PascalParser.TypeIdentifierContext idCtx = ctx.typeIdentifier();
+        SegueParser.TypeIdentifierContext idCtx = ctx.typeIdentifier();
         String typeName = idCtx.IDENTIFIER().getText().toLowerCase();
         SymtabEntry typeId = symtabStack.lookupLocal(typeName);
         
-        PascalParser.TypeSpecificationContext typespecCtx = 
+        SegueParser.TypeSpecificationContext typespecCtx = 
                                                         ctx.typeSpecification();
         
         // If it's a record type, create a named record type.
-        if (typespecCtx instanceof PascalParser.RecordTypespecContext)
+        if (typespecCtx instanceof SegueParser.RecordTypespecContext)
         {
             typeId = createRecordType(
-                    (PascalParser.RecordTypespecContext) typespecCtx, typeName);            
+                    (SegueParser.RecordTypespecContext) typespecCtx, typeName);            
         }
 
         // Enter the type name of any other type into the symbol table.
@@ -222,7 +212,7 @@ public class Semantics extends PascalBaseVisitor<Object>
     }
 
     @Override 
-    public Object visitRecordTypespec(PascalParser.RecordTypespecContext ctx) 
+    public Object visitRecordTypespec(SegueParser.RecordTypespecContext ctx) 
     { 
         // Create an unnamed record type.
         String recordTypeName = Symtab.generateUnnamedName();
@@ -237,11 +227,12 @@ public class Semantics extends PascalBaseVisitor<Object>
      * @param recordTypeName the name of the record type.
      * @return the symbol table entry of the record type identifier.
      */
+    /*
     private SymtabEntry createRecordType(
-                        PascalParser.RecordTypespecContext recordTypeSpecCtx, 
+                        SegueParser.RecordTypespecContext recordTypeSpecCtx, 
                         String recordTypeName)
     {
-        PascalParser.RecordTypeContext recordTypeCtx = 
+        SegueParser.RecordTypeContext recordTypeCtx = 
                                                 recordTypeSpecCtx.recordType();
         Typespec recordType = new Typespec(RECORD);
         
@@ -262,12 +253,13 @@ public class Semantics extends PascalBaseVisitor<Object>
         
         return recordTypeId;
     }
-
+    */
     /**
      * Create the fully qualified type pathname of a record type.
      * @param recordType the record type.
      * @return the pathname.
      */
+    /*
     private String createRecordTypePath(Typespec recordType)
     {
         SymtabEntry recordId = recordType.getIdentifier();
@@ -284,14 +276,15 @@ public class Semantics extends PascalBaseVisitor<Object>
         path = parentId.getName() + "$" + path;
         return path;
     }
-
+    */
     /**
      * Create the symbol table for a record type.
      * @param ctx the RecordFieldsContext,
      * @param ownerId the symbol table entry of the owner's identifier.
      * @return the symbol table.
      */
-    private Symtab createRecordSymtab(PascalParser.RecordFieldsContext ctx,
+    /*
+    private Symtab createRecordSymtab(SegueParser.RecordFieldsContext ctx,
                                       SymtabEntry ownerId) 
     { 
         Symtab recordSymtab = symtabStack.push();
@@ -303,9 +296,10 @@ public class Semantics extends PascalBaseVisitor<Object>
         
         return recordSymtab;
     }
+    */
     
     @Override 
-    public Object visitSimpleTypespec(PascalParser.SimpleTypespecContext ctx) 
+    public Object visitSimpleTypespec(SegueParser.SimpleTypespecContext ctx) 
     { 
         visit(ctx.simpleType());
         ctx.type = ctx.simpleType().type;
@@ -315,7 +309,7 @@ public class Semantics extends PascalBaseVisitor<Object>
 
     @Override 
     public Object visitTypeIdentifierTypespec(
-                                PascalParser.TypeIdentifierTypespecContext ctx) 
+                                SegueParser.TypeIdentifierTypespecContext ctx) 
     { 
         visit(ctx.typeIdentifier());
         ctx.type = ctx.typeIdentifier().type;
@@ -324,7 +318,7 @@ public class Semantics extends PascalBaseVisitor<Object>
     }
 
     @Override 
-    public Object visitTypeIdentifier(PascalParser.TypeIdentifierContext ctx) 
+    public Object visitTypeIdentifier(SegueParser.TypeIdentifierContext ctx) 
     { 
         String typeName = ctx.IDENTIFIER().getText().toLowerCase();
         SymtabEntry typeId = symtabStack.lookup(typeName);
@@ -355,17 +349,17 @@ public class Semantics extends PascalBaseVisitor<Object>
 
     @Override 
     public Object visitEnumerationTypespec(
-                                    PascalParser.EnumerationTypespecContext ctx) 
+                                    SegueParser.EnumerationTypespecContext ctx) 
     { 
         Typespec enumType = new Typespec(ENUMERATION);
         ArrayList<SymtabEntry> constants = new ArrayList<>();
         int value = -1;
 
         // Loop over the enumeration constants.
-        for (PascalParser.EnumerationConstantContext constCtx : 
+        for (SegueParser.EnumerationConstantContext constCtx : 
                                     ctx.enumerationType().enumerationConstant())
         {
-            PascalParser.ConstantIdentifierContext constIdCtx = 
+            SegueParser.ConstantIdentifierContext constIdCtx = 
                                                 constCtx.constantIdentifier();
             String constantName = constIdCtx.IDENTIFIER().getText()
                                                          .toLowerCase();
@@ -399,12 +393,12 @@ public class Semantics extends PascalBaseVisitor<Object>
 
     @Override 
     public Object visitSubrangeTypespec(
-                                    PascalParser.SubrangeTypespecContext ctx) 
+                                    SegueParser.SubrangeTypespecContext ctx) 
     { 
         Typespec type = new Typespec(SUBRANGE);
-        PascalParser.SubrangeTypeContext subCtx = ctx.subrangeType();
-        PascalParser.ConstantContext minCtx = subCtx.constant().get(0);
-        PascalParser.ConstantContext maxCtx = subCtx.constant().get(1);
+        SegueParser.SubrangeTypeContext subCtx = ctx.subrangeType();
+        SegueParser.ConstantContext minCtx = subCtx.constant().get(0);
+        SegueParser.ConstantContext maxCtx = subCtx.constant().get(1);
         
         Object minObj = visit(minCtx);
         Object maxObj = visit(maxCtx);
@@ -457,11 +451,11 @@ public class Semantics extends PascalBaseVisitor<Object>
     }
 
     @Override 
-    public Object visitArrayTypespec(PascalParser.ArrayTypespecContext ctx) 
+    public Object visitArrayTypespec(SegueParser.ArrayTypespecContext ctx) 
     { 
         Typespec arrayType = new Typespec(ARRAY);
-        PascalParser.ArrayTypeContext arrayCtx = ctx.arrayType();
-        PascalParser.ArrayDimensionListContext listCtx = 
+        SegueParser.ArrayTypeContext arrayCtx = ctx.arrayType();
+        SegueParser.ArrayDimensionListContext listCtx = 
                                                 arrayCtx.arrayDimensionList();
         
         ctx.type = arrayType;
@@ -470,7 +464,7 @@ public class Semantics extends PascalBaseVisitor<Object>
         int count = listCtx.simpleType().size();
         for (int i = 0; i < count; i++)
         {
-            PascalParser.SimpleTypeContext simpleCtx = 
+            SegueParser.SimpleTypeContext simpleCtx = 
                                                     listCtx.simpleType().get(i);
             visit(simpleCtx);
             arrayType.setArrayIndexType(simpleCtx.type);
@@ -517,16 +511,16 @@ public class Semantics extends PascalBaseVisitor<Object>
 
     @Override 
     public Object visitVariableDeclarations(
-                                PascalParser.VariableDeclarationsContext ctx) 
+                                SegueParser.VariableDeclarationsContext ctx) 
     { 
-        PascalParser.TypeSpecificationContext typeCtx = ctx.typeSpecification();
+        SegueParser.TypeSpecificationContext typeCtx = ctx.typeSpecification();
         visit(typeCtx);
         
-        PascalParser.VariableIdentifierListContext listCtx = 
+        SegueParser.VariableIdentifierListContext listCtx = 
                                                 ctx.variableIdentifierList();
         
         // Loop over the variables being declared.
-        for (PascalParser.VariableIdentifierContext idCtx : 
+        for (SegueParser.VariableIdentifierContext idCtx : 
                                                 listCtx.variableIdentifier())
         {
             int lineNumber = idCtx.getStart().getLine();        
@@ -561,12 +555,12 @@ public class Semantics extends PascalBaseVisitor<Object>
     @Override 
     @SuppressWarnings("unchecked")
     public Object visitRoutineDefinition(
-                                    PascalParser.RoutineDefinitionContext ctx) 
+                                    SegueParser.RoutineDefinitionContext ctx) 
     {
-        PascalParser.FunctionHeadContext  funcCtx = ctx.functionHead();
-        PascalParser.ProcedureHeadContext procCtx = ctx.procedureHead();
-        PascalParser.RoutineIdentifierContext idCtx = null;
-        PascalParser.ParametersContext parameters = null;
+        SegueParser.FunctionHeadContext  funcCtx = ctx.functionHead();
+        SegueParser.ProcedureHeadContext procCtx = ctx.procedureHead();
+        SegueParser.RoutineIdentifierContext idCtx = null;
+        SegueParser.ParametersContext parameters = null;
         boolean functionDefinition = funcCtx != null;
         Typespec returnType = null;
         String routineName;
@@ -621,7 +615,7 @@ public class Semantics extends PascalBaseVisitor<Object>
         
         if (functionDefinition)
         {
-            PascalParser.TypeIdentifierContext typeIdCtx = 
+            SegueParser.TypeIdentifierContext typeIdCtx = 
                                                     funcCtx.typeIdentifier();
             visit(typeIdCtx);
             returnType = typeIdCtx.type;
@@ -661,12 +655,12 @@ public class Semantics extends PascalBaseVisitor<Object>
     @Override 
     @SuppressWarnings("unchecked")
     public Object visitParameterDeclarationsList(
-                            PascalParser.ParameterDeclarationsListContext ctx)
+                            SegueParser.ParameterDeclarationsListContext ctx)
     {
         ArrayList<SymtabEntry> parameterList = new ArrayList<>();
         
         // Loop over the parameter declarations.
-        for (PascalParser.ParameterDeclarationsContext dclCtx : 
+        for (SegueParser.ParameterDeclarationsContext dclCtx : 
                                                     ctx.parameterDeclarations())
         {
             ArrayList<SymtabEntry> parameterSublist = 
@@ -679,10 +673,10 @@ public class Semantics extends PascalBaseVisitor<Object>
 
     @Override 
     public Object visitParameterDeclarations(
-                                PascalParser.ParameterDeclarationsContext ctx) 
+                                SegueParser.ParameterDeclarationsContext ctx) 
     {
         Kind kind = ctx.VAR() != null ? REFERENCE_PARAMETER : VALUE_PARAMETER; 
-        PascalParser.TypeIdentifierContext typeCtx = ctx.typeIdentifier();
+        SegueParser.TypeIdentifierContext typeCtx = ctx.typeIdentifier();
         
         visit(typeCtx);
         Typespec parmType = typeCtx.type;
@@ -690,9 +684,9 @@ public class Semantics extends PascalBaseVisitor<Object>
         ArrayList<SymtabEntry> parameterSublist = new ArrayList<>();
         
         // Loop over the parameter identifiers.
-        PascalParser.ParameterIdentifierListContext parmListCtx = 
+        SegueParser.ParameterIdentifierListContext parmListCtx = 
                                                 ctx.parameterIdentifierList();
-        for (PascalParser.ParameterIdentifierContext parmIdCtx : 
+        for (SegueParser.ParameterIdentifierContext parmIdCtx : 
                                             parmListCtx.parameterIdentifier())
         {
             int lineNumber = parmIdCtx.getStart().getLine();   
@@ -728,10 +722,10 @@ public class Semantics extends PascalBaseVisitor<Object>
     
     @Override 
     public Object visitAssignmentStatement(
-                                    PascalParser.AssignmentStatementContext ctx) 
+                                    SegueParser.AssignmentStatementContext ctx) 
     {
-        PascalParser.LhsContext lhsCtx = ctx.lhs();
-        PascalParser.RhsContext rhsCtx = ctx.rhs();
+        SegueParser.LhsContext lhsCtx = ctx.lhs();
+        SegueParser.RhsContext rhsCtx = ctx.rhs();
         
         visitChildren(ctx);
         
@@ -747,9 +741,9 @@ public class Semantics extends PascalBaseVisitor<Object>
     }
 
     @Override 
-    public Object visitLhs(PascalParser.LhsContext ctx) 
+    public Object visitLhs(SegueParser.LhsContext ctx) 
     {
-        PascalParser.VariableContext varCtx = ctx.variable();
+        SegueParser.VariableContext varCtx = ctx.variable();
         visit(varCtx);
         ctx.type = varCtx.type;
         
@@ -757,11 +751,11 @@ public class Semantics extends PascalBaseVisitor<Object>
     }
 
     @Override 
-    public Object visitIfStatement(PascalParser.IfStatementContext ctx) 
+    public Object visitIfStatement(SegueParser.IfStatementContext ctx) 
     {
-        PascalParser.ExpressionContext     exprCtx  = ctx.expression();
-        PascalParser.TrueStatementContext  trueCtx  = ctx.trueStatement();
-        PascalParser.FalseStatementContext falseCtx = ctx.falseStatement();
+        SegueParser.ExpressionContext     exprCtx  = ctx.expression();
+        SegueParser.TrueStatementContext  trueCtx  = ctx.trueStatement();
+        SegueParser.FalseStatementContext falseCtx = ctx.falseStatement();
         
         visit(exprCtx);
         Typespec exprType = exprCtx.type;
@@ -778,9 +772,9 @@ public class Semantics extends PascalBaseVisitor<Object>
     }
 
     @Override 
-    public Object visitCaseStatement(PascalParser.CaseStatementContext ctx) 
+    public Object visitCaseStatement(SegueParser.CaseStatementContext ctx) 
     {
-        PascalParser.ExpressionContext exprCtx = ctx.expression();
+        SegueParser.ExpressionContext exprCtx = ctx.expression();
         visit(exprCtx);
         Typespec exprType = exprCtx.type;
         Form exprTypeForm = exprType.getForm();
@@ -796,23 +790,23 @@ public class Semantics extends PascalBaseVisitor<Object>
         }
         
         HashSet<Integer> constants = new HashSet<>();
-        PascalParser.CaseBranchListContext branchListCtx = ctx.caseBranchList();
+        SegueParser.CaseBranchListContext branchListCtx = ctx.caseBranchList();
         
         // Loop over the CASE branches.
-        for (PascalParser.CaseBranchContext branchCtx : 
+        for (SegueParser.CaseBranchContext branchCtx : 
                                                     branchListCtx.caseBranch())
         {
-            PascalParser.CaseConstantListContext constListCtx = 
+            SegueParser.CaseConstantListContext constListCtx = 
                                                     branchCtx.caseConstantList();
-            PascalParser.StatementContext stmtCtx = branchCtx.statement();
+            SegueParser.StatementContext stmtCtx = branchCtx.statement();
             
             if (constListCtx != null)
             {
                 // Loop over the CASE constants in each branch.
-                for (PascalParser.CaseConstantContext caseConstCtx : 
+                for (SegueParser.CaseConstantContext caseConstCtx : 
                                                     constListCtx.caseConstant())
                 {
-                    PascalParser.ConstantContext constCtx = 
+                    SegueParser.ConstantContext constCtx = 
                                                         caseConstCtx.constant();
                     Object constValue = visit(constCtx);
                     
@@ -851,9 +845,9 @@ public class Semantics extends PascalBaseVisitor<Object>
     }
 
     @Override 
-    public Object visitRepeatStatement(PascalParser.RepeatStatementContext ctx) 
+    public Object visitRepeatStatement(SegueParser.RepeatStatementContext ctx) 
     {
-        PascalParser.ExpressionContext exprCtx = ctx.expression();
+        SegueParser.ExpressionContext exprCtx = ctx.expression();
         visit(exprCtx);
         Typespec exprType = exprCtx.type;
         
@@ -867,9 +861,9 @@ public class Semantics extends PascalBaseVisitor<Object>
     }
 
     @Override 
-    public Object visitWhileStatement(PascalParser.WhileStatementContext ctx) 
+    public Object visitWhileStatement(SegueParser.WhileStatementContext ctx) 
     {
-        PascalParser.ExpressionContext exprCtx = ctx.expression();
+        SegueParser.ExpressionContext exprCtx = ctx.expression();
         visit(exprCtx);
         Typespec exprType = exprCtx.type;
         
@@ -883,9 +877,9 @@ public class Semantics extends PascalBaseVisitor<Object>
     }
 
     @Override 
-    public Object visitForStatement(PascalParser.ForStatementContext ctx) 
+    public Object visitForStatement(SegueParser.ForStatementContext ctx) 
     {
-        PascalParser.VariableContext varCtx = ctx.variable();
+        SegueParser.VariableContext varCtx = ctx.variable();
         visit(varCtx);
         
         String controlName = varCtx.variableIdentifier().getText().toLowerCase();
@@ -909,8 +903,8 @@ public class Semantics extends PascalBaseVisitor<Object>
                        controlName);
         }
         
-        PascalParser.ExpressionContext startCtx = ctx.expression().get(0);
-        PascalParser.ExpressionContext endCtx   = ctx.expression().get(1);
+        SegueParser.ExpressionContext startCtx = ctx.expression().get(0);
+        SegueParser.ExpressionContext endCtx   = ctx.expression().get(1);
         
         visit(startCtx);
         visit(endCtx);
@@ -924,10 +918,10 @@ public class Semantics extends PascalBaseVisitor<Object>
 
     @Override 
     public Object visitProcedureCallStatement(
-                                PascalParser.ProcedureCallStatementContext ctx) 
+                                SegueParser.ProcedureCallStatementContext ctx) 
     {
-        PascalParser.ProcedureNameContext nameCtx = ctx.procedureName();
-        PascalParser.ArgumentListContext listCtx = ctx.argumentList();
+        SegueParser.ProcedureNameContext nameCtx = ctx.procedureName();
+        SegueParser.ArgumentListContext listCtx = ctx.argumentList();
         String name = ctx.procedureName().getText().toLowerCase();
         SymtabEntry procedureId = symtabStack.lookup(name);
         boolean badName = false;
@@ -946,7 +940,7 @@ public class Semantics extends PascalBaseVisitor<Object>
         // Bad procedure name. Do a simple arguments check and then leave.
         if (badName)
         {
-            for (PascalParser.ArgumentContext exprCtx : listCtx.argument())
+            for (SegueParser.ArgumentContext exprCtx : listCtx.argument())
             {
                 visit(exprCtx);
             }
@@ -965,11 +959,11 @@ public class Semantics extends PascalBaseVisitor<Object>
 
     @Override 
     public Object visitFunctionCallFactor(
-                                    PascalParser.FunctionCallFactorContext ctx) 
+                                    SegueParser.FunctionCallFactorContext ctx) 
     {
-        PascalParser.FunctionCallContext callCtx = ctx.functionCall();
-        PascalParser.FunctionNameContext nameCtx = callCtx.functionName();
-        PascalParser.ArgumentListContext listCtx = callCtx.argumentList();
+        SegueParser.FunctionCallContext callCtx = ctx.functionCall();
+        SegueParser.FunctionNameContext nameCtx = callCtx.functionName();
+        SegueParser.ArgumentListContext listCtx = callCtx.argumentList();
         String name = callCtx.functionName().getText().toLowerCase();
         SymtabEntry functionId = symtabStack.lookup(name);
         boolean badName = false;
@@ -990,7 +984,7 @@ public class Semantics extends PascalBaseVisitor<Object>
         // Bad function name. Do a simple arguments check and then leave.
         if (badName)
         {
-            for (PascalParser.ArgumentContext exprCtx : listCtx.argument())
+            for (SegueParser.ArgumentContext exprCtx : listCtx.argument())
             {
                 visit(exprCtx);
             }
@@ -1015,7 +1009,7 @@ public class Semantics extends PascalBaseVisitor<Object>
      * @param listCtx the ArgumentListContext.
      * @param parameters the arraylist of parameters to fill.
      */
-    private void checkCallArguments(PascalParser.ArgumentListContext listCtx,
+    private void checkCallArguments(SegueParser.ArgumentListContext listCtx,
                                     ArrayList<SymtabEntry> parameters)
     {
         int parmsCount = parameters.size();
@@ -1030,8 +1024,8 @@ public class Semantics extends PascalBaseVisitor<Object>
         // Check each argument against the corresponding parameter.
         for (int i = 0; i < parmsCount; i++)
         {
-            PascalParser.ArgumentContext argCtx = listCtx.argument().get(i);
-            PascalParser.ExpressionContext exprCtx = argCtx.expression();
+            SegueParser.ArgumentContext argCtx = listCtx.argument().get(i);
+            SegueParser.ExpressionContext exprCtx = argCtx.expression();
             visit(exprCtx);
             
             SymtabEntry parmId = parameters.get(i);
@@ -1069,23 +1063,23 @@ public class Semantics extends PascalBaseVisitor<Object>
      * @param exprCtx the ExpressionContext.
      * @return true if it's an expression only, else false.
      */
-    private boolean expressionIsVariable(PascalParser.ExpressionContext exprCtx)
+    private boolean expressionIsVariable(SegueParser.ExpressionContext exprCtx)
     {
         // Only a single simple expression?
         if (exprCtx.simpleExpression().size() == 1)
         {
-            PascalParser.SimpleExpressionContext simpleCtx = 
+            SegueParser.SimpleExpressionContext simpleCtx = 
                                               exprCtx.simpleExpression().get(0);
             // Only a single term?
             if (simpleCtx.term().size() == 1)
             {
-                PascalParser.TermContext termCtx = simpleCtx.term().get(0);
+                SegueParser.TermContext termCtx = simpleCtx.term().get(0);
                 
                 // Only a single factor?
                 if (termCtx.factor().size() == 1)
                 {
                     return termCtx.factor().get(0) instanceof 
-                                            PascalParser.VariableFactorContext;
+                                            SegueParser.VariableFactorContext;
                 }
             }
         }
@@ -1094,9 +1088,9 @@ public class Semantics extends PascalBaseVisitor<Object>
     }
 
     @Override 
-    public Object visitExpression(PascalParser.ExpressionContext ctx) 
+    public Object visitExpression(SegueParser.ExpressionContext ctx) 
     {
-        PascalParser.SimpleExpressionContext simpleCtx1 =
+        SegueParser.SimpleExpressionContext simpleCtx1 =
                                                 ctx.simpleExpression().get(0);
 
         // First simple expression.
@@ -1105,12 +1099,12 @@ public class Semantics extends PascalBaseVisitor<Object>
         Typespec simpleType1 = simpleCtx1.type;
         ctx.type = simpleType1;
         
-        PascalParser.RelOpContext relOpCtx = ctx.relOp();
+        SegueParser.RelOpContext relOpCtx = ctx.relOp();
         
         // Second simple expression?
         if (relOpCtx != null)
         {
-            PascalParser.SimpleExpressionContext simpleCtx2 = 
+            SegueParser.SimpleExpressionContext simpleCtx2 = 
                                                 ctx.simpleExpression().get(1);
             visit(simpleCtx2);
             
@@ -1127,12 +1121,12 @@ public class Semantics extends PascalBaseVisitor<Object>
     }
 
     @Override 
-    public Object visitSimpleExpression(PascalParser.SimpleExpressionContext ctx) 
+    public Object visitSimpleExpression(SegueParser.SimpleExpressionContext ctx) 
     {
         int count = ctx.term().size();
-        PascalParser.SignContext signCtx = ctx.sign();
+        SegueParser.SignContext signCtx = ctx.sign();
         Boolean hasSign = signCtx != null;
-        PascalParser.TermContext termCtx1 = ctx.term().get(0);
+        SegueParser.TermContext termCtx1 = ctx.term().get(0);
         
         if (hasSign)
         {
@@ -1151,7 +1145,7 @@ public class Semantics extends PascalBaseVisitor<Object>
         for (int i = 1; i < count; i++)
         {
             String op = ctx.addOp().get(i-1).getText().toLowerCase();
-            PascalParser.TermContext termCtx2 = ctx.term().get(i);
+            SegueParser.TermContext termCtx2 = ctx.term().get(i);
             visit(termCtx2);
             Typespec termType2 = termCtx2.type;
             
@@ -1249,10 +1243,10 @@ public class Semantics extends PascalBaseVisitor<Object>
     }
 
     @Override 
-    public Object visitTerm(PascalParser.TermContext ctx) 
+    public Object visitTerm(SegueParser.TermContext ctx) 
     {
         int count = ctx.factor().size();
-        PascalParser.FactorContext factorCtx1 = ctx.factor().get(0);
+        SegueParser.FactorContext factorCtx1 = ctx.factor().get(0);
         
         // First factor.
         visit(factorCtx1);
@@ -1262,7 +1256,7 @@ public class Semantics extends PascalBaseVisitor<Object>
         for (int i = 1; i < count; i++)
         {
             String op = ctx.mulOp().get(i-1).getText().toLowerCase();
-            PascalParser.FactorContext factorCtx2 = ctx.factor().get(i);
+            SegueParser.FactorContext factorCtx2 = ctx.factor().get(i);
             visit(factorCtx2);
             Typespec factorType2 = factorCtx2.type;
             
@@ -1357,9 +1351,9 @@ public class Semantics extends PascalBaseVisitor<Object>
     }
 
     @Override 
-    public Object visitVariableFactor(PascalParser.VariableFactorContext ctx) 
+    public Object visitVariableFactor(SegueParser.VariableFactorContext ctx) 
     {
-        PascalParser.VariableContext varCtx = ctx.variable();
+        SegueParser.VariableContext varCtx = ctx.variable();
         visit(varCtx);        
         ctx.type  = varCtx.type;
         
@@ -1367,9 +1361,9 @@ public class Semantics extends PascalBaseVisitor<Object>
     }
 
     @Override 
-    public Object visitVariable(PascalParser.VariableContext ctx) 
+    public Object visitVariable(SegueParser.VariableContext ctx) 
     {
-        PascalParser.VariableIdentifierContext varIdCtx = 
+        SegueParser.VariableIdentifierContext varIdCtx = 
                                                     ctx.variableIdentifier();
         
         visit(varIdCtx);
@@ -1381,7 +1375,7 @@ public class Semantics extends PascalBaseVisitor<Object>
 
     @Override 
     public Object visitVariableIdentifier(
-                                    PascalParser.VariableIdentifierContext ctx) 
+                                    SegueParser.VariableIdentifierContext ctx) 
     {
         String variableName = ctx.IDENTIFIER().getText().toLowerCase();
         SymtabEntry variableId = symtabStack.lookup(variableName);
@@ -1423,25 +1417,25 @@ public class Semantics extends PascalBaseVisitor<Object>
      * @return the datatype with any modifiers.
      */
     private Typespec variableDatatype(
-                        PascalParser.VariableContext varCtx, Typespec varType)
+                        SegueParser.VariableContext varCtx, Typespec varType)
     {
         Typespec type = varType;
         
         // Loop over the modifiers.
-        for (PascalParser.ModifierContext modCtx : varCtx.modifier())
+        for (SegueParser.ModifierContext modCtx : varCtx.modifier())
         {
             // Subscripts.
             if (modCtx.indexList() != null)
             {
-                PascalParser.IndexListContext indexListCtx = modCtx.indexList();
+                SegueParser.IndexListContext indexListCtx = modCtx.indexList();
                 
                 // Loop over the subscripts.
-                for (PascalParser.IndexContext indexCtx : indexListCtx.index())
+                for (SegueParser.IndexContext indexCtx : indexListCtx.index())
                 {
                     if (type.getForm() == ARRAY)
                     {
                         Typespec indexType = type.getArrayIndexType();
-                        PascalParser.ExpressionContext exprCtx = 
+                        SegueParser.ExpressionContext exprCtx = 
                                                         indexCtx.expression();
                         visit(exprCtx);
                         
@@ -1464,7 +1458,7 @@ public class Semantics extends PascalBaseVisitor<Object>
                 if (type.getForm() == RECORD)
                 {
                     Symtab symtab = type.getRecordSymtab();
-                    PascalParser.FieldContext fieldCtx = modCtx.field();
+                    SegueParser.FieldContext fieldCtx = modCtx.field();
                     String fieldName = 
                                 fieldCtx.IDENTIFIER().getText().toLowerCase();
                     SymtabEntry fieldId = symtab.lookup(fieldName);
@@ -1495,11 +1489,11 @@ public class Semantics extends PascalBaseVisitor<Object>
     }
     
     @Override 
-    public Object visitNumberFactor(PascalParser.NumberFactorContext ctx) 
+    public Object visitNumberFactor(SegueParser.NumberFactorContext ctx) 
     {
-        PascalParser.NumberContext          numberCtx   = ctx.number();
-        PascalParser.UnsignedNumberContext  unsignedCtx = numberCtx.unsignedNumber();
-        PascalParser.IntegerConstantContext integerCtx  = unsignedCtx.integerConstant();
+        SegueParser.NumberContext          numberCtx   = ctx.number();
+        SegueParser.UnsignedNumberContext  unsignedCtx = numberCtx.unsignedNumber();
+        SegueParser.IntegerConstantContext integerCtx  = unsignedCtx.integerConstant();
 
         ctx.type = (integerCtx != null) ? Predefined.integerType
                                         : Predefined.realType;
@@ -1509,23 +1503,23 @@ public class Semantics extends PascalBaseVisitor<Object>
 
     @Override 
     public Object visitCharacterFactor(
-                                    PascalParser.CharacterFactorContext ctx) 
+                                    SegueParser.CharacterFactorContext ctx) 
     {
         ctx.type = Predefined.charType;
         return null;
     }
 
     @Override 
-    public Object visitStringFactor(PascalParser.StringFactorContext ctx) 
+    public Object visitStringFactor(SegueParser.StringFactorContext ctx) 
     {
         ctx.type = Predefined.stringType;
         return null;
     }
 
     @Override 
-    public Object visitNotFactor(PascalParser.NotFactorContext ctx) 
+    public Object visitNotFactor(SegueParser.NotFactorContext ctx) 
     {
-        PascalParser.FactorContext factorCtx = ctx.factor();
+        SegueParser.FactorContext factorCtx = ctx.factor();
         visit(factorCtx);
         
         if (factorCtx.type != Predefined.booleanType)
@@ -1539,9 +1533,9 @@ public class Semantics extends PascalBaseVisitor<Object>
 
     @Override 
     public Object visitParenthesizedFactor(
-                                    PascalParser.ParenthesizedFactorContext ctx) 
+                                    SegueParser.ParenthesizedFactorContext ctx) 
     {
-        PascalParser.ExpressionContext exprCtx = ctx.expression();
+        SegueParser.ExpressionContext exprCtx = ctx.expression();
         visit(exprCtx);
         ctx.type = exprCtx.type;
 

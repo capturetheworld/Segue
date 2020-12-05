@@ -22,42 +22,39 @@ import static intermediate.type.Typespec.Form.*;
 public class Predefined
 {
     // Predefined types.
-    public static Typespec integerType;
-    public static Typespec realType;
+    public static Typespec doubleType;
     public static Typespec booleanType;
     //public static Typespec charType;
     public static Typespec stringType;
     //public static Typespec undefinedType;
 
     // Predefined identifiers.
-    public static SymtabEntry integerId;
-    public static SymtabEntry realId;
+    public static SymtabEntry doubleId;
     public static SymtabEntry booleanId;
-    public static SymtabEntry charId;
-    public static SymtabEntry stringId;
     public static SymtabEntry falseId;
     public static SymtabEntry trueId;
-    public static SymtabEntry readId;
-    public static SymtabEntry readlnId;
-    public static SymtabEntry writeId;
-    public static SymtabEntry writelnId;
-    public static SymtabEntry absId;
-    public static SymtabEntry arctanId;
-    public static SymtabEntry chrId;
-    public static SymtabEntry cosId;
-    public static SymtabEntry eofId;
-    public static SymtabEntry eolnId;
-    public static SymtabEntry expId;
-    public static SymtabEntry lnId;
-    public static SymtabEntry oddId;
-    public static SymtabEntry ordId;
-    public static SymtabEntry predId;
-    public static SymtabEntry roundId;
-    public static SymtabEntry sinId;
-    public static SymtabEntry sqrId;
-    public static SymtabEntry sqrtId;
-    public static SymtabEntry succId;
-    public static SymtabEntry truncId;
+    public static SymtabEntry printId;
+    // public static SymtabEntry readId;
+    // public static SymtabEntry readlnId;
+    // public static SymtabEntry writeId;
+    // public static SymtabEntry writelnId;
+    // public static SymtabEntry absId;
+    // public static SymtabEntry arctanId;
+    // public static SymtabEntry chrId;
+    // public static SymtabEntry cosId;
+    // public static SymtabEntry eofId;
+    // public static SymtabEntry eolnId;
+    // public static SymtabEntry expId;
+    // public static SymtabEntry lnId;
+    // public static SymtabEntry oddId;
+    // public static SymtabEntry ordId;
+    // public static SymtabEntry predId;
+    // public static SymtabEntry roundId;
+    // public static SymtabEntry sinId;
+    // public static SymtabEntry sqrId;
+    // public static SymtabEntry sqrtId;
+    // public static SymtabEntry succId;
+    // public static SymtabEntry truncId;
 
     /**
      * Initialize a symbol table stack with predefined identifiers.
@@ -76,17 +73,12 @@ public class Predefined
      */
     private static void initializeTypes(SymtabStack symTabStack)
     {
-        // Type integer.
-        integerId = symTabStack.enterLocal("integer", TYPE);
-        integerType = new Typespec(SCALAR);
-        integerType.setIdentifier(integerId);
-        integerId.setType(integerType);
 
-        // Type real.
-        realId = symTabStack.enterLocal("real", TYPE);
-        realType = new Typespec(SCALAR); //typespec is some properties of datatypes
-        realType.setIdentifier(realId);
-        realId.setType(realType);
+        // Type boolean.
+        doubleId = symTabStack.enterLocal("double", TYPE);
+        doubleType = new Typespec(SCALAR); //typespec is some properties of datatypes
+        doubleType.setIdentifier(doubleId);
+        doubleId.setType(doubleType);
 
         // Type boolean.
         booleanId = symTabStack.enterLocal("boolean", TYPE);
@@ -124,6 +116,7 @@ public class Predefined
      */
     private static void initializeStandardRoutines(SymtabStack symTabStack)
     {
+        printId   = enterStandard(symTabStack, PROCEDURE, "print",   PRINT);
         // readId    = enterStandard(symTabStack, PROCEDURE, "read",    READ);
         // readlnId  = enterStandard(symTabStack, PROCEDURE, "readln",  READLN);
         // writeId   = enterStandard(symTabStack, PROCEDURE, "write",   WRITE);
@@ -135,8 +128,8 @@ public class Predefined
         // cosId    = enterStandard(symTabStack, FUNCTION, "cos",    COS);
         // eofId    = enterStandard(symTabStack, FUNCTION, "eof",    EOF);
         // eolnId   = enterStandard(symTabStack, FUNCTION, "eoln",   EOLN);
-        expId    = enterStandard(symTabStack, FUNCTION, "exp",    EXP);
-        lnId     = enterStandard(symTabStack, FUNCTION, "ln",     LN);
+        // expId    = enterStandard(symTabStack, FUNCTION, "exp",    EXP);
+        // lnId     = enterStandard(symTabStack, FUNCTION, "ln",     LN);
         // oddId    = enterStandard(symTabStack, FUNCTION, "odd",    ODD);
         // ordId    = enterStandard(symTabStack, FUNCTION, "ord",    ORD);
         // predId   = enterStandard(symTabStack, FUNCTION, "pred",   PRED);
