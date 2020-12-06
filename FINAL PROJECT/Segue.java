@@ -10,7 +10,11 @@ import antlr4.*;
 
 import frontend.*;
 import intermediate.symtab.*;
+
+// import intermediate.util.BackendMode;
 import backend.compiler.Compiler;
+
+// import static intermediate.util.BackendMode.*;
 
 public class Segue {
     public static void main(String[] args) throws Exception {
@@ -31,13 +35,13 @@ public class Segue {
         CharStream cs = CharStreams.fromStream(source);
 
         // Custom syntax error handler.
-        SyntaxErrorHandler syntaxErrorHandler = new SyntaxErrorHandler();
+        CustomErrorListener err = new CustomErrorListener();
 
         // Create a lexer which scans the character stream
         // to create a token stream.
         SegueLexer lexer = new SegueLexer(cs);
         lexer.removeErrorListeners();
-        lexer.addErrorListener(syntaxErrorHandler);
+        lexer.addErrorListener(err);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
 
         // Create a parser which parses the token stream.
@@ -46,16 +50,16 @@ public class Segue {
         // Pass 1: Check syntax and create the parse tree.
         System.out.printf("\nPASS 1 Syntax: ");
         parser.removeErrorListeners();
-        parser.addErrorListener(syntaxErrorHandler);
+        parser.addErrorListener(err);
         ParseTree tree = parser.program();
 
-        int errorCount = syntaxErrorHandler.getCount();
+        int errorCount = err.getCount();
         if (errorCount > 0) {
-            System.out.printf("\nThere were %d syntax errors.\n", errorCount);
+            System.out.println("There were " + errorCount + " errors in Parser Pass.");
             System.out.println("Object file not created or modified.");
             return;
         } else {
-            System.out.println("There were no syntax errors.");
+            System.out.println("There were no errors in Pass 1");
         }
 
         // Pass 2: Semantic operations.
@@ -68,11 +72,11 @@ public class Segue {
 
         errorCount = pass2.getErrorCount();
         if (errorCount > 0) {
-            System.out.printf("\nThere were %d semantic errors.\n", errorCount);
+            System.out.println("There were " + errorCount + " errors in the Semantic Pass.");
             System.out.println("Object file not created or modified.");
             return;
         }
-        /*
+        /* 
         // Pass 3: Compile the Pascal program.
         System.out.printf("\nPASS 3 Compilation: ");
         SymtabEntry programId = pass2.getProgramId();

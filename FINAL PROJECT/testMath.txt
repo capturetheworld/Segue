@@ -1,0 +1,39 @@
+#a1 = 3
+
+#a2 = 6
+
+#b1 = 9.22
+
+#b2 = 7.1
+
+
+@Slope(#x1, #x2, #y1, #y2){
+
+    return (#y2-#y1)/(#x2-#x1)
+  
+}
+
+@TriangleArea(#base, #height){
+
+    return 0.5 * #base * #height
+  
+}
+
+@TrapezoidArea(#base1, #base2, #height){
+
+    return 0.5 * (#base1+base2) * #height
+  
+}
+
+@CircleArea(#radius){
+
+    return (3.14159265358979 * (#radius * #radius))
+  
+}
+
+
+print(@Slope(#a1, #a2, #b1, #b2))
+print(@TriangleArea(#a2, #a1))
+print(@TrapezoidArea(#a2, #a1, #a1))
+print(@CircleArea(#b1))
+
