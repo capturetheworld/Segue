@@ -134,6 +134,8 @@ public class SegueParser extends Parser {
 	}
 
 	public static class ProgramContext extends ParserRuleContext {
+		public Typespec type = null;
+		public SymtabEntry entry = null;
 		public StatementContext statement() {
 			return getRuleContext(StatementContext.class,0);
 		}
@@ -548,6 +550,8 @@ public class SegueParser extends Parser {
 	}
 
 	public static class FunctioncallContext extends ParserRuleContext {
+		public Typespec type = null;
+		public SymtabEntry entry = null;
 		public FunctionIDContext functionID() {
 			return getRuleContext(FunctionIDContext.class,0);
 		}
@@ -1202,6 +1206,8 @@ public class SegueParser extends Parser {
 	}
 
 	public static class FunctionIDContext extends ParserRuleContext {
+		public Typespec type = null;
+		public SymtabEntry entry = null;
 		public FunctionSymbolContext functionSymbol() {
 			return getRuleContext(FunctionSymbolContext.class,0);
 		}
@@ -1332,6 +1338,8 @@ public class SegueParser extends Parser {
 	}
 
 	public static class ParamContext extends ParserRuleContext {
+		public Typespec type = null;
+		public SymtabEntry entry = null;
 		public BoolIdentifierContext boolIdentifier() {
 			return getRuleContext(BoolIdentifierContext.class,0);
 		}

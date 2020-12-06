@@ -9,7 +9,8 @@ grammar Segue;
 
 
 //STARTPGM : '{' ;
-program  :  BR* line* statement BR* EOF ;
+program locals [ Typespec type = null, SymtabEntry entry = null ]
+        :  BR* line* statement BR* EOF ;
 
 line: statement BR+;
 
@@ -26,7 +27,8 @@ statement:  assignmentStatement
             ;
 
 functiondef:  functionID '(' paramList? ')' (BR*) '{' BR* line+ BR* '}' ;
-functioncall:  functionID '(' argList? ')';
+functioncall locals [ Typespec type = null, SymtabEntry entry = null ]
+            :  functionID '(' argList? ')';
 
 
 assignmentStatement locals [ Typespec type = null, SymtabEntry entry = null ] 
@@ -44,13 +46,15 @@ returnStatement : RETURN (numericalExpression|booleanExpression);
 
 
 
-functionID : functionSymbol IDENTIFIER;
+functionID locals [ Typespec type = null, SymtabEntry entry = null ]
+            : functionSymbol IDENTIFIER;
 functionSymbol : '@';
 
 paramList locals [ Typespec type = null, SymtabEntry entry = null ] 
             : param (',' param)*;
             
-param: boolIdentifier | numIdentifier;
+param locals [ Typespec type = null, SymtabEntry entry = null ]
+        : boolIdentifier | numIdentifier;
 
 argList locals [ Typespec type = null, SymtabEntry entry = null ] 
             : arg (',' arg)*;

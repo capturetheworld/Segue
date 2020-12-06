@@ -26,7 +26,7 @@ public class Predefined
     public static Typespec booleanType;
     //public static Typespec charType;
     public static Typespec stringType;
-    //public static Typespec undefinedType;
+    public static Typespec undefinedType;
 
     // Predefined identifiers.
     public static SymtabEntry doubleId;

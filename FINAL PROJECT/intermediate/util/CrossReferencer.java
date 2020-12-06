@@ -120,7 +120,7 @@ public class CrossReferencer
             if (entry.getKind() == TYPE)
             {
                 Typespec type = entry.getType();
-                if (type.getForm() == RECORD) printRecord(type);
+                //if (type.getForm() == RECORD) printRecord(type);
             }
         }
     }
@@ -244,7 +244,7 @@ public class CrossReferencer
 
                 break;
             }
-
+            /*
             case SUBRANGE: 
             {
                 Object minValue = type.getSubrangeMinValue();
@@ -294,15 +294,16 @@ public class CrossReferencer
 
                 break;
             }
-            
+            */
             default: break;
         }
     }
-
+    
     /**
      * Print the cross-reference table for a record type.
      * @param recordType the RECORD type specification.
      */
+    /*
     private void printRecord(Typespec recordType)
     {
         SymtabEntry recordId = recordType.getIdentifier();
@@ -315,7 +316,7 @@ public class CrossReferencer
         Symtab symtab = recordType.getRecordSymtab();
         printSymtab(symtab);
     }
-
+    */
     /**
      * Convert a value to a string.
      * @param value the value.
