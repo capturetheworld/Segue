@@ -297,7 +297,7 @@ public class Semantics extends SegueBaseVisitor<Object>
         return recordSymtab;
     }
     */
-    
+    /*
     @Override 
     public Object visitSimpleTypespec(SegueParser.SimpleTypespecContext ctx) 
     { 
@@ -316,7 +316,8 @@ public class Semantics extends SegueBaseVisitor<Object>
         
         return null;
     }
-
+    */
+    /*
     @Override 
     public Object visitTypeIdentifier(SegueParser.TypeIdentifierContext ctx) 
     { 
@@ -346,7 +347,8 @@ public class Semantics extends SegueBaseVisitor<Object>
         ctx.entry = typeId;
         return null;
     }
-
+    */
+    /*
     @Override 
     public Object visitEnumerationTypespec(
                                     SegueParser.EnumerationTypespecContext ctx) 
@@ -484,12 +486,13 @@ public class Semantics extends SegueBaseVisitor<Object>
         
         return null;
     }
-    
+    */
     /**
      * Return the number of values in a datatype.
      * @param type the datatype.
      * @return the number of values.
      */
+    /*
     private int typeCount(Typespec type)
     {
         int count = 0;
@@ -508,7 +511,8 @@ public class Semantics extends SegueBaseVisitor<Object>
         
         return count;
     }
-
+    */
+    /*
     @Override 
     public Object visitVariableDeclarations(
                                 SegueParser.VariableDeclarationsContext ctx) 
@@ -551,7 +555,7 @@ public class Semantics extends SegueBaseVisitor<Object>
         
         return null;
     }
-
+    */
     @Override 
     @SuppressWarnings("unchecked")
     public Object visitRoutineDefinition(

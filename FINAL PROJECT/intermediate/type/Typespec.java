@@ -21,7 +21,8 @@ public class Typespec
     
     public enum Form
     {
-        SCALAR, ENUMERATION, SUBRANGE, ARRAY, RECORD, UNKNOWN;
+        // SCALAR, ENUMERATION, SUBRANGE, ARRAY, RECORD, UNKNOWN;
+        SCALAR, ENUMERATION, UNKNOWN;
 
         public String toString() { return super.toString().toLowerCase(); }
     }
@@ -42,31 +43,31 @@ public class Typespec
     /**
      * Subrange type information.
      */
-    private class SubrangeInfo implements TypeInfo
-    {
-        private Typespec baseType;
-        private int minValue;
-        private int maxValue;
-    }
+    // private class SubrangeInfo implements TypeInfo
+    // {
+    //     private Typespec baseType;
+    //     private int minValue;
+    //     private int maxValue;
+    // }
     
     /**
      * Array type information.
      */
-    private class ArrayInfo implements TypeInfo
-    {
-        private Typespec indexType;
-        private Typespec elementType;
-        private int elementCount;
-    }
+    // private class ArrayInfo implements TypeInfo
+    // {
+    //     private Typespec indexType;
+    //     private Typespec elementType;
+    //     private int elementCount;
+    // }
     
     /**
      * Record type information.
      */
-    private class RecordInfo implements TypeInfo
-    {
-        String typePath;
-        private Symtab symtab;
-    }
+    // private class RecordInfo implements TypeInfo
+    // {
+    //     String typePath;
+    //     private Symtab symtab;
+    // }
 
     /**
      * Constructor.
@@ -86,25 +87,25 @@ public class Typespec
                                                 new ArrayList<SymtabEntry>();
                 break;
 
-            case SUBRANGE:
-                info = new SubrangeInfo();
-                ((SubrangeInfo) info).minValue = 0;
-                ((SubrangeInfo) info).maxValue = 0;
-                ((SubrangeInfo) info).baseType = null;
-                break;
+            // case SUBRANGE:
+            //     info = new SubrangeInfo();
+            //     ((SubrangeInfo) info).minValue = 0;
+            //     ((SubrangeInfo) info).maxValue = 0;
+            //     ((SubrangeInfo) info).baseType = null;
+            //     break;
 
-            case ARRAY:
-                info = new ArrayInfo();
-                ((ArrayInfo) info).indexType = null;
-                ((ArrayInfo) info).elementType = null;
-                ((ArrayInfo) info).elementCount = 0;
-                break;
+            // case ARRAY:
+            //     info = new ArrayInfo();
+            //     ((ArrayInfo) info).indexType = null;
+            //     ((ArrayInfo) info).elementType = null;
+            //     ((ArrayInfo) info).elementCount = 0;
+            //     break;
 
-            case RECORD:
-                info = new RecordInfo();
-                ((RecordInfo) info).typePath = null;
-                ((RecordInfo) info).symtab = null;
-                break;
+            // case RECORD:
+            //     info = new RecordInfo();
+            //     ((RecordInfo) info).typePath = null;
+            //     ((RecordInfo) info).symtab = null;
+            //     break;
                 
             default: break;
         }
@@ -114,10 +115,10 @@ public class Typespec
      * Determine whether or not the type is structured (array or record).
      * @return true if structured, false if not.
      */
-    public boolean isStructured() 
-    { 
-        return (form == Form.ARRAY) || (form == Form.RECORD);
-    }
+    // public boolean isStructured() 
+    // { 
+    //     return (form == Form.ARRAY) || (form == Form.RECORD);
+    // }
 
     /**
      * Get the type form.
@@ -146,56 +147,57 @@ public class Typespec
      */
     public Typespec baseType()
     {
-        return form == Form.SUBRANGE ? ((SubrangeInfo) info).baseType : this;
+        // return form == Form.SUBRANGE ? ((SubrangeInfo) info).baseType : this;
+        return this;
     }
 
     /**
      * Get the subrange base type.
      * @return the base type.
      */
-    public Typespec getSubrangeBaseType() 
-    { 
-        return ((SubrangeInfo) info).baseType; 
-    }
+    // public Typespec getSubrangeBaseType() 
+    // { 
+    //     return ((SubrangeInfo) info).baseType; 
+    // }
 
     /**
      * Set the subrange base type.
      * @param baseType the base type to set.
      */
-    public void setSubrangeBaseType(Typespec baseType)
-    {
-        ((SubrangeInfo) info).baseType = baseType;
-    }
+    // public void setSubrangeBaseType(Typespec baseType)
+    // {
+    //     ((SubrangeInfo) info).baseType = baseType;
+    // }
 
     /**
      * Get the subrange minimum value.
      * @return the value.
      */
-    public int getSubrangeMinValue() { return ((SubrangeInfo) info).minValue; }
+    // public int getSubrangeMinValue() { return ((SubrangeInfo) info).minValue; }
 
     /**
      * Get the subrange maximum value.
      * @return the value.
      */
-    public int getSubrangeMaxValue() { return ((SubrangeInfo) info).maxValue; }
+    // public int getSubrangeMaxValue() { return ((SubrangeInfo) info).maxValue; }
 
     /**
      * Set the subrange minimum value.
      * @param minValue the value to set.
      */
-    public void setSubrangeMinValue(int minValue)
-    {
-        ((SubrangeInfo) info).minValue = minValue;
-    }
+    // public void setSubrangeMinValue(int minValue)
+    // {
+    //     ((SubrangeInfo) info).minValue = minValue;
+    // }
 
     /**
      * Set the subrange maximum value.
      * @param maxValue the value to set.
      */
-    public void setSubrangeMaxValue(int maxValue)
-    {
-        ((SubrangeInfo) info).maxValue = maxValue;
-    }
+    // public void setSubrangeMaxValue(int maxValue)
+    // {
+    //     ((SubrangeInfo) info).maxValue = maxValue;
+    // }
 
     /**
      * Get the arraylist of symbol table entries of enumeration constants.
@@ -219,96 +221,96 @@ public class Typespec
      * Get the array index data type.
      * @return the data type.
      */
-    public Typespec getArrayIndexType()
-    {
-        return ((ArrayInfo) info).indexType;
-    }
+    // public Typespec getArrayIndexType()
+    // {
+    //     return ((ArrayInfo) info).indexType;
+    // }
 
     /**
      * Set the array index data type.
      * @parm index_type the data type to set.
      */
-    public void setArrayIndexType(Typespec indexType)
-    {
-        ((ArrayInfo) info).indexType = indexType;
-    }
+    // public void setArrayIndexType(Typespec indexType)
+    // {
+    //     ((ArrayInfo) info).indexType = indexType;
+    // }
 
     /**
      * Get the array element data type.
      * @return the data type.
      */
-    public Typespec getArrayElementType()
-    {
-        return ((ArrayInfo) info).elementType;
-    }
+    // public Typespec getArrayElementType()
+    // {
+    //     return ((ArrayInfo) info).elementType;
+    // }
 
     /**
      * Set the array element data type.
      * @return elmt_type the data type to set.
      */
-    public void setArrayElementType(Typespec elementType)
-    {
-        ((ArrayInfo) info).elementType = elementType;
-    }
+    // public void setArrayElementType(Typespec elementType)
+    // {
+    //     ((ArrayInfo) info).elementType = elementType;
+    // }
 
     /**
      * Get the array element count.
      * @return the count.
      */
-    public int getArrayElementCount() { return ((ArrayInfo) info).elementCount; }
+    // public int getArrayElementCount() { return ((ArrayInfo) info).elementCount; }
 
     /**
      * Set the array element count.
      * @parm elmt_count the count to set.
      */
-    public void setArrayElementCount(int elementCount)
-    {
-        ((ArrayInfo) info).elementCount = elementCount;
-    }
+    // public void setArrayElementCount(int elementCount)
+    // {
+    //     ((ArrayInfo) info).elementCount = elementCount;
+    // }
     
     /**
      * Get the base type of an array.
      * @return the base type of its final dimension.
      */
-    public Typespec getArrayBaseType()
-    {
-        Typespec elmtType = this;
+    // public Typespec getArrayBaseType()
+    // {
+    //     Typespec elmtType = this;
         
-        while (elmtType.form == Form.ARRAY)
-        {
-            elmtType = elmtType.getArrayElementType();
-        }
+    //     while (elmtType.form == Form.ARRAY)
+    //     {
+    //         elmtType = elmtType.getArrayElementType();
+    //     }
         
-        return elmtType.baseType();
-    }
+    //     return elmtType.baseType();
+    // }
 
     /**
      * Get the record's symbol table.
      * @return the symbol table.
      */
-    public Symtab getRecordSymtab() { return ((RecordInfo) info).symtab; }
+    // public Symtab getRecordSymtab() { return ((RecordInfo) info).symtab; }
 
     /**
      * Set the record's symbol table.
      * @parm symtab the symbol table to set.
      */
-    public void setRecordSymtab(Symtab symtab)
-    {
-        ((RecordInfo) info).symtab = symtab;
-    }
+    // public void setRecordSymtab(Symtab symtab)
+    // {
+    //     ((RecordInfo) info).symtab = symtab;
+    // }
     
     /**
      * Get a record type's fully qualified type path.
      * @return the path.
      */
-    public String getRecordTypePath() { return ((RecordInfo) info).typePath; }
+    // public String getRecordTypePath() { return ((RecordInfo) info).typePath; }
     
     /**
      * Set a record type's fully qualified type path.
      * @param typePath the path to set.
      */
-    public void setRecordTypePath(String typePath) 
-    { 
-        ((RecordInfo) info).typePath = typePath; 
-    }
+    // public void setRecordTypePath(String typePath) 
+    // { 
+    //     ((RecordInfo) info).typePath = typePath; 
+    // }
 }

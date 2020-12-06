@@ -34,6 +34,18 @@ public interface SegueVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStatement(SegueParser.StatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link SegueParser#functiondef}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctiondef(SegueParser.FunctiondefContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegueParser#functioncall}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctioncall(SegueParser.FunctioncallContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link SegueParser#assignmentStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -75,6 +87,48 @@ public interface SegueVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitSynthFunction(SegueParser.SynthFunctionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegueParser#returnStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitReturnStatement(SegueParser.ReturnStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegueParser#functionID}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionID(SegueParser.FunctionIDContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegueParser#functionSymbol}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionSymbol(SegueParser.FunctionSymbolContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegueParser#paramList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParamList(SegueParser.ParamListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegueParser#param}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParam(SegueParser.ParamContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegueParser#argList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArgList(SegueParser.ArgListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegueParser#arg}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArg(SegueParser.ArgContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SegueParser#numericalExpression}.
 	 * @param ctx the parse tree
