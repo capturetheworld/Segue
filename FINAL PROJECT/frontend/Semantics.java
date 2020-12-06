@@ -613,8 +613,7 @@ public class Semantics extends SegueBaseVisitor<Object>
         
         // Loop over the parameter declarations.
         for (SegueParser.ParamContext dclCtx : ctx.param()) {
-            ArrayList<SymtabEntry> parameterSublist = (ArrayList<SymtabEntry>) visit(dclCtx);
-            parameterList.addAll(parameterSublist);
+            parameterList.add((SymtabEntry)visit(dclCtx));
         }
         
         return parameterList;
