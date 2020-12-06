@@ -7,6 +7,17 @@
 #b2 = 7.1
 
 
+@SquareRoot(#n){
+    #x = #n
+    #y = 1
+    #e = 0.000001
+    while (#x - #y > #e) {
+        #x = (#x + #y) / 2
+        #y = #n / #x
+    }
+    return #x
+}
+
 @Slope(#x1, #x2, #y1, #y2){
 
     return (#y2-#y1)/(#x2-#x1)
@@ -21,7 +32,7 @@
 
 @TrapezoidArea(#base1, #base2, #height){
 
-    return 0.5 * (#base1+base2) * #height
+    return 0.5 * (#base1+#base2) * #height
   
 }
 
