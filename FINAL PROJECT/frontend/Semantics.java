@@ -1307,6 +1307,7 @@ public class Semantics extends SegueBaseVisitor<Object>
             }
             else
             {
+                if (variableId.getType() != Predefined.doubleType) error.flag(SAME_NAME_DIFFERENT_TYPE, ctx);
                 ctx.type = variableId.getType();
                 ctx.entry = variableId;
                // variableId.appendLineNumber(lineNumber);
@@ -1352,6 +1353,7 @@ public class Semantics extends SegueBaseVisitor<Object>
             }
             else
             {
+                if (variableId.getType() != Predefined.booleanType) error.flag(SAME_NAME_DIFFERENT_TYPE, ctx);
                 ctx.type = variableId.getType();
                 ctx.entry = variableId;
                // variableId.appendLineNumber(lineNumber);

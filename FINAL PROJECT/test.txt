@@ -1,5 +1,5 @@
 #s = 20
-$boolean = TRUE
+$bool = TRUE
 
 
 #double3 = 7.00 + 24
@@ -23,10 +23,9 @@ $boolean = TRUE
 }
 
 #s =5
-#x = 6
+$x = false
 @SquareMinus(#s, #x)
 print(#s)
-print($s)
-print($double3)
-print($boolean)
+print(#double3)
+print($bool)
 print(@SquareMinus(#s, #x))

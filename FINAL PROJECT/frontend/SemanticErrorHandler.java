@@ -27,7 +27,8 @@ public class SemanticErrorHandler
         INVALID_REFERENCE_PARAMETER("Reference parameter cannot be scalar"),
         INVALID_RETURN_TYPE        ("Invalid function return type"),
         TOO_MANY_SUBSCRIPTS        ("Too many subscripts"),
-        INVALID_FIELD              ("Invalid field");
+        INVALID_FIELD              ("Invalid field"),
+        SAME_NAME_DIFFERENT_TYPE   ("Variable with the same name but wrong type");
         
         private String message;
         
