@@ -1259,6 +1259,7 @@ public class Semantics extends SegueBaseVisitor<Object>
         ctx.type = factorType1;
         return null;
     }
+    */
 
     @Override 
     public Object visitVariableFactor(SegueParser.VariableFactorContext ctx) 
@@ -1269,8 +1270,7 @@ public class Semantics extends SegueBaseVisitor<Object>
         
         return null;
     }
-    */
-    /*
+    
     @Override 
     public Object visitVariable(SegueParser.VariableContext ctx) 
     {
@@ -1284,27 +1284,22 @@ public class Semantics extends SegueBaseVisitor<Object>
         return null;
     }
 
-    @Override 
-    public Object visitVariableIdentifier(
-                                    SegueParser.VariableIdentifierContext ctx) 
-    {
+    
+    @Override
+    public Object visitNumIdentifier(SegueParser.NumIdentifierContext ctx){
+
         String variableName = ctx.IDENTIFIER().getText().toLowerCase();
         SymtabEntry variableId = symtabStack.lookup(variableName);
-        
-        if (variableId != null)
-        {
+
+        if(variableId != null){
             int lineNumber = ctx.getStart().getLine();
             ctx.type = variableId.getType();
             ctx.entry = variableId;
             variableId.appendLineNumber(lineNumber);
-            
+
             Kind kind = variableId.getKind();
             switch (kind)
             {
-                case TYPE:
-                case PROGRAM:
-                case PROGRAM_PARAMETER:
-                case PROCEDURE:
                 case UNDEFINED:
                     error.flag(INVALID_VARIABLE, ctx);
                     break;
@@ -1312,15 +1307,83 @@ public class Semantics extends SegueBaseVisitor<Object>
                 default: break;
             }
         }
-        else
-        {
+        else{
+
             error.flag(UNDECLARED_IDENTIFIER, ctx);
-            ctx.type = Predefined.integerType;
+            ctx.type = Predefined.doubleType;
         }
 
         return null;
     }
-    */
+
+    @Override
+    public Object visitBoolIdentifier(SegueParser.BoolIdentifierContext ctx){
+
+        String variableName = ctx.IDENTIFIER().getText().toLowerCase();
+        SymtabEntry variableId = symtabStack.lookup(variableName);
+
+        if(variableId != null){
+            int lineNumber = ctx.getStart().getLine();
+            ctx.type = variableId.getType();
+            ctx.entry = variableId;
+            variableId.appendLineNumber(lineNumber);
+
+            Kind kind = variableId.getKind();
+            switch (kind)
+            {
+                case UNDEFINED:
+                    error.flag(INVALID_VARIABLE, ctx);
+                    break;
+                    
+                default: break;
+            }
+        }
+        else{
+
+            error.flag(UNDECLARED_IDENTIFIER, ctx);
+            ctx.type = Predefined.booleanType;
+        }
+
+        return null;
+    }
+
+    // @Override 
+    // public Object visitVariableIdentifier(
+    //                                 SegueParser.VariableIdentifierContext ctx) 
+    // {
+    //     String variableName = ctx.IDENTIFIER().getText().toLowerCase();
+    //     SymtabEntry variableId = symtabStack.lookup(variableName);
+        
+    //     if (variableId != null)
+    //     {
+    //         int lineNumber = ctx.getStart().getLine();
+    //         ctx.type = variableId.getType();
+    //         ctx.entry = variableId;
+    //         variableId.appendLineNumber(lineNumber);
+            
+    //         Kind kind = variableId.getKind();
+    //         switch (kind)
+    //         {
+    //             case TYPE:
+    //             case PROGRAM:
+    //             case PROGRAM_PARAMETER:
+    //             case PROCEDURE:
+    //             case UNDEFINED:
+    //                 error.flag(INVALID_VARIABLE, ctx);
+    //                 break;
+                    
+    //             default: break;
+    //         }
+    //     }
+    //     else
+    //     {
+    //         error.flag(UNDECLARED_IDENTIFIER, ctx);
+    //         ctx.type = Predefined.integerType;
+    //     }
+
+    //     return null;
+    // }
+    
     /**
      * Determine the datatype of a variable that can have modifiers.
      * @param varCtx the VariableContext.
