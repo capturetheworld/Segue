@@ -58,12 +58,15 @@ public class StatementGenerator extends CodeGenerator
     {
         if(ctx.boolIdentifier() != null){ //boolean
             SegueParser.BoolIdentifierContext lhs = ctx.boolIdentifier();
-            SegueParser.BooleanExpressionContext rhs = ctx.booleanExpression();
             SymtabEntry varId = lhs.entry;
-            Typespec varType  = Predefined.booleanType;
-            Typespec exprType = Predefined.booleanType;
             
-            compiler.visit(rhs);
+            if (ctx.booleanExpression() != null) {
+                SegueParser.BooleanExpressionContext rhs = ctx.booleanExpression();
+                compiler.visit(rhs);
+            } else {
+                SegueParser.FunctioncallContext rhs = ctx.functioncall();
+                compiler.visit(rhs);
+            }
 
             emitStoreValue(varId, Predefined.booleanType);
 
@@ -73,12 +76,15 @@ public class StatementGenerator extends CodeGenerator
             //double
 
             SegueParser.NumIdentifierContext lhs = ctx.numIdentifier();
-            SegueParser.NumericalExpressionContext rhs = ctx.numericalExpression();
             SymtabEntry varId = lhs.entry;
-            Typespec varType  = Predefined.doubleType;
-            Typespec exprType = Predefined.doubleType;
             
-            compiler.visit(rhs);
+            if (ctx.numericalExpression() != null) {
+                SegueParser.NumericalExpressionContext rhs = ctx.numericalExpression();
+                compiler.visit(rhs);
+            } else {
+                SegueParser.FunctioncallContext rhs = ctx.functioncall();
+                compiler.visit(rhs);
+            }
 
             emitStoreValue(varId, Predefined.doubleType);
             

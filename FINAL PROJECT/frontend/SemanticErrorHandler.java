@@ -28,7 +28,8 @@ public class SemanticErrorHandler
         INVALID_RETURN_TYPE        ("Invalid function return type"),
         TOO_MANY_SUBSCRIPTS        ("Too many subscripts"),
         INVALID_FIELD              ("Invalid field"),
-        SAME_NAME_DIFFERENT_TYPE   ("Variable with the same name but wrong type");
+        SAME_NAME_DIFFERENT_TYPE   ("Variable with the same name but wrong type"),
+        RETURN_TYPE_MISMATCH       ("Return type does not match expected type");
         
         private String message;
         

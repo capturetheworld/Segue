@@ -33,10 +33,11 @@ functioncall locals [ Typespec type = null, SymtabEntry entry = null ]
 
 
 assignmentStatement locals [ Typespec type = null, SymtabEntry entry = null ] 
-                    :  boolIdentifier '=' booleanExpression | numIdentifier '=' numericalExpression; 
+                    : boolIdentifier '=' (booleanExpression | functioncall)
+                    | numIdentifier '=' (numericalExpression | functioncall); 
 ifStatement:   IF '(' booleanExpression ')' BR* '{' BR* lineList '}' BR* (ELSE BR* '{' BR* lineList '}')?; // or ()
 whileStatement : WHILE '(' booleanExpression ')' BR* '{' BR* lineList'}';
-printStatement : PRINT  '(' arg ')'; 
+printStatement : PRINT  '(' (arg | functioncall) ')'; 
 synthStatement : SYNTH '.' synthFunction;
 synthFunction : synthSetFunction
                 | synthChannelFunction

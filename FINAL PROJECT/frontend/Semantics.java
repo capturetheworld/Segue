@@ -597,7 +597,10 @@ public class Semantics extends SegueBaseVisitor<Object>
             }
         }
 
+        routineId.setType(Predefined.undefinedType);
         visit(ctx.lineList());
+        idCtx.type = routineId.getType();
+        routineId.appendLineNumber(ctx.start.getLine());
         
         routineId.setExecutable(ctx.lineList());
         
@@ -649,6 +652,34 @@ public class Semantics extends SegueBaseVisitor<Object>
             parmId.appendLineNumber(lineNumber);
 
             return parmId;
+    }
+
+    @Override
+    public Object visitReturnStatement (SegueParser.ReturnStatementContext ctx) {
+        Typespec current = symtabStack.getLocalSymtab().getOwner().getType();
+        Typespec temp = ctx.booleanExpression() != null ? Predefined.booleanType : Predefined.doubleType;
+        if (current == Predefined.undefinedType) {
+            current = temp;
+        } else {
+            if (current != temp) error.flag(RETURN_TYPE_MISMATCH, ctx);
+        }
+        symtabStack.getLocalSymtab().getOwner().setType(current);
+        return null;
+    }
+
+    @Override
+    public Object visitAssignmentStatement (SegueParser.AssignmentStatementContext ctx) {
+        if (ctx.functioncall() != null) {
+            String name = ctx.functioncall().functionID().IDENTIFIER().getText().toLowerCase();
+            SymtabEntry functionId = symtabStack.lookup(name);
+            if (functionId == null) {
+                error.flag(UNDECLARED_IDENTIFIER, ctx.functioncall().functionID());
+            } else {
+                Typespec temp = ctx.booleanExpression() != null ? Predefined.booleanType : Predefined.doubleType;
+                if (ctx.functioncall().type != temp) error.flag(INCOMPATIBLE_ASSIGNMENT, ctx);
+            }
+        }
+        return null;
     }
     /*
     @Override 
@@ -931,6 +962,7 @@ public class Semantics extends SegueBaseVisitor<Object>
         
         nameCtx.entry = functionId;
         nameCtx.type  = ctx.type;
+        functionId.appendLineNumber(ctx.start.getLine());
 
         return null;
     }

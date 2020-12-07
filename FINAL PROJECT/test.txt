@@ -19,7 +19,6 @@ $bool = TRUE
 	    }
     }
         RETURN #result
-        
 }
 
 #s =5
