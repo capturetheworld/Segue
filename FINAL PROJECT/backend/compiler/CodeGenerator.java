@@ -363,9 +363,9 @@ public class CodeGenerator
      */
     public void emitLoadConstant(double value)
     {
-        if      (value == 0.0f) emit(FCONST_0);
-        else if (value == 1.0f) emit(FCONST_1);
-        else if (value == 2.0f) emit(FCONST_2);
+        if      (value == 0.0f) emit(DCONST_0);
+        else if (value == 1.0f) emit(DCONST_1);
+        else if (value == 2.0f) emit(DCONST_2);
         else                    emit(LDC, value);
     }
 
@@ -394,13 +394,9 @@ public class CodeGenerator
         {
             Object value = variableId.getValue();
             
-            if (type == Predefined.integerType)
+            if (type == Predefined.doubleType)
             {
-                emitLoadConstant((Integer) value);
-            }
-            else if (type == Predefined.realType)
-            {
-                emitLoadConstant((Float) value);
+                emitLoadConstant((Double) value);
             }
            // else if (type == Predefined.charType)
           //  {
@@ -451,8 +447,7 @@ public class CodeGenerator
             form = type.getForm();
         }
 
-        if (   (type == Predefined.integerType)
-            || (type == Predefined.booleanType)
+        if ((type == Predefined.booleanType)
            // || (type == Predefined.charType)
             || (form == ENUMERATION))
         {
@@ -465,14 +460,14 @@ public class CodeGenerator
                 default: emit(ILOAD, index);
             }
         }
-        else if (type == Predefined.realType) 
+        else if (type == Predefined.doubleType) 
         {
             switch (index) {
-                case 0:  emit(FLOAD_0); break;
-                case 1:  emit(FLOAD_1); break;
-                case 2:  emit(FLOAD_2); break;
-                case 3:  emit(FLOAD_3); break;
-                default: emit(FLOAD, index);
+                case 0:  emit(DLOAD_0); break;
+                case 1:  emit(DLOAD_1); break;
+                case 2:  emit(DLOAD_2); break;
+                case 3:  emit(DLOAD_3); break;
+                default: emit(DLOAD, index);
             }
         }
         else 
@@ -500,18 +495,9 @@ public class CodeGenerator
      */
     public void emitStoreValue(SymtabEntry targetId, Typespec targetType)
     {
-        if (targetId == null)
-        {
-            emitStoreToArrayElement(targetType);
-        }
-        else if (targetId.getKind() == RECORD_FIELD) 
-        {
-            emitStoreToRecordField(targetId);
-        }
-        else
-        {
-            emitStoreToUnmodifiedVariable(targetId, targetType);
-        }
+        
+        emitStoreToUnmodifiedVariable(targetId, targetType);
+        
     }
 
     /**
@@ -558,8 +544,7 @@ public class CodeGenerator
             form = type.getForm();
         }
 
-        if (   (type == Predefined.integerType)
-            || (type == Predefined.booleanType)
+        if ((type == Predefined.booleanType)
            // || (type == Predefined.charType)
             || (form == ENUMERATION))
         {
@@ -572,16 +557,18 @@ public class CodeGenerator
                 default: emit(ISTORE, slot);
             }
         }
-        else if (type == Predefined.realType) 
+        
+        else if (type == Predefined.doubleType) 
         {
             switch (slot) {
-                case 0:  emit(FSTORE_0); break;
-                case 1:  emit(FSTORE_1); break;
-                case 2:  emit(FSTORE_2); break;
-                case 3:  emit(FSTORE_3); break;
-                default: emit(FSTORE, slot);
+                case 0:  emit(DSTORE_0); break;
+                case 1:  emit(DSTORE_1); break;
+                case 2:  emit(DSTORE_2); break;
+                case 3:  emit(DSTORE_3); break;
+                default: emit(DSTORE, slot);
             }
         }
+        
         else 
         {
             switch (slot) 
@@ -599,6 +586,7 @@ public class CodeGenerator
      * Emit a store to an array element.
      * @param elmtType the element type.
      */
+    /*
     private void emitStoreToArrayElement(Typespec elmtType)
     {
         Form form = null;
@@ -616,10 +604,13 @@ public class CodeGenerator
              : form == ENUMERATION                ? IASTORE
              :                                      AASTORE);
     }
+    */
+
     /**
      * Emit a store to a record field.
      * @param fieldId the symbol table entry of the field.
      */
+    /*
     private void emitStoreToRecordField(SymtabEntry fieldId)
     {
         String fieldName = fieldId.getName();
@@ -631,6 +622,7 @@ public class CodeGenerator
         
         emit(PUTFIELD, fieldPath, typeDescriptor(fieldType));
     }
+    */
 
     // ======================
     // Miscellaneous emitters
@@ -657,6 +649,7 @@ public class CodeGenerator
      * Emit the CHECKCAST instruction for a class.
      * @param type the data type.
      */
+    /*
     public void emitCheckCastClass(Typespec type)
     {
         String descriptor = objectTypeName(type);
@@ -669,6 +662,7 @@ public class CodeGenerator
 
         emit(CHECKCAST, descriptor);
     }
+    */
 
     /**
      * Emit a function return of a value.
@@ -684,11 +678,10 @@ public class CodeGenerator
             form = type.getForm();
         }
 
-        if (   (type == Predefined.integerType)
-            || (type == Predefined.booleanType)
+        if ((type == Predefined.booleanType)
           //  || (type == Predefined.charType)
             || (form == ENUMERATION))         emit(IRETURN);
-        else if (type == Predefined.realType) emit(FRETURN);
+        else if (type == Predefined.doubleType) emit(DRETURN);
         else                                  emit(ARETURN);
     }
 
@@ -737,23 +730,27 @@ public class CodeGenerator
         Form form = pascalType.getForm();
         StringBuffer buffer = new StringBuffer();
 
+        /*
         while (form == ARRAY) 
         {
             buffer.append("[");
             pascalType =  pascalType.getArrayElementType();
             form = pascalType.getForm();
         }
-
+        */
         pascalType = pascalType.baseType();
         String str;
 
-        if      (pascalType == Predefined.integerType) str = "I";
-        else if (pascalType == Predefined.realType)    str = "F";
-        else if (pascalType == Predefined.booleanType) str = "Z";
+        //if      (pascalType == Predefined.integerType) str = "I";
+        //else if (pascalType == Predefined.realType)    str = "F";
+        //if (pascalType == Predefined.booleanType) str = "Z";
        // else if (pascalType == Predefined.charType)    str = "C";
-        else if (pascalType == Predefined.stringType)  str = "Ljava/lang/String;";
-        else if (form == ENUMERATION)                  str = "I";
-        else /* (form == RECORD) */ str = "L" + pascalType.getRecordTypePath() + ";";
+        //else if (pascalType == Predefined.stringType)  str = "Ljava/lang/String;";
+        //else if (form == SCALAR)                  str = "D";
+        //else /* (form == RECORD) */ str = "L" + pascalType.getRecordTypePath() + ";";
+
+        if (pascalType == Predefined.booleanType)   str = "Z";
+        else                                        str = "D"; //double
 
         buffer.append(str);
         return buffer.toString();
@@ -764,6 +761,7 @@ public class CodeGenerator
      * @param pascalType the datatype.
      * @return the object name.
      */
+    /*
     public String objectTypeName(Typespec pascalType)
     {
         Form form = pascalType.getForm();
@@ -789,19 +787,20 @@ public class CodeGenerator
        // else if (pascalType == Predefined.charType)    str = "java/lang/Character";
         else if (pascalType == Predefined.stringType)  str = "Ljava/lang/String;";
         else if (form == ENUMERATION)                  str = "java/lang/Integer";
-        else /* (form == RECORD) */ str = "L" + pascalType.getRecordTypePath() + ";";
+        else  (form == RECORD)  str = "L" + pascalType.getRecordTypePath() + ";";
         
         buffer.append(str);
         if (isArray) buffer.append(";");
 
         return buffer.toString();
     }
-
+    */
     /**
      * Return whether or not a value needs to be cloned to pass by value.
      * @param formalId the symbol table entry of the formal parameter.
      * @return true if needs wrapping, false if not.
      */
+    /*
     public boolean needsCloning(SymtabEntry formalId)
     {
         Typespec type = formalId.getType();
@@ -813,12 +812,14 @@ public class CodeGenerator
         return (   (kind == VALUE_PARAMETER))
                 && ((form == ARRAY) || (form == RECORD));
     }
+    */
 
     /**
      * Return the valueOf() signature for a given scalar type.
      * @param type the scalar type.
      * @return the valueOf() signature.
      */
+    /*
     public String valueOfSignature(Typespec type)
     {
         String javaType = objectTypeName(type);
@@ -827,12 +828,14 @@ public class CodeGenerator
         return String.format("%s/valueOf(%s)L%s;",
                              javaType, typeCode, javaType);
     }
+    */
 
     /**
      * Return the xxxValue() signature for a given scalar type.
      * @param type the scalar type.
      * @return the valueOf() signature.
      */
+    /*
     public String valueSignature(Typespec type)
     {
         String javaType = objectTypeName(type);
@@ -846,15 +849,17 @@ public class CodeGenerator
         return (String.format("%s.%sValue()%s",
                               javaType, typeName, typeCode));
     }
-    
+    */
     /**
      * Convert a Pascal string to a Java string.
      * @param pascalString the Pascal string.
      * @return the Java string.
      */
+    /*
     public String convertString(String pascalString)
     {
         String unquoted = pascalString.substring(1, pascalString.length()-1);
         return unquoted.replace("''", "'").replace("\"", "\\\"");
     }
+    */
 }

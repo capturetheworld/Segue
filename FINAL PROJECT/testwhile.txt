@@ -5,14 +5,14 @@
 
 #N =9.0
 #M = 15
-WHILE(#N <> #M) {
+WHILE(#N != #M) {
     #N = #N + 1
 }
-WHILE(#N <> #M) {
+WHILE(#N != #M) {
     ~#N =(#N + 1)
     ++#N
 }
-WHILE(#N <> #M) {
+WHILE(#N != #M) {
     ~#N =#N - 1
     #N--
 }

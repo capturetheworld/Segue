@@ -558,29 +558,11 @@ public class Semantics extends SegueBaseVisitor<Object>
     */
     @Override 
     @SuppressWarnings("unchecked")
-    public Object visitRoutineDefinition(
-                                    SegueParser.RoutineDefinitionContext ctx) 
+    public Object visitFunctiondef(SegueParser.FunctiondefContext ctx) 
     {
-        SegueParser.FunctionHeadContext  funcCtx = ctx.functionHead();
-        SegueParser.ProcedureHeadContext procCtx = ctx.procedureHead();
-        SegueParser.RoutineIdentifierContext idCtx = null;
-        SegueParser.ParametersContext parameters = null;
-        boolean functionDefinition = funcCtx != null;
-        Typespec returnType = null;
-        String routineName;
-        
-        if (functionDefinition)
-        {
-            idCtx = funcCtx.routineIdentifier();
-            parameters = funcCtx.parameters();
-        }
-        else
-        {
-            idCtx = procCtx.routineIdentifier();
-            parameters = procCtx.parameters();
-        }
-        
-        routineName = idCtx.IDENTIFIER().getText().toLowerCase();
+        SegueParser.FunctionIDContext idCtx = ctx.functionID();
+        SegueParser.ParamListContext parameters = ctx.paramList();
+        String routineName = idCtx.IDENTIFIER().getText().toLowerCase();
         SymtabEntry routineId = symtabStack.lookupLocal(routineName);
         
         if (routineId != null)
@@ -590,8 +572,7 @@ public class Semantics extends SegueBaseVisitor<Object>
             return null;
         }
 
-        routineId = symtabStack.enterLocal(
-                        routineName, functionDefinition ? FUNCTION : PROCEDURE);
+        routineId = symtabStack.enterLocal(routineName, FUNCTION);
         routineId.setRoutineCode(DECLARED);
         idCtx.entry = routineId;
         
@@ -607,8 +588,7 @@ public class Semantics extends SegueBaseVisitor<Object>
         
         if (parameters != null)
         {
-            ArrayList<SymtabEntry> parameterIds = (ArrayList<SymtabEntry>) 
-                                visit(parameters.parameterDeclarationsList());
+            ArrayList<SymtabEntry> parameterIds = (ArrayList<SymtabEntry>) visit(parameters);
             routineId.setRoutineParameters(parameterIds);
             
             for (SymtabEntry parmId : parameterIds)
@@ -616,41 +596,10 @@ public class Semantics extends SegueBaseVisitor<Object>
                 parmId.setSlotNumber(symtab.nextSlotNumber());
             }
         }
+
+        visit(ctx.lineList());
         
-        if (functionDefinition)
-        {
-            SegueParser.TypeIdentifierContext typeIdCtx = 
-                                                    funcCtx.typeIdentifier();
-            visit(typeIdCtx);
-            returnType = typeIdCtx.type;
-            
-            if (returnType.getForm() != SCALAR)
-            {
-                error.flag(INVALID_RETURN_TYPE, typeIdCtx);
-                returnType = Predefined.integerType;
-            }
-            
-            routineId.setType(returnType);
-            idCtx.type = returnType;
-        }
-        else
-        {
-            idCtx.type = null;
-        }
-        
-        visit(ctx.block().declarations());     
-        
-        // Enter the function's associated variable into its symbol table.
-        if (functionDefinition)
-        {
-            SymtabEntry assocVarId = 
-                                symtabStack.enterLocal(routineName, VARIABLE);
-            assocVarId.setSlotNumber(symtab.nextSlotNumber());
-            assocVarId.setType(returnType);
-        }
-        
-        visit(ctx.block().compoundStatement());
-        routineId.setExecutable(ctx.block().compoundStatement());
+        routineId.setExecutable(ctx.lineList());
         
         symtabStack.pop();
         return null;
@@ -658,72 +607,49 @@ public class Semantics extends SegueBaseVisitor<Object>
 
     @Override 
     @SuppressWarnings("unchecked")
-    public Object visitParameterDeclarationsList(
-                            SegueParser.ParameterDeclarationsListContext ctx)
+    public Object visitParamList(SegueParser.ParamListContext ctx)
     {
         ArrayList<SymtabEntry> parameterList = new ArrayList<>();
         
         // Loop over the parameter declarations.
-        for (SegueParser.ParameterDeclarationsContext dclCtx : 
-                                                    ctx.parameterDeclarations())
-        {
-            ArrayList<SymtabEntry> parameterSublist = 
-                                        (ArrayList<SymtabEntry>) visit(dclCtx);
-            parameterList.addAll(parameterSublist);
+        for (SegueParser.ParamContext dclCtx : ctx.param()) {
+            parameterList.add((SymtabEntry)visit(dclCtx));
         }
         
         return parameterList;
     }
 
     @Override 
-    public Object visitParameterDeclarations(
-                                SegueParser.ParameterDeclarationsContext ctx) 
+    public Object visitParam(SegueParser.ParamContext ctx) 
     {
-        Kind kind = ctx.VAR() != null ? REFERENCE_PARAMETER : VALUE_PARAMETER; 
-        SegueParser.TypeIdentifierContext typeCtx = ctx.typeIdentifier();
+        Kind kind = VALUE_PARAMETER; 
         
-        visit(typeCtx);
-        Typespec parmType = typeCtx.type;
-        
-        ArrayList<SymtabEntry> parameterSublist = new ArrayList<>();
-        
-        // Loop over the parameter identifiers.
-        SegueParser.ParameterIdentifierListContext parmListCtx = 
-                                                ctx.parameterIdentifierList();
-        for (SegueParser.ParameterIdentifierContext parmIdCtx : 
-                                            parmListCtx.parameterIdentifier())
-        {
-            int lineNumber = parmIdCtx.getStart().getLine();   
-            String parmName = parmIdCtx.IDENTIFIER().getText().toLowerCase();
+        Typespec parmType = ctx.boolIdentifier() != null ? Predefined.booleanType : Predefined.doubleType;
+
+            int lineNumber = ctx.getStart().getLine();
+            String parmName;
+            if(ctx.boolIdentifier() != null) parmName = ctx.boolIdentifier().IDENTIFIER().getText().toLowerCase();
+            else parmName = ctx.numIdentifier().IDENTIFIER().getText().toLowerCase();
             SymtabEntry parmId = symtabStack.lookupLocal(parmName);
             
             if (parmId == null)
             {
                 parmId = symtabStack.enterLocal(parmName, kind);
                 parmId.setType(parmType);
-                
-                if (   (kind == REFERENCE_PARAMETER) 
-                    && (mode != EXECUTOR)
-                    && (parmType.getForm() == SCALAR))
-                {
-                    error.flag(INVALID_REFERENCE_PARAMETER, parmIdCtx);
-                }
             }
             else
             {
-                error.flag(REDECLARED_IDENTIFIER, parmIdCtx);
+                error.flag(REDECLARED_IDENTIFIER, ctx);
             }
             
-            parmIdCtx.entry = parmId;
-            parmIdCtx.type  = parmType;
+            ctx.entry = parmId;
+            ctx.type  = parmType;
             
-            parameterSublist.add(parmId);
-            parmId.appendLineNumber(lineNumber);    
-        }
-        
-        return parameterSublist;
+            parmId.appendLineNumber(lineNumber);
+
+            return parmId;
     }
-    
+    /*
     @Override 
     public Object visitAssignmentStatement(
                                     SegueParser.AssignmentStatementContext ctx) 
@@ -774,7 +700,8 @@ public class Semantics extends SegueBaseVisitor<Object>
         
         return null;
     }
-
+    */
+    /*
     @Override 
     public Object visitCaseStatement(SegueParser.CaseStatementContext ctx) 
     {
@@ -919,7 +846,8 @@ public class Semantics extends SegueBaseVisitor<Object>
         visit(ctx.statement());
         return null;
     }
-
+    */
+    /*
     @Override 
     public Object visitProcedureCallStatement(
                                 SegueParser.ProcedureCallStatementContext ctx) 
@@ -960,19 +888,17 @@ public class Semantics extends SegueBaseVisitor<Object>
         nameCtx.entry = procedureId;
         return null;
     }
-
+*/
     @Override 
-    public Object visitFunctionCallFactor(
-                                    SegueParser.FunctionCallFactorContext ctx) 
+    public Object visitFunctioncall(SegueParser.FunctioncallContext ctx) 
     {
-        SegueParser.FunctionCallContext callCtx = ctx.functionCall();
-        SegueParser.FunctionNameContext nameCtx = callCtx.functionName();
-        SegueParser.ArgumentListContext listCtx = callCtx.argumentList();
-        String name = callCtx.functionName().getText().toLowerCase();
+        SegueParser.FunctionIDContext nameCtx = ctx.functionID();
+        SegueParser.ArgListContext listCtx = ctx.argList();
+        String name = nameCtx.IDENTIFIER().getText().toLowerCase();
         SymtabEntry functionId = symtabStack.lookup(name);
         boolean badName = false;
         
-        ctx.type = Predefined.integerType;
+        ctx.type = Predefined.undefinedType;
 
         if (functionId == null)
         {
@@ -988,7 +914,7 @@ public class Semantics extends SegueBaseVisitor<Object>
         // Bad function name. Do a simple arguments check and then leave.
         if (badName)
         {
-            for (SegueParser.ArgumentContext exprCtx : listCtx.argument())
+            for (SegueParser.ArgContext exprCtx : listCtx.arg())
             {
                 visit(exprCtx);
             }
@@ -1013,11 +939,10 @@ public class Semantics extends SegueBaseVisitor<Object>
      * @param listCtx the ArgumentListContext.
      * @param parameters the arraylist of parameters to fill.
      */
-    private void checkCallArguments(SegueParser.ArgumentListContext listCtx,
-                                    ArrayList<SymtabEntry> parameters)
+    private void checkCallArguments(SegueParser.ArgListContext listCtx, ArrayList<SymtabEntry> parameters)
     {
         int parmsCount = parameters.size();
-        int argsCount = listCtx != null ? listCtx.argument().size() : 0;
+        int argsCount = listCtx != null ? listCtx.arg().size() : 0;
         
         if (parmsCount != argsCount)
         {
@@ -1028,36 +953,15 @@ public class Semantics extends SegueBaseVisitor<Object>
         // Check each argument against the corresponding parameter.
         for (int i = 0; i < parmsCount; i++)
         {
-            SegueParser.ArgumentContext argCtx = listCtx.argument().get(i);
-            SegueParser.ExpressionContext exprCtx = argCtx.expression();
-            visit(exprCtx);
-            
-            SymtabEntry parmId = parameters.get(i);
-            Typespec parmType = parmId.getType();
-            Typespec argType  = exprCtx.type;
-            
-            // For a VAR parameter, the argument must be a variable
-            // with the same datatype.
-            if (parmId.getKind() == REFERENCE_PARAMETER)
-            {
-                if (expressionIsVariable(exprCtx))
-                {
-                    if (parmType != argType)
-                    {
-                        error.flag(TYPE_MISMATCH, exprCtx);
-                    }
-                }
-                else
-                {
-                    error.flag(ARGUMENT_MUST_BE_VARIABLE, exprCtx);
-                }
-            }
+            SegueParser.ArgContext argCtx = listCtx.arg().get(i);
+            Typespec form1 = argCtx.booleanExpression() != null ? Predefined.booleanType: Predefined.doubleType;
+            Typespec form2 = parameters.get(i).getType();
             
             // For a value parameter, the argument type must be
             // assignment compatible with the parameter type.
-            else if (!TypeChecker.areAssignmentCompatible(parmType, argType))
+            if (!form1.equals(form2))
             {
-                error.flag(TYPE_MISMATCH, exprCtx);
+                error.flag(TYPE_MISMATCH, argCtx);
             }
         }
     }
@@ -1067,6 +971,7 @@ public class Semantics extends SegueBaseVisitor<Object>
      * @param exprCtx the ExpressionContext.
      * @return true if it's an expression only, else false.
      */
+    /*
     private boolean expressionIsVariable(SegueParser.ExpressionContext exprCtx)
     {
         // Only a single simple expression?
@@ -1090,7 +995,8 @@ public class Semantics extends SegueBaseVisitor<Object>
         
         return false;
     }
-
+    */
+    /*
     @Override 
     public Object visitExpression(SegueParser.ExpressionContext ctx) 
     {
@@ -1363,7 +1269,8 @@ public class Semantics extends SegueBaseVisitor<Object>
         
         return null;
     }
-
+    */
+    /*
     @Override 
     public Object visitVariable(SegueParser.VariableContext ctx) 
     {
@@ -1413,13 +1320,14 @@ public class Semantics extends SegueBaseVisitor<Object>
 
         return null;
     }
-
+    */
     /**
      * Determine the datatype of a variable that can have modifiers.
      * @param varCtx the VariableContext.
      * @param varType the variable's datatype without the modifiers.
      * @return the datatype with any modifiers.
      */
+    /*
     private Typespec variableDatatype(
                         SegueParser.VariableContext varCtx, Typespec varType)
     {
@@ -1491,7 +1399,8 @@ public class Semantics extends SegueBaseVisitor<Object>
         
         return type;
     }
-    
+    */
+    /*
     @Override 
     public Object visitNumberFactor(SegueParser.NumberFactorContext ctx) 
     {
@@ -1545,4 +1454,5 @@ public class Semantics extends SegueBaseVisitor<Object>
 
         return null;
     }
+    */
 }

@@ -95,7 +95,7 @@ public class StatementGenerator extends CodeGenerator
         Label nextLabel = new Label();            
         Label falseLabel = null;
 
-        compiler.visit(ctx.expression());        
+        compiler.visit(ctx.booleanExpression());        
         if(ctx.ELSE() != null){            
             falseLabel = new Label();            
             emit(IFEQ, falseLabel);        
@@ -103,12 +103,12 @@ public class StatementGenerator extends CodeGenerator
         else{
             emit(IFEQ, nextLabel);
         }
-        compiler.visit(ctx.trueStatement());
+        compiler.visit(ctx.lineList(0));
 
         if(ctx.ELSE() != null){            
             emit(GOTO, nextLabel);            
             emitLabel(falseLabel);            
-            compiler.visit(ctx.falseStatement());            
+            compiler.visit(ctx.lineList(1));            
             emitLabel(nextLabel);        
         }        
         else{          
@@ -121,6 +121,7 @@ public class StatementGenerator extends CodeGenerator
      * Emit code for a CASE statement.
      * @param ctx the CaseStatementContext.
      */
+    /*
     public void emitCase(SegueParser.CaseStatementContext ctx)
     {
         LinkedHashMap<CaseBranchContext, Label> labelList = new LinkedHashMap<>();
@@ -157,13 +158,14 @@ public class StatementGenerator extends CodeGenerator
         });
 
         emitLabel(defaultLabel);
-        /***** Complete this method. *****/
     }
+    */
 
     /**
      * Emit code for a REPEAT statement.
      * @param ctx the RepeatStatementContext.
      */
+    /*
     public void emitRepeat(SegueParser.RepeatStatementContext ctx)
     {
         Label loopTopLabel  = new Label();
@@ -178,7 +180,8 @@ public class StatementGenerator extends CodeGenerator
         
         emitLabel(loopExitLabel);
     }
-    
+    */
+
     /**
      * Emit code for a WHILE statement.
      * @param ctx the WhileStatementContext.
@@ -188,9 +191,9 @@ public class StatementGenerator extends CodeGenerator
         Label loopLabel = new Label();
         Label nextLabel = new Label();
         emitLabel(loopLabel);
-        compiler.visit(ctx.expression());
+        compiler.visit(ctx.booleanExpression());
         emit(IFEQ, nextLabel);
-        compiler.visit(ctx.statement());
+        compiler.visit(ctx.lineList());
         emit(GOTO, loopLabel);
 
         emitLabel(nextLabel);
@@ -202,6 +205,7 @@ public class StatementGenerator extends CodeGenerator
      * Emit code for a FOR statement.
      * @param ctx the ForStatementContext.
      */
+    /*
     public void emitFor(SegueParser.ForStatementContext ctx)
     {
         Label loopLabel = new Label();
@@ -288,46 +292,47 @@ public class StatementGenerator extends CodeGenerator
 
         emitLabel(nextLabel);
 
-        /***** Complete this method. *****/
     }
+    */
     
     /**
      * Emit code for a procedure call statement.
      * @param ctx the ProcedureCallStatementContext.
      */
+    /*
     public void emitProcedureCall(SegueParser.ProcedureCallStatementContext ctx)
     {
         SegueParser.ProcedureNameContext name = ctx.procedureName();
         SymtabEntry routineId = name.entry;
         
         emitCall(routineId, ctx.argumentList());
-        /***** Complete this method. *****/
     }
-    
+    */
+
     /**
      * Emit code for a function call statement.
      * @param ctx the FunctionCallContext.
      */
+    /*
     public void emitFunctionCall(SegueParser.FunctionCallContext ctx)
     {
         SegueParser.FunctionNameContext name = ctx.functionName();
         SymtabEntry routineId = name.entry;
         
         emitCall(routineId, ctx.argumentList());
-        /***** Complete this method. *****/
     }
-    
+    */
+
     /**
      * Emit a call to a procedure or a function.
      * @param routineId the routine name's symbol table entry.
      * @param argListCtx the ArgumentListContext.
      */
-    private void emitCall(SymtabEntry routineId,
-                          SegueParser.ArgumentListContext argListCtx)
+    public void emitCall(SymtabEntry routineId, SegueParser.ArgListContext argListCtx)
     {
 
         if(argListCtx != null){
-            for (ArgumentContext arg : argListCtx.argument()) {
+            for (SegueParser.ArgContext arg : argListCtx.arg()) {
                 compiler.visit(arg);
             }
         }

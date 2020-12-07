@@ -9,9 +9,11 @@ grammar Segue;
 
 
 //STARTPGM : '{' ;
-program  :  BR* line* statement BR* EOF ;
+program locals [ Typespec type = null, SymtabEntry entry = null ]
+        :  BR* line* statement BR* EOF ;
 
 line: statement BR+;
+lineList: line+;
 
 statement:  assignmentStatement
             | ifStatement
@@ -25,14 +27,15 @@ statement:  assignmentStatement
             | functioncall
             ;
 
-functiondef:  functionID '(' paramList? ')' (BR*) '{' BR* line+ BR* '}' ;
-functioncall:  functionID '(' argList? ')';
+functiondef:  functionID '(' paramList? ')' (BR*) '{' BR* lineList BR* '}' ;
+functioncall locals [ Typespec type = null, SymtabEntry entry = null ]
+            :  functionID '(' argList? ')';
 
 
 assignmentStatement locals [ Typespec type = null, SymtabEntry entry = null ] 
                     :  boolIdentifier '=' booleanExpression | numIdentifier '=' numericalExpression; 
-ifStatement:   IF '(' booleanExpression ')' BR* '{' BR* line+ '}' BR* ELSE BR* '{' BR* line+ '}'; // or ()
-whileStatement : WHILE '(' booleanExpression ')' BR* '{' BR* line+'}';
+ifStatement:   IF '(' booleanExpression ')' BR* '{' BR* lineList '}' BR* (ELSE BR* '{' BR* lineList '}')?; // or ()
+whileStatement : WHILE '(' booleanExpression ')' BR* '{' BR* lineList'}';
 printStatement : PRINT printArguments;
 printArguments : '(' (statement|arg) ')'; //TODO fix
 synthStatement : SYNTH '.' synthFunction;
@@ -44,13 +47,15 @@ returnStatement : RETURN (numericalExpression|booleanExpression);
 
 
 
-functionID : functionSymbol IDENTIFIER;
+functionID locals [ Typespec type = null, SymtabEntry entry = null ]
+            : functionSymbol IDENTIFIER;
 functionSymbol : '@';
 
 paramList locals [ Typespec type = null, SymtabEntry entry = null ] 
             : param (',' param)*;
             
-param: boolIdentifier | numIdentifier;
+param locals [ Typespec type = null, SymtabEntry entry = null ]
+        : boolIdentifier | numIdentifier;
 
 argList locals [ Typespec type = null, SymtabEntry entry = null ] 
             : arg (',' arg)*;
@@ -72,10 +77,11 @@ booleanExpression : booleanTerm (boolOp booleanTerm)?
 
 booleanTerm: '(' booleanExpression ')' | booleanSingleton;
 
-booleanSingleton :  notSymbol booleanExpression
+booleanSingleton :  notStatement
                     | boolIdentifier
                     | booleanConstant;
-                    
+
+notStatement :  notSymbol booleanExpression;
 notSymbol : '!';
 
 boolIdentifier : boolSymbol IDENTIFIER;

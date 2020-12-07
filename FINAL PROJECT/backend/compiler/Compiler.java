@@ -47,15 +47,16 @@ public class Compiler extends SegueBaseVisitor<Object>
      * @param parent the parent compiler.
      * @param recordId the symbol table entry of the name of the record to compile.
      */
+	/*
     public Compiler(Compiler parent, SymtabEntry recordId)
     {        
-        String recordTypePath = recordId.getType().getRecordTypePath();
+        //String recordTypePath = recordId.getType().getRecordTypePath();
         code = new CodeGenerator(recordTypePath, "j", this);
         createNewGenerators(code);
         
-        programCode.emitRecord(recordId, recordTypePath);
+       // programCode.emitRecord(recordId, recordTypePath);
     }
-    
+    */
     /**
      * Create new child code generators.
      * @param parentGenerator the parent code generator.

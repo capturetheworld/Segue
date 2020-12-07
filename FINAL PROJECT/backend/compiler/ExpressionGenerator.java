@@ -273,9 +273,9 @@ public class ExpressionGenerator extends CodeGenerator
      * Emit code for NOT.
      * @param ctx the NotFactorContext.
      */
-    public void emitNotFactor(SegueParser.NotFactorContext ctx)
+    public void emitNotStatement(SegueParser.NotStatementContext ctx)
     {
-        compiler.visit(ctx.factor());
+        compiler.visit(ctx.booleanExpression());
         emit(ICONST_1);
         emit(IXOR);
     }
@@ -355,6 +355,7 @@ public class ExpressionGenerator extends CodeGenerator
      * @param lastModifier true if this is the variable's last modifier.
      * @return the type of the element.
      */
+    /*
     private Typespec emitLoadArrayElementAccess(
                                     SegueParser.IndexListContext indexListCtx,
                                     Typespec elmtType, boolean lastModifier)
@@ -385,11 +386,13 @@ public class ExpressionGenerator extends CodeGenerator
 
         return elmtType;
     }
+    */
 
     /**
      * Emit a load of an array element's value.
      * @param elmtType the element type if character, else null.
      */
+    /*
     private void emitLoadArrayElementValue(Typespec elmtType)
     {
         Form form = SCALAR;
@@ -417,12 +420,15 @@ public class ExpressionGenerator extends CodeGenerator
                  :                                      AALOAD);
         }
     }
-    
+    */
+
+    /*
     private void emitLoadRecordFieldValue(
                         SegueParser.FieldContext fieldCtx, Typespec recordType)
     {
         emitLoadRecordField(fieldCtx, recordType);
     }
+    */
 
     /**
      * Emit code to load the address or value of a record field.
@@ -430,6 +436,7 @@ public class ExpressionGenerator extends CodeGenerator
      * @param last true if this is the variable's last field, else false.
      * @return the type of the field.
      */
+    /*
     private Typespec emitLoadRecordField(
                         SegueParser.FieldContext fieldCtx, Typespec recordType)
     {
@@ -443,6 +450,7 @@ public class ExpressionGenerator extends CodeGenerator
 
         return fieldType;
     }
+    */
     
     /**
      * Emit code to load an integer constant.
