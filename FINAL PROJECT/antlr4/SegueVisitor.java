@@ -28,6 +28,12 @@ public interface SegueVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitLine(SegueParser.LineContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link SegueParser#lineList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLineList(SegueParser.LineListContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link SegueParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -189,6 +195,12 @@ public interface SegueVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitBooleanSingleton(SegueParser.BooleanSingletonContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegueParser#notStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNotStatement(SegueParser.NotStatementContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SegueParser#notSymbol}.
 	 * @param ctx the parse tree

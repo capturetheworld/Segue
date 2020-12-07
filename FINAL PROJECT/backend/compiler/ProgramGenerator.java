@@ -9,7 +9,6 @@ import intermediate.symtab.SymtabEntry.Kind;
 import intermediate.type.Typespec;
 
 import static intermediate.symtab.SymtabEntry.Kind.*;
-import static intermediate.type.Typespec.Form.*;
 import static backend.compiler.Directive.*;
 import static backend.compiler.Instruction.*;
 
@@ -37,12 +36,12 @@ public class ProgramGenerator extends CodeGenerator
      */
     public void emitProgram(SegueParser.ProgramContext ctx)
     {
-        programId = ctx.programHeader().programIdentifier().entry;
-        Symtab programSymtab = programId.getRoutineSymtab();
+        programId = ctx.entry;
+        //Symtab programSymtab = programId.getRoutineSymtab();
         
         localVariables = new LocalVariables(programLocalsCount);
         
-        emitRecords(programSymtab);
+        //emitRecords(programSymtab);
         
         emitDirective(CLASS_PUBLIC, programName);
         emitDirective(SUPER, "java/lang/Object");
@@ -50,7 +49,7 @@ public class ProgramGenerator extends CodeGenerator
         emitProgramVariables();
         emitInputScanner();
         emitConstructor();
-        emitSubroutines(ctx.block().declarations().routinesPart());
+        emitSubroutines(ctx);
         
         emitMainMethod(ctx);
     }
@@ -59,6 +58,7 @@ public class ProgramGenerator extends CodeGenerator
      * Create a new compiler instance for a record.
      * @param symtab the record type's symbol table.
      */
+    /*
     public void emitRecords(Symtab symtab)
     {
         for (SymtabEntry id : symtab.sortedEntries())
@@ -70,10 +70,12 @@ public class ProgramGenerator extends CodeGenerator
             }
         }
     }
+    */
     
     /**
      * Emit code for a record.
      */
+    /*
     public void emitRecord(SymtabEntry recordId, String namePath)
     {
         Symtab recordSymtab = recordId.getType().getRecordSymtab();
@@ -97,6 +99,7 @@ public class ProgramGenerator extends CodeGenerator
         emitConstructor();
         close();  // the object file
     }
+    */
     
     /**
      * Emit field directives for the program variables.
@@ -174,17 +177,11 @@ public class ProgramGenerator extends CodeGenerator
     /**
      * Emit code for any nested procedures and functions.
      */
-    private void emitSubroutines(SegueParser.RoutinesPartContext ctx)
+    private void emitSubroutines(SegueParser.ProgramContext ctx)
     {
-        if (ctx != null)
-        {
-            for (PascalParser.RoutineDefinitionContext defnCtx : 
-                                                        ctx.routineDefinition())
-            {
-                compiler = new Compiler(compiler);
-                compiler.visit(defnCtx);
-            }
-        }     
+        for (SymtabEntry subroutine : ctx.entry.getSubroutines()) {
+            emitRoutine(subroutine);
+        } 
     }
 
     /**
@@ -201,13 +198,12 @@ public class ProgramGenerator extends CodeGenerator
         emitMainPrologue(programId);
 
         // Emit code to allocate any arrays, records, and strings.
-        StructuredDataGenerator structureCode = 
-                                    new StructuredDataGenerator(this, compiler);
-        structureCode.emitData(programId);
+        //StructuredDataGenerator structureCode = new StructuredDataGenerator(this, compiler);
+        //structureCode.emitData(programId);
 
         // Emit code for the compound statement.
         emitLine();
-        compiler.visit(ctx.block().compoundStatement());
+        for (SegueParser.LineContext line : ctx.line()) compiler.visit(line);
         
         emitMainEpilogue();
     }
@@ -277,27 +273,22 @@ public class ProgramGenerator extends CodeGenerator
      * Emit code for a declared procedure or function
      * @param routineId the symbol table entry of the routine's name.
      */
-    public void emitRoutine(SegueParser.RoutineDefinitionContext ctx)
+    public void emitRoutine(SymtabEntry e)
     {
-        SymtabEntry routineId = ctx.procedureHead() != null 
-                                ? ctx.procedureHead().routineIdentifier().entry
-                                : ctx.functionHead().routineIdentifier().entry;
+        SymtabEntry routineId = e;
         Symtab routineSymtab = routineId.getRoutineSymtab();
 
         emitRoutineHeader(routineId);
         emitRoutineLocals(routineId);
 
         // Generate code to allocate any arrays, records, and strings.
-        StructuredDataGenerator structuredCode = 
-                                    new StructuredDataGenerator(this, compiler);
-        structuredCode.emitData(routineId);
+        //StructuredDataGenerator structuredCode = new StructuredDataGenerator(this, compiler);
+        //structuredCode.emitData(routineId);
                 
         localVariables = new LocalVariables(routineSymtab.getMaxSlotNumber());
 
         // Emit code for the compound statement.
-        PascalParser.CompoundStatementContext stmtCtx = 
-            (PascalParser.CompoundStatementContext) routineId.getExecutable();
-        compiler.visit(stmtCtx);
+        compiler.visit((SegueParser.LineListContext) routineId.getExecutable());
         
         emitRoutineReturn(routineId);
         emitRoutineEpilogue();

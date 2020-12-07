@@ -597,9 +597,9 @@ public class Semantics extends SegueBaseVisitor<Object>
             }
         }
 
-        for (LineContext line : ctx.line()) visit(line);
+        visit(ctx.lineList());
         
-        routineId.setExecutable(ctx.line());
+        routineId.setExecutable(ctx.lineList());
         
         symtabStack.pop();
         return null;
@@ -624,7 +624,7 @@ public class Semantics extends SegueBaseVisitor<Object>
     {
         Kind kind = VALUE_PARAMETER; 
         
-        Typespec parmType = ctx.boolIdentifier() != null ? new Typespec(Typespec.Form.ENUMERATION) : new Typespec(Typespec.Form.SCALAR);
+        Typespec parmType = ctx.boolIdentifier() != null ? Predefined.booleanType : Predefined.doubleType;
 
             int lineNumber = ctx.getStart().getLine();
             String parmName;
@@ -954,8 +954,8 @@ public class Semantics extends SegueBaseVisitor<Object>
         for (int i = 0; i < parmsCount; i++)
         {
             SegueParser.ArgContext argCtx = listCtx.arg().get(i);
-            Typespec.Form form1 = argCtx.booleanExpression() != null ? Typespec.Form.ENUMERATION : Typespec.Form.SCALAR;
-            Typespec.Form form2 = parameters.get(i).getType().getForm();
+            Typespec form1 = argCtx.booleanExpression() != null ? Predefined.booleanType: Predefined.doubleType;
+            Typespec form2 = parameters.get(i).getType();
             
             // For a value parameter, the argument type must be
             // assignment compatible with the parameter type.

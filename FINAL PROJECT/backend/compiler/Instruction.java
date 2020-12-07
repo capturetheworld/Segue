@@ -13,23 +13,23 @@ public enum Instruction
     // Load constant
     ICONST_0(1), ICONST_1(1), ICONST_2(1), ICONST_3(1), 
     ICONST_4(1), ICONST_5(1), ICONST_M1(1),
-    FCONST_0(1), FCONST_1(1), FCONST_2(1), ACONST_NULL(1),
+    DCONST_0(1), DCONST_1(1), DCONST_2(1), ACONST_NULL(1),
     BIPUSH(1), SIPUSH(1), LDC(1),
 
     // Load value or address
     ILOAD_0(1), ILOAD_1(1), ILOAD_2(1), ILOAD_3(1),
-    FLOAD_0(1), FLOAD_1(1), FLOAD_2(1), FLOAD_3(1),
+    DLOAD_0(1), DLOAD_1(1), DLOAD_2(1), DLOAD_3(1),
     ALOAD_0(1), ALOAD_1(1), ALOAD_2(1), ALOAD_3(1),
     LLOAD_0(2), LLOAD_1(2), LLOAD_2(2), LLOAD_3(2),
-    ILOAD(1),   FLOAD(1),   ALOAD(1),
+    ILOAD(1),   DLOAD(1),   ALOAD(1),
     GETSTATIC(1), GETFIELD(0),
 
     // Store value or address
     ISTORE_0(-1),  ISTORE_1(-1), ISTORE_2(-1), ISTORE_3(-1),
-    FSTORE_0(-1),  FSTORE_1(-1), FSTORE_2(-1), FSTORE_3(-1),
+    DSTORE_0(-1),  DSTORE_1(-1), DSTORE_2(-1), DSTORE_3(-1),
     ASTORE_0(-1),  ASTORE_1(-1), ASTORE_2(-1), ASTORE_3(-1),
     LSTORE_0(-2),  LSTORE_1(-2), LSTORE_2(-2), LSTORE_3(-2),
-    ISTORE(-1),    FSTORE(-1),   ASTORE(-1),
+    ISTORE(-1),    DSTORE(-1),   ASTORE(-1),
     PUTSTATIC(-1), PUTFIELD(-2),
 
     // Operand stack
@@ -58,7 +58,7 @@ public enum Instruction
     // Call and return
     INVOKESTATIC(0), INVOKESPECIAL(0), 
     INVOKEVIRTUAL(0), INVOKENONVIRTUAL(0),
-    RETURN(0), IRETURN(-1), FRETURN(-1), ARETURN(-1),
+    RETURN(0), IRETURN(-1), ARETURN(-1), DRETURN(-1),
 
     // No operation
     NOP(0);
