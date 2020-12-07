@@ -1260,7 +1260,7 @@ public class Semantics extends SegueBaseVisitor<Object>
         return null;
     }
     */
-
+    /*
     @Override 
     public Object visitVariableFactor(SegueParser.VariableFactorContext ctx) 
     {
@@ -1283,35 +1283,48 @@ public class Semantics extends SegueBaseVisitor<Object>
 
         return null;
     }
-
+    */
     
     @Override
     public Object visitNumIdentifier(SegueParser.NumIdentifierContext ctx){
-
+        int lineNumber = ctx.getStart().getLine();        
         String variableName = ctx.IDENTIFIER().getText().toLowerCase();
         SymtabEntry variableId = symtabStack.lookup(variableName);
-
-        if(variableId != null){
-            int lineNumber = ctx.getStart().getLine();
-            ctx.type = variableId.getType();
-            ctx.entry = variableId;
-            variableId.appendLineNumber(lineNumber);
-
-            Kind kind = variableId.getKind();
-            switch (kind)
+            
+            if (variableId == null)
             {
-                case UNDEFINED:
-                    error.flag(INVALID_VARIABLE, ctx);
-                    break;
-                    
-                default: break;
+                variableId = symtabStack.enterLocal(variableName, VARIABLE);
+                variableId.setType(Predefined.doubleType);
+                
+                // Assign slot numbers to local variables.
+                Symtab symtab = variableId.getSymtab();
+                if (symtab.getNestingLevel() > 1)
+                {
+                    variableId.setSlotNumber(symtab.nextSlotNumber());
+                }
+                
+                ctx.entry = variableId;
             }
-        }
-        else{
-
-            error.flag(UNDECLARED_IDENTIFIER, ctx);
+            else
+            {
+                ctx.type = variableId.getType();
+                ctx.entry = variableId;
+               // variableId.appendLineNumber(lineNumber);
+    
+                Kind kind = variableId.getKind();
+                switch (kind)
+                {
+                    case UNDEFINED:
+                        error.flag(INVALID_VARIABLE, ctx);
+                        break;
+                        
+                    default: break;
+                }
+            }
+            
+            variableId.appendLineNumber(lineNumber);        
             ctx.type = Predefined.doubleType;
-        }
+        
 
         return null;
     }
@@ -1319,31 +1332,44 @@ public class Semantics extends SegueBaseVisitor<Object>
     @Override
     public Object visitBoolIdentifier(SegueParser.BoolIdentifierContext ctx){
 
+        int lineNumber = ctx.getStart().getLine();        
         String variableName = ctx.IDENTIFIER().getText().toLowerCase();
         SymtabEntry variableId = symtabStack.lookup(variableName);
-
-        if(variableId != null){
-            int lineNumber = ctx.getStart().getLine();
-            ctx.type = variableId.getType();
-            ctx.entry = variableId;
-            variableId.appendLineNumber(lineNumber);
-
-            Kind kind = variableId.getKind();
-            switch (kind)
+            
+            if (variableId == null)
             {
-                case UNDEFINED:
-                    error.flag(INVALID_VARIABLE, ctx);
-                    break;
-                    
-                default: break;
+                variableId = symtabStack.enterLocal(variableName, VARIABLE);
+                variableId.setType(Predefined.booleanType);
+                
+                // Assign slot numbers to local variables.
+                Symtab symtab = variableId.getSymtab();
+                if (symtab.getNestingLevel() > 1)
+                {
+                    variableId.setSlotNumber(symtab.nextSlotNumber());
+                }
+                
+                ctx.entry = variableId;
             }
-        }
-        else{
-
-            error.flag(UNDECLARED_IDENTIFIER, ctx);
+            else
+            {
+                ctx.type = variableId.getType();
+                ctx.entry = variableId;
+               // variableId.appendLineNumber(lineNumber);
+    
+                Kind kind = variableId.getKind();
+                switch (kind)
+                {
+                    case UNDEFINED:
+                        error.flag(INVALID_VARIABLE, ctx);
+                        break;
+                        
+                    default: break;
+                }
+            }
+            
+            variableId.appendLineNumber(lineNumber);        
             ctx.type = Predefined.booleanType;
-        }
-
+        
         return null;
     }
 

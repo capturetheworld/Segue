@@ -6,19 +6,19 @@ $boolean = TRUE
 @SquareMinus(#x, #s){
     #result = 0
 
-    IF(#r == #s){
+    IF(#x == #s){
     #result = -9
 
     }   
     ELSE{
-	    IF(#r < #s){
-		    #result = (#s * #s) - (#r * #r)
+	    IF(#x < #s){
+		    #result = (#s * #s) - (#x * #x)
 	          }
 	    ELSE{
-            #result =  (#r * #r) - (#s * #s)
+            #result =  (#x * #x) - (#s * #s)
 	    }
     }
-        RETURN result
+        RETURN #result
         
 }
 
