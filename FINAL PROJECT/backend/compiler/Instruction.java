@@ -53,7 +53,7 @@ public enum Instruction
     IFEQ(-1), IFNE(-1), IFLT(-1), IFLE(-1), IFGT(-1), IFGE(-1),
     IF_ICMPEQ(-2), IF_ICMPNE(-2), IF_ICMPLT(-2), 
     IF_ICMPLE(-2), IF_ICMPGT(-2), IF_ICMPGE(-2),
-    FCMPG(-1), GOTO(0), LOOKUPSWITCH(-1),
+    DCMPG(-1), GOTO(0), LOOKUPSWITCH(-1),
 
     // Call and return
     INVOKESTATIC(0), INVOKESPECIAL(0), 

@@ -1,4 +1,4 @@
-// Generated from /Users/ian/Documents/Github/CS153-Compiler-Design/FINAL PROJECT/Segue.g4 by ANTLR 4.8
+// Generated from /Users/adanhernandez/Desktop/PRO/FALL 2020/CS 153/Assignment 2/CS153-Compiler-Design/FINAL PROJECT/Segue.g4 by ANTLR 4.8
 
     package antlr4;
     import java.util.HashMap;
@@ -159,6 +159,12 @@ public interface SegueVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitSuffixOp(SegueParser.SuffixOpContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SegueParser#signOp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSignOp(SegueParser.SignOpContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SegueParser#numIdentifier}.
 	 * @param ctx the parse tree

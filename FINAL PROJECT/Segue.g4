@@ -64,8 +64,10 @@ numericalExpression : term (addOp term)*;
 term : factor (mulOp factor)*;
 factor : '(' numericalExpression ')' | numberConstant | numIdentifier | prefixOp | suffixOp;
 
-prefixOp : ('++' | '--') numIdentifier;
-suffixOp : numIdentifier ('++' | '--');
+prefixOp : signOp numIdentifier;
+suffixOp : numIdentifier signOp;
+
+signOp : ('++' | '--');
 
 numIdentifier locals [ Typespec type = null, SymtabEntry entry = null ]
         : numSymbol IDENTIFIER;
