@@ -1,16 +1,16 @@
 package backend.compiler;
 
-import java.util.ArrayList;
+// import java.util.ArrayList;
 import java.util.TreeMap;
-import java.util.Set;
-import java.util.Iterator;
+// import java.util.Set;
+// import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Map;
+// import java.util.Map;
 
 import antlr4.SegueParser;
-import antlr4.SegueParser.ArgumentContext;
-import antlr4.SegueParser.CaseBranchContext;
-import antlr4.SegueParser.CaseConstantContext;
+// import antlr4.SegueParser.ArgContext;
+// import antlr4.SegueParser.CaseBranchContext;
+// import antlr4.SegueParser.CaseConstantContext;
 import intermediate.symtab.*;
 import intermediate.type.*;
 import intermediate.type.Typespec.Form;
@@ -38,53 +38,119 @@ public class StatementGenerator extends CodeGenerator
         super(parent, compiler);
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * Emit code for an assignment statement.
      * @param ctx the AssignmentStatementContext.
      */
     public void emitAssignment(SegueParser.AssignmentStatementContext ctx)
     {
-        SegueParser.VariableContext   varCtx  = ctx.lhs().variable();
-        SegueParser.ExpressionContext exprCtx = ctx.rhs().expression();
-        SymtabEntry varId = varCtx.entry;
-        Typespec varType  = varCtx.type;
-        Typespec exprType = exprCtx.type;
+        if(ctx.boolIdentifier() != null){ //boolean
+            SegueParser.BoolIdentifierContext lhs = ctx.boolIdentifier();
+            SegueParser.BooleanExpressionContext rhs = ctx.booleanExpression();
+            SymtabEntry varId = lhs.entry;
+            Typespec varType  = Predefined.booleanType;
+            Typespec exprType = Predefined.booleanType;
+            
+            compiler.visit(rhs);
 
-        // The last modifier, if any, is the variable's last subscript or field.
-        int modifierCount = varCtx.modifier().size();
-        SegueParser.ModifierContext lastModCtx = modifierCount == 0
-                            ? null : varCtx.modifier().get(modifierCount - 1);
+            emitStoreValue(varId, Predefined.booleanType);
 
-        // The target variable has subscripts and/or fields.
-        if (modifierCount > 0) 
-        {
-            lastModCtx = varCtx.modifier().get(modifierCount - 1);
-            compiler.visit(varCtx);
-        }
-        
-        // Emit code to evaluate the expression.
-        compiler.visit(exprCtx);
-        
-        // float variable := integer constant
-        if (   (varType == Predefined.realType)
-            && (exprType.baseType() == Predefined.integerType)) emit(I2F);
-        
-        // Emit code to store the expression value into the target variable.
-        // The target variable has no subscripts or fields.
-        if (lastModCtx == null) emitStoreValue(varId, varId.getType());
 
-        // The target variable is a field.
-        else if (lastModCtx.field() != null)
-        {
-            emitStoreValue(lastModCtx.field().entry, lastModCtx.field().type);
+
+        }else{
+            //double
+
+            SegueParser.NumIdentifierContext lhs = ctx.numIdentifier();
+            SegueParser.NumericalExpressionContext rhs = ctx.numericalExpression();
+            SymtabEntry varId = lhs.entry;
+            Typespec varType  = Predefined.doubleType;
+            Typespec exprType = Predefined.doubleType;
+            
+            compiler.visit(rhs);
+
+            emitStoreValue(varId, Predefined.doubleType);
+            
+
+
         }
 
-        // The target variable is an array element.
-        else
-        {
-            emitStoreValue(null, varType);
-        }
+
+
+
+
+
+        // SegueParser.VariableContext   varCtx  = ctx.lhs().variable();
+        // SegueParser.ExpressionContext exprCtx = ctx.rhs().expression();
+        // SymtabEntry varId = varCtx.entry;
+        // Typespec varType  = varCtx.type;
+        // Typespec exprType = exprCtx.type;
+
+        // // The last modifier, if any, is the variable's last subscript or field.
+        // int modifierCount = varCtx.modifier().size();
+        // SegueParser.ModifierContext lastModCtx = modifierCount == 0
+        //                     ? null : varCtx.modifier().get(modifierCount - 1);
+
+        // // The target variable has subscripts and/or fields.
+        // if (modifierCount > 0) 
+        // {
+        //     lastModCtx = varCtx.modifier().get(modifierCount - 1);
+        //     compiler.visit(varCtx);
+        // }
+        
+        // // Emit code to evaluate the expression.
+        // compiler.visit(exprCtx);
+        
+        // // float variable := integer constant
+        // if (   (varType == Predefined.realType)
+        //     && (exprType.baseType() == Predefined.integerType)) emit(I2F);
+        
+        // // Emit code to store the expression value into the target variable.
+        // // The target variable has no subscripts or fields.
+        // if (lastModCtx == null) emitStoreValue(varId, varId.getType());
+
+        // // The target variable is a field.
+        // else if (lastModCtx.field() != null)
+        // {
+        //     emitStoreValue(lastModCtx.field().entry, lastModCtx.field().type);
+        // }
+
+        // // The target variable is an array element.
+        // else
+        // {
+        //     emitStoreValue(null, varType);
+        // }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Emit code for an IF statement.
@@ -114,7 +180,7 @@ public class StatementGenerator extends CodeGenerator
         else{          
             emitLabel(nextLabel);        
         }
-        /***** Complete this method. *****/
+        
     }
     
     /**
@@ -355,262 +421,342 @@ public class StatementGenerator extends CodeGenerator
         /***** Complete this method. *****/
     }
 
-    /**
-     * Emit code for a WRITE statement.
-     * @param ctx the WriteStatementContext.
-     */
-    public void emitWrite(SegueParser.WriteStatementContext ctx)
-    {
-        emitWrite(ctx.writeArguments(), false);
-    }
 
-    /**
-     * Emit code for a WRITELN statement.
-     * @param ctx the WritelnStatementContext.
-     */
-    public void emitWriteln(SegueParser.WritelnStatementContext ctx)
-    {
-        emitWrite(ctx.writeArguments(), true);
-    }
 
-    /**
-     * Emit code for a call to WRITE or WRITELN.
-     * @param argsCtx the WriteArgumentsContext.
-     * @param needLF true if need a line feed.
-     */
-    private void emitWrite(SegueParser.WriteArgumentsContext argsCtx,
-                           boolean needLF)
-    {
-        emit(GETSTATIC, "java/lang/System/out", "Ljava/io/PrintStream;");
 
-        // WRITELN with no arguments.
-        if (argsCtx == null) 
-        {
-            emit(INVOKEVIRTUAL, "java/io/PrintStream.println()V");
-            localStack.decrease(1);
-        }
-            
-        // Generate code for the arguments.
-        else
-        {
-            StringBuffer format = new StringBuffer();
-            int exprCount = createWriteFormat(argsCtx, format, needLF);
-            
-            // Load the format string.
-            emit(LDC, format.toString());
-            
-            // Emit the arguments array.
-            if (exprCount > 0)
-            {
-                emitArgumentsArray(argsCtx, exprCount);
 
-                emit(INVOKEVIRTUAL,
-                     "java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)" +
-                     "Ljava/io/PrintStream;");
-                localStack.decrease(2);
-                emit(POP);
-            }
-            else
-            {
-                emit(INVOKEVIRTUAL,
-                     "java/io/PrintStream/print(Ljava/lang/String;)V");
-                localStack.decrease(2);
-            }
-        }
-    }
-    
-    /**
-     * Create the printf format string.
-     * @param argsCtx the WriteArgumentsContext.
-     * @param format the format string to create.
-     * @return the count of expression arguments.
-     */
-    private int createWriteFormat(SegueParser.WriteArgumentsContext argsCtx,
-                                  StringBuffer format, boolean needLF)
-    {
-        int exprCount = 0;
-        format.append("\"");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // /**
+    // //  * Emit code for a WRITE statement.
+    // //  * @param ctx the WriteStatementContext.
+    // //  */
+    // // public void emitWrite(SegueParser.WriteStatementContext ctx)
+    // // {
+    // //     emitWrite(ctx.writeArguments(), false);
+    // // }
+
+    // // /**
+    // // //  * Emit code for a WRITELN statement.
+    // // //  * @param ctx the WritelnStatementContext.
+    // // //  */
+    // // public void emitWriteln(SegueParser.WritelnStatementContext ctx)
+    // // {
+    // //     emitWrite(ctx.writeArguments(), true);
+    // // }
+
+    // // // /**
+    // //  * Emit code for a call to WRITE or WRITELN.
+    // //  * @param argsCtx the WriteArgumentsContext.
+    // //  * @param needLF true if need a line feed.
+    // //  */
+    // public void emitWrite(SegueParser.PrintStatementContext ctx)
+    // {
+    //     emit(GETSTATIC, "java/lang/System/out", "Ljava/io/PrintStream;");
+    //         StringBuffer format = new StringBuffer();
+
         
-        // Loop over the write arguments.
-        for (SegueParser.WriteArgumentContext argCtx : argsCtx.writeArgument())
-        {
-            Typespec type = argCtx.expression().type;
-            String argText = argCtx.getText();
+
+    //         int expressioncount = createWriteFormat(ctx, format, true);
+
             
-            // Append any literal strings.
-            if (argText.charAt(0) == '\'') 
-            {
-                format.append(convertString(argText));
-            }
+    //         // Load the format string.
+    //         emit(LDC, format.toString());
             
-            // For any other expressions, append a field specifier.
-            else
-            {
-                exprCount++;
-                format.append("%");
+    //         // Emit the arguments array.
+    //         if (expressioncount > 0)
+    //         {
+    //             emitArgumentsArray(ctx, expressioncount);
+
+    //             emit(INVOKEVIRTUAL,
+    //                  "java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)" +
+    //                  "Ljava/io/PrintStream;");
+    //             localStack.decrease(2);
+    //             emit(POP);
+    //         }
+    //         else
+    //         {
+    //             emit(INVOKEVIRTUAL,
+    //                  "java/io/PrintStream/print(Ljava/lang/String;)V");
+    //             localStack.decrease(2);
+    //         }
+    //     // }
+    // }
+    
+    // /**
+    //  * Create the printf format string.
+    //  * @param argsCtx the WriteArgumentsContext.
+    //  * @param format the format string to create.
+    //  * @return the count of expression arguments.
+    //  */
+    // private int createWriteFormat(SegueParser.WriteArgumentsContext argsCtx,
+    //                               StringBuffer format, boolean needLF)
+    // {
+    //     int exprCount = 0;
+    //     format.append("\"");
+        
+    //     // Loop over the write arguments.
+    //     for (SegueParser.WriteArgumentContext argCtx : argsCtx.writeArgument())
+    //     {
+    //         Typespec type = argCtx.expression().type;
+    //         String argText = argCtx.getText();
+            
+    //         // Append any literal strings.
+    //         if (argText.charAt(0) == '\'') 
+    //         {
+    //             format.append(convertString(argText));
+    //         }
+            
+    //         // For any other expressions, append a field specifier.
+    //         else
+    //         {
+    //             exprCount++;
+    //             format.append("%");
                 
-                SegueParser.FieldWidthContext fwCtx = argCtx.fieldWidth();              
-                if (fwCtx != null)
-                {
-                    String sign = (   (fwCtx.sign() != null) 
-                                   && (fwCtx.sign().getText().equals("-"))) 
-                                ? "-" : "";
-                    format.append(sign)
-                          .append(fwCtx.integerConstant().getText());
+    //             SegueParser.FieldWidthContext fwCtx = argCtx.fieldWidth();              
+    //             if (fwCtx != null)
+    //             {
+    //                 String sign = (   (fwCtx.sign() != null) 
+    //                                && (fwCtx.sign().getText().equals("-"))) 
+    //                             ? "-" : "";
+    //                 format.append(sign)
+    //                       .append(fwCtx.integerConstant().getText());
                     
-                    SegueParser.DecimalPlacesContext dpCtx = 
-                                                        fwCtx.decimalPlaces();
-                    if (dpCtx != null)
-                    {
-                        format.append(".")
-                              .append(dpCtx.integerConstant().getText());
-                    }
-                }
+    //                 SegueParser.DecimalPlacesContext dpCtx = 
+    //                                                     fwCtx.decimalPlaces();
+    //                 if (dpCtx != null)
+    //                 {
+    //                     format.append(".")
+    //                           .append(dpCtx.integerConstant().getText());
+    //                 }
+    //             }
                 
-                String typeFlag = type == Predefined.integerType ? "d" 
-                                : type == Predefined.realType    ? "f" 
-                                : type == Predefined.booleanType ? "b" 
-                            //    : type == Predefined.charType    ? "c" 
-                                :                                  "s";
-                format.append(typeFlag);
-            }
-        }
+    //             String typeFlag = type == Predefined.integerType ? "d" 
+    //                             : type == Predefined.realType    ? "f" 
+    //                             : type == Predefined.booleanType ? "b" 
+    //                         //    : type == Predefined.charType    ? "c" 
+    //                             :                                  "s";
+    //             format.append(typeFlag);
+    //         }
+    //     }
         
-        format.append(needLF ? "\\n\"" : "\"");
+    //     format.append(needLF ? "\\n\"" : "\"");
  
-        return exprCount;
-    }
+    //     return exprCount;
+    // }
     
-    /**
-     * Emit the printf arguments array.
-     * @param argsCtx
-     * @param exprCount
-     */
-    private void emitArgumentsArray(SegueParser.WriteArgumentsContext argsCtx,
-                                    int exprCount)
-    {
-        // Create the arguments array.
-        emitLoadConstant(exprCount);
-        emit(ANEWARRAY, "java/lang/Object");
 
-        int index = 0;
 
-        // Loop over the write arguments to fill the arguments array.
-        for (SegueParser.WriteArgumentContext argCtx : 
-                                                    argsCtx.writeArgument())
-        {
-            String argText = argCtx.getText();
-            SegueParser.ExpressionContext exprCtx = argCtx.expression();
-            Typespec type = exprCtx.type.baseType();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // /**
+    //  * Emit the printf arguments array.
+    //  * @param argsCtx
+    //  * @param exprCount
+    //  */
+    // private void emitArgumentsArray(SegueParser.WriteArgumentsContext argsCtx,
+    //                                 int exprCount)
+    
+    //     // Create the arguments array.
+    //     emitLoadConstant(exprCount);
+    //     emit(ANEWARRAY, "java/lang/Object");
+
+    //     int index = 0;
+
+    //     // Loop over the write arguments to fill the arguments array.
+    //     for (SegueParser.WriteArgumentContext argCtx : 
+    //                                                 argsCtx.writeArgument())
+    //     {
+    //         String argText = argCtx.getText();
+    //         SegueParser.ExpressionContext exprCtx = argCtx.expression();
+    //         Typespec type = exprCtx.type.baseType();
             
-            // Skip string constants, which were made part of
-            // the format string.
-            if (argText.charAt(0) != '\'') 
-            {
-                emit(DUP);
-                emitLoadConstant(index++);
+    //         // Skip string constants, which were made part of
+    //         // the format string.
+    //         if (argText.charAt(0) != '\'') 
+    //         {
+    //             emit(DUP);
+    //             emitLoadConstant(index++);
 
-                compiler.visit(exprCtx);
+    //             compiler.visit(exprCtx);
 
-                Form form = type.getForm();
-                if (    ((form == SCALAR) || (form == ENUMERATION))
-                     && (type != Predefined.stringType))
-                {
-                    emit(INVOKESTATIC, valueOfSignature(type));
-                }
+    //             Form form = type.getForm();
+    //             if (    ((form == SCALAR) || (form == ENUMERATION))
+    //                  && (type != Predefined.stringType))
+    //             {
+    //                 emit(INVOKESTATIC, valueOfSignature(type));
+    //             }
 
-                // Store the value into the array.
-                emit(AASTORE);
-            }
-        }
-    }
+    //             // Store the value into the array.
+    //             emit(AASTORE);
+    //         }
+    //     }
+    // }
 
-    /**
-     * Emit code for a READ statement.
-     * @param ctx the ReadStatementContext.
-     */
-    public void emitRead(SegueParser.ReadStatementContext ctx)
-    {
-        emitRead(ctx.readArguments(), false);
-    }
+    // /**
+    //  * Emit code for a READ statement.
+    //  * @param ctx the ReadStatementContext.
+    //  */
+    // // public void emitRead(SegueParser.ReadStatementContext ctx)
+    // {
+    //     emitRead(ctx.readArguments(), false);
+    // }
 
-    /**
-     * Emit code for a READLN statement.
-     * @param ctx the ReadlnStatementContext.
-     */
-    public void emitReadln(SegueParser.ReadlnStatementContext ctx)
-    {
-        emitRead(ctx.readArguments(), true);
-    }
+    // /**
+    //  * Emit code for a READLN statement.
+    //  * @param ctx the ReadlnStatementContext.
+    //  */
+    // public void emitReadln(SegueParser.ReadlnStatementContext ctx)
+    // {
+    //     emitRead(ctx.readArguments(), true);
+    // }
 
-    /**
-     * Generate code for a call to READ or READLN.
-     * @param argsCtx the ReadArgumentsContext.
-     * @param needSkip true if need to skip the rest of the input line.
-     */
-    private void emitRead(SegueParser.ReadArgumentsContext argsCtx,
-                          boolean needSkip)
-    {
-        int size = argsCtx.variable().size();
+    // /**
+    //  * Generate code for a call to READ or READLN.
+    //  * @param argsCtx the ReadArgumentsContext.
+    //  * @param needSkip true if need to skip the rest of the input line.
+    //  */
+    // private void emitRead(SegueParser.ReadArgumentsContext argsCtx,
+    //                       boolean needSkip)
+    // {
+    //     int size = argsCtx.variable().size();
         
-        // Loop over read arguments.
-        for (int i = 0; i < size; i++)
-        {
-            SegueParser.VariableContext varCtx = argsCtx.variable().get(i);
-            Typespec varType = varCtx.type;
+    //     // Loop over read arguments.
+    //     for (int i = 0; i < size; i++)
+    //     {
+    //         SegueParser.VariableContext varCtx = argsCtx.variable().get(i);
+    //         Typespec varType = varCtx.type;
             
-            if (varType == Predefined.integerType)
-            {
-                emit(GETSTATIC, programName + "/_sysin Ljava/util/Scanner;");
-                emit(INVOKEVIRTUAL, "java/util/Scanner/nextInt()I");
-                emitStoreValue(varCtx.entry, null);
-            }
-            else if (varType == Predefined.realType)
-            {
-                emit(GETSTATIC, programName + "/_sysin Ljava/util/Scanner;");
-                emit(INVOKEVIRTUAL, "java/util/Scanner/nextFloat()F");
-                emitStoreValue(varCtx.entry, null);
-            }
-            else if (varType == Predefined.booleanType)
-            {
-                emit(GETSTATIC, programName + "/_sysin Ljava/util/Scanner;");
-                emit(INVOKEVIRTUAL, "java/util/Scanner/nextBoolean()Z");
-                emitStoreValue(varCtx.entry, null);
-            }
-            /**
-            else if (varType == Predefined.charType)
-            {
-                emit(GETSTATIC, programName + "/_sysin Ljava/util/Scanner;");
-                emit(LDC, "\"\"");
-                emit(INVOKEVIRTUAL, "java/util/Scanner/useDelimiter(Ljava/lang/String;)" +
-                                    "Ljava/util/Scanner;");
-                emit(POP);                
-                emit(GETSTATIC, programName + "/_sysin Ljava/util/Scanner;");
-                emit(INVOKEVIRTUAL, "java/util/Scanner/next()Ljava/lang/String;");
-                emit(ICONST_0);           
-                emit(INVOKEVIRTUAL, "java/lang/String/charAt(I)C");
-                emitStoreValue(varCtx.entry, null);
+    //         if (varType == Predefined.integerType)
+    //         {
+    //             emit(GETSTATIC, programName + "/_sysin Ljava/util/Scanner;");
+    //             emit(INVOKEVIRTUAL, "java/util/Scanner/nextInt()I");
+    //             emitStoreValue(varCtx.entry, null);
+    //         }
+    //         else if (varType == Predefined.realType)
+    //         {
+    //             emit(GETSTATIC, programName + "/_sysin Ljava/util/Scanner;");
+    //             emit(INVOKEVIRTUAL, "java/util/Scanner/nextFloat()F");
+    //             emitStoreValue(varCtx.entry, null);
+    //         }
+    //         else if (varType == Predefined.booleanType)
+    //         {
+    //             emit(GETSTATIC, programName + "/_sysin Ljava/util/Scanner;");
+    //             emit(INVOKEVIRTUAL, "java/util/Scanner/nextBoolean()Z");
+    //             emitStoreValue(varCtx.entry, null);
+    //         }
+    //         /**
+    //         else if (varType == Predefined.charType)
+    //         {
+    //             emit(GETSTATIC, programName + "/_sysin Ljava/util/Scanner;");
+    //             emit(LDC, "\"\"");
+    //             emit(INVOKEVIRTUAL, "java/util/Scanner/useDelimiter(Ljava/lang/String;)" +
+    //                                 "Ljava/util/Scanner;");
+    //             emit(POP);                
+    //             emit(GETSTATIC, programName + "/_sysin Ljava/util/Scanner;");
+    //             emit(INVOKEVIRTUAL, "java/util/Scanner/next()Ljava/lang/String;");
+    //             emit(ICONST_0);           
+    //             emit(INVOKEVIRTUAL, "java/lang/String/charAt(I)C");
+    //             emitStoreValue(varCtx.entry, null);
                 
-                emit(GETSTATIC, programName + "/_sysin Ljava/util/Scanner;");
-                emit(INVOKEVIRTUAL, "java/util/Scanner/reset()Ljava/util/Scanner;");
+    //             emit(GETSTATIC, programName + "/_sysin Ljava/util/Scanner;");
+    //             emit(INVOKEVIRTUAL, "java/util/Scanner/reset()Ljava/util/Scanner;");
 
-            }
+    //         }
 
-             */
-            else  // string
-            {
-                emit(GETSTATIC, programName + "/_sysin Ljava/util/Scanner;");
-                emit(INVOKEVIRTUAL, "java/util/Scanner/next()Ljava/lang/String;");
-                emitStoreValue(varCtx.entry, null);
-            }
-        }
+    //          */
+    //         else  // string
+    //         {
+    //             emit(GETSTATIC, programName + "/_sysin Ljava/util/Scanner;");
+    //             emit(INVOKEVIRTUAL, "java/util/Scanner/next()Ljava/lang/String;");
+    //             emitStoreValue(varCtx.entry, null);
+    //         }
+    //     }
 
-        // READLN: Skip the rest of the input line.
-        if (needSkip) 
-        {
-            emit(GETSTATIC, programName + "/_sysin Ljava/util/Scanner;");
-            emit(INVOKEVIRTUAL, "java/util/Scanner/nextLine()Ljava/lang/String;");
-            emit(POP);                 
-        }
-    }
+    //     // READLN: Skip the rest of the input line.
+    //     if (needSkip) 
+    //     {
+    //         emit(GETSTATIC, programName + "/_sysin Ljava/util/Scanner;");
+    //         emit(INVOKEVIRTUAL, "java/util/Scanner/nextLine()Ljava/lang/String;");
+    //         emit(POP);                 
+    //     }
+    // }
 }

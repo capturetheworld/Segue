@@ -36,8 +36,7 @@ assignmentStatement locals [ Typespec type = null, SymtabEntry entry = null ]
                     :  boolIdentifier '=' booleanExpression | numIdentifier '=' numericalExpression; 
 ifStatement:   IF '(' booleanExpression ')' BR* '{' BR* lineList '}' BR* (ELSE BR* '{' BR* lineList '}')?; // or ()
 whileStatement : WHILE '(' booleanExpression ')' BR* '{' BR* lineList'}';
-printStatement : PRINT printArguments;
-printArguments : '(' (statement|arg) ')'; //TODO fix
+printStatement : PRINT  '(' arg ')'; 
 synthStatement : SYNTH '.' synthFunction;
 synthFunction : synthSetFunction
                 | synthChannelFunction

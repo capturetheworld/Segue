@@ -489,7 +489,7 @@ public class CodeGenerator
     
     /**
      * Emit a store of a value that is on top of the operand stack.
-     * Store to an array element, a record field, or an ummodified variable.
+     * Store to an or an ummodified variable.
      * @param targetId the symbol table entry of the target.
      * @param targetType the target's datatype.
      */

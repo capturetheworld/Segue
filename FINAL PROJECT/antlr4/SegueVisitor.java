@@ -1,4 +1,4 @@
-// Generated from c:\Users\mcnan\Documents\SJSU\Fall 2020\CS 153\CS153-Compiler-Design\FINAL PROJECT\Segue.g4 by ANTLR 4.8
+// Generated from /Users/ian/Documents/Github/CS153-Compiler-Design/FINAL PROJECT/Segue.g4 by ANTLR 4.8
 
     package antlr4;
     import java.util.HashMap;
@@ -75,12 +75,6 @@ public interface SegueVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitPrintStatement(SegueParser.PrintStatementContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SegueParser#printArguments}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPrintArguments(SegueParser.PrintArgumentsContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SegueParser#synthStatement}.
 	 * @param ctx the parse tree

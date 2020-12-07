@@ -569,8 +569,8 @@ public class Semantics extends SegueBaseVisitor<Object>
         {
             error.flag(REDECLARED_IDENTIFIER, 
                        ctx.getStart().getLine(), routineName);
-            return null;
-        }
+            
+        }else{
 
         routineId = symtabStack.enterLocal(routineName, FUNCTION);
         routineId.setRoutineCode(DECLARED);
@@ -602,6 +602,7 @@ public class Semantics extends SegueBaseVisitor<Object>
         routineId.setExecutable(ctx.lineList());
         
         symtabStack.pop();
+    }
         return null;
     }
 
