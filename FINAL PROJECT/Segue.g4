@@ -68,7 +68,8 @@ factor : '(' numericalExpression ')' | numberConstant | numIdentifier | prefixOp
 prefixOp : ('++' | '--') numIdentifier;
 suffixOp : numIdentifier ('++' | '--');
 
-numIdentifier : numSymbol IDENTIFIER;
+numIdentifier locals [ Typespec type = null, SymtabEntry entry = null ]
+        : numSymbol IDENTIFIER;
 numSymbol    : '#';
 
 
@@ -84,7 +85,8 @@ booleanSingleton :  notStatement
 notStatement :  notSymbol booleanExpression;
 notSymbol : '!';
 
-boolIdentifier : boolSymbol IDENTIFIER;
+boolIdentifier locals [ Typespec type = null, SymtabEntry entry = null ]
+        : boolSymbol IDENTIFIER;
 boolSymbol    : '$';
 
 
@@ -108,8 +110,8 @@ synthVibratoFrequency : 'f' numericalExpression;
 relOp : '==' | '!=' | '<' | '<=' | '>' | '>=' ;
 boolOp : '&' | '|' | '==' | '!=' ;
 
-addOp : '+' | '-' | ;  // basic arithmatic operations
-mulOp : '*' | '/' | ; // basic arithmatic operations
+addOp : '+' | '-' ;  // basic arithmatic operations
+mulOp : '*' | '/' ; // basic arithmatic operations
 
 fragment A : ('a' | 'A') ;
 fragment B : ('b' | 'B') ;

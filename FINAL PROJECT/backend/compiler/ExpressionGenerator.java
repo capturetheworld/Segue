@@ -27,6 +27,73 @@ public class ExpressionGenerator extends CodeGenerator
     {
         super(parent, compiler);
     }
+
+    /**
+     * Emit code for a numerical expression.
+     * @param ctx the NumericalExpressionContext.
+     */
+    public void emitNumericalExpression(SegueParser.NumericalExpressionContext ctx){
+        SegueParser.TermContext termCtx = ctx.term(0);
+
+        emitTerm(termCtx);
+
+
+        if(ctx.term().size() > 1){
+
+            for(int i = 1; i < ctx.term().size(); i++){
+
+                String op = ctx.addOp(i-1).getText();
+
+                emitTerm(ctx.term(i));
+
+                if (op.equals("+")) emit(DADD);
+                else                emit(DSUB);
+
+            }
+        }
+    }
+
+    public void emitTerm(SegueParser.TermContext ctx){
+
+        SegueParser.FactorContext factorCtx = ctx.factor(0);
+
+        emitFactor(factorCtx);
+
+        if(ctx.factor().size() > 1){
+
+            for(int i = 1; i < ctx.factor().size(); i++){
+
+                String op = ctx.mulOp(i-1).getText();
+
+                emitFactor(ctx.factor(i));
+
+                if (op.equals("*")) emit(DMUL);
+                else                emit(DDIV);
+
+            }
+        }
+    }
+
+    public void emitFactor(SegueParser.FactorContext ctx){
+
+        if(ctx.numericalExpression() != null){
+            
+            emitNumericalExpression(ctx.numericalExpression());
+        }
+        else if(ctx.numberConstant() != null){
+
+            emitLoadDoubleConstant(ctx.numberConstant());
+        }
+        else if(ctx.numIdentifier() != null){
+            
+        }
+        else if(ctx.prefixOp() != null){
+            
+        }
+        else if(ctx.suffixOp() != null){
+            
+        }
+    }
     
     /**
      * Emit code for an expression.
@@ -213,61 +280,61 @@ public class ExpressionGenerator extends CodeGenerator
      * Emit code for a term.
      * @param ctx the TermContext.
      */
-    public void emitTerm(SegueParser.TermContext ctx)
-    {
-        int count = ctx.factor().size();
+    // public void emitTerm(SegueParser.TermContext ctx)
+    // {
+    //     int count = ctx.factor().size();
         
-        // First factor.
-        SegueParser.FactorContext factorCtx1 = ctx.factor().get(0);
-        Typespec type1 = factorCtx1.type;
-        compiler.visit(factorCtx1);
+    //     // First factor.
+    //     SegueParser.FactorContext factorCtx1 = ctx.factor().get(0);
+    //     Typespec type1 = factorCtx1.type;
+    //     compiler.visit(factorCtx1);
         
-        // Loop over the subsequent factors.
-        for (int i = 1; i < count; i++)
-        {
-            String op = ctx.mulOp().get(i-1).getText().toLowerCase();
-            SegueParser.FactorContext factorCtx2 = ctx.factor().get(i);
-            Typespec type2 = factorCtx2.type;
+    //     // Loop over the subsequent factors.
+    //     for (int i = 1; i < count; i++)
+    //     {
+    //         String op = ctx.mulOp().get(i-1).getText().toLowerCase();
+    //         SegueParser.FactorContext factorCtx2 = ctx.factor().get(i);
+    //         Typespec type2 = factorCtx2.type;
 
-            boolean integerMode = false;
-            boolean realMode    = false;
+    //         boolean integerMode = false;
+    //         boolean realMode    = false;
 
-            if (   (type1 == Predefined.integerType)
-                && (type2 == Predefined.integerType)) 
-            {
-                integerMode = true;
-            }
-            else if (   (type1 == Predefined.realType) 
-                     || (type2 == Predefined.realType))
-            {
-                realMode = true;
-            }
+    //         if (   (type1 == Predefined.integerType)
+    //             && (type2 == Predefined.integerType)) 
+    //         {
+    //             integerMode = true;
+    //         }
+    //         else if (   (type1 == Predefined.realType) 
+    //                  || (type2 == Predefined.realType))
+    //         {
+    //             realMode = true;
+    //         }
                 
-            if (integerMode)
-            {
-                compiler.visit(factorCtx2);            
+    //         if (integerMode)
+    //         {
+    //             compiler.visit(factorCtx2);            
 
-                if      (op.equals("*"))   emit(IMUL);
-                else if (op.equals("/"))   emit(FDIV);
-                else if (op.equals("div")) emit(IDIV);
-                else if (op.equals("mod")) emit(IREM);
-            }
-            else if (realMode)
-            {
-                if (type1 == Predefined.integerType) emit(I2F);
-                compiler.visit(factorCtx2); 
-                if (type2 == Predefined.integerType) emit(I2F);
+    //             if      (op.equals("*"))   emit(IMUL);
+    //             else if (op.equals("/"))   emit(FDIV);
+    //             else if (op.equals("div")) emit(IDIV);
+    //             else if (op.equals("mod")) emit(IREM);
+    //         }
+    //         else if (realMode)
+    //         {
+    //             if (type1 == Predefined.integerType) emit(I2F);
+    //             compiler.visit(factorCtx2); 
+    //             if (type2 == Predefined.integerType) emit(I2F);
                 
-                if      (op.equals("*")) emit(FMUL);
-                else if (op.equals("/")) emit(FDIV);
-            }
-            else  // booleanMode
-            {
-                compiler.visit(factorCtx2);                 
-                emit(IAND);
-            }
-        }
-    }
+    //             if      (op.equals("*")) emit(FMUL);
+    //             else if (op.equals("/")) emit(FDIV);
+    //         }
+    //         else  // booleanMode
+    //         {
+    //             compiler.visit(factorCtx2);                 
+    //             emit(IAND);
+    //         }
+    //     }
+    // }
     
     /**
      * Emit code for NOT.
@@ -314,37 +381,48 @@ public class ExpressionGenerator extends CodeGenerator
      * @param variableNode the variable node.
      * @return the datatype of the variable.
      */
-    public Typespec emitLoadVariable(SegueParser.VariableContext varCtx)
-    {
-        SymtabEntry variableId = varCtx.entry;
-        Typespec variableType = variableId.getType();
-        int modifierCount = varCtx.modifier().size();
+    // public Typespec emitLoadVariable(SegueParser.VariableContext varCtx)
+    // {
+    //     SymtabEntry variableId = varCtx.entry;
+    //     Typespec variableType = variableId.getType();
         
-        // Scalar value or structure address.
-        emitLoadValue(variableId);
+    //     // Scalar value or structure address.
+    //     emitLoadValue(variableId);
 
-        // Loop over subscript and field modifiers.
-        for (int i = 0; i < modifierCount; ++i)
-        {
-            SegueParser.ModifierContext modCtx = varCtx.modifier().get(i);
-            boolean lastModifier = i == modifierCount - 1;
+    //     // Loop over subscript and field modifiers.
+    //     for (int i = 0; i < modifierCount; ++i)
+    //     {
+    //         SegueParser.ModifierContext modCtx = varCtx.modifier().get(i);
+    //         boolean lastModifier = i == modifierCount - 1;
 
-            // Subscript
-            if (modCtx.indexList() != null) 
-            {
-                variableType = emitLoadArrayElementAccess(
-                                modCtx.indexList(), variableType, lastModifier);
-            }
+    //         // Subscript
+    //         if (modCtx.indexList() != null) 
+    //         {
+    //             variableType = emitLoadArrayElementAccess(
+    //                             modCtx.indexList(), variableType, lastModifier);
+    //         }
             
-            // Field
-            else if (!lastModifier)
-            {
-                variableType = emitLoadRecordField(modCtx.field(), variableType);
-            }
-        }
+    //         // Field
+    //         else if (!lastModifier)
+    //         {
+    //             variableType = emitLoadRecordField(modCtx.field(), variableType);
+    //         }
+    //     }
 
-        return variableType;
+    //     return variableType;
+    // }
+
+    public void emitDoubleVariable(SegueParser.NumIdentifierContext ctx){
+
+        
     }
+
+    public void emitBooleanVariable(SegueParser.BoolIdentifierContext ctx){
+
+        
+    }
+
+
 
     /**
      * Emit code to access an array element by loading the array address
@@ -456,19 +534,19 @@ public class ExpressionGenerator extends CodeGenerator
      * Emit code to load an integer constant.
      * @parm intCtx the IntegerConstantContext.
      */
-    public void emitLoadIntegerConstant(SegueParser.NumberContext intCtx)
+    public void emitLoadBooleanConstant(SegueParser.BooleanConstantContext intCtx)
     {
-        int value = Integer.parseInt(intCtx.getText());
-        emitLoadConstant(value);
+        boolean value = Boolean.parseBoolean(intCtx.getText());
+        emitLoadConstant(value? 1 : 0);
     }
     
     /**
      * Emit code to load real constant.
      * @parm intCtx the IntegerConstantContext.
      */
-    public void emitLoadRealConstant(SegueParser.NumberContext realCtx)
+    public void emitLoadDoubleConstant(SegueParser.NumberConstantContext realCtx)
     {
-        float value = Float.parseFloat(realCtx.getText());
+        Double value = Double.parseDouble(realCtx.getText());
         emitLoadConstant(value);
     }
 }

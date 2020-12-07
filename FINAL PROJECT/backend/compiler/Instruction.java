@@ -36,8 +36,8 @@ public enum Instruction
     POP(-1), SWAP(0), DUP(1), DUP_X1(1), DUP_X2(1),
 
     // Arithmetic and logical
-    IADD(-1), FADD(-1), ISUB(-1), FSUB(-1), IMUL(-1), FMUL(-1),
-    IDIV(-1), FDIV(-1), IREM(-1), FREM(-1), INEG(0),  FNEG(0),
+    IADD(-1), DADD(-1), ISUB(-1), DSUB(-1), IMUL(-1), DMUL(-1),
+    IDIV(-1), DDIV(-1), IREM(-1), DREM(-1), INEG(0),  DNEG(0),
     IINC(0),  IAND(-1), IOR(-1),  IXOR(-1),
 
     // Type conversion and checking
