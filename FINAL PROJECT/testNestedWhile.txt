@@ -1,0 +1,33 @@
+
+#i = 0
+#j = 17
+#count = 0.1
+
+WHILE(#i < 5){
+    #count++
+    WHILE(#j < 10){
+       # count++
+        #j--
+    }
+#i++
+    
+}
+#m = 1
+#n = 0
+$test = TRUE
+WHILE(#m {
+
+    WHILE(){
+        WHILE($TEST){
+            IF#m + #n > 30){
+
+                
+            }
+            ELSE{$TEST = FALSE}
+           
+        }
+
+    }
+
+    
+}
