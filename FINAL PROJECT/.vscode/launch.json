@@ -5,21 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "java",
-            "name": "CodeLens (Launch) - Segue",
-            "request": "launch",
-            "mainClass": "Segue",
-            "projectName": "FINAL PROJECT_c3d8faf8"
-        },
-        {
-            "type": "java",
-            "name": "CodeLens (Launch) - Pascal",
-            "request": "launch",
-            "mainClass": "Pascal",
-            "projectName": "FINAL PROJECT_93d87252"
-        },
-        {
-            "name": "Debug ANTLR4 grammar",
+            "name": "ANTLR w/ PARSE TREE",
             "type": "antlr-debug",
             "request": "launch",
             "input": "test.txt",
@@ -30,7 +16,7 @@
         },
         {
             "type": "java",
-            "name": "Debug (Launch) - Current File",
+            "name": "JAVA FILE (RUN ON MAIN JAVA)",
             "request": "launch",
             "mainClass": "${file}",
             "args": "${command:SpecifyProgramArgs}"
