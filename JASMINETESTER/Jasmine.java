@@ -1,6 +1,6 @@
 class Jasmine{
-    private static double n;
+    
     public static void main(String str[]){
-       n = 9.0;
+       System.out.println(9.0);
     }
 }

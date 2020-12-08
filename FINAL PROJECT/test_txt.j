@@ -49,6 +49,7 @@
 	ldc	9.0
 	f2d
 	putstatic	test_txt/n D
+	getstatic	test_txt/n D
 
 	invokestatic	java/time/Instant/now()Ljava/time/Instant;
 	astore_2
@@ -72,5 +73,5 @@
 	return
 
 .limit locals 6
-.limit stack 7
+.limit stack 8
 .end method
