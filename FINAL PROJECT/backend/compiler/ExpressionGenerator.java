@@ -167,6 +167,7 @@ public class ExpressionGenerator extends CodeGenerator
                         emit(IF_ICMPNE,trueLabel);
                         emit(GOTO, falseLabel);
                         break;
+                    default: break;
 
                 }
 

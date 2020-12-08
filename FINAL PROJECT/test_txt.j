@@ -47,6 +47,7 @@
 	astore_1
 
 	ldc	9.0
+	f2d
 	putstatic	test_txt/n D
 
 	invokestatic	java/time/Instant/now()Ljava/time/Instant;
