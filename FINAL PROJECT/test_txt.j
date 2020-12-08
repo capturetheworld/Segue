@@ -57,7 +57,7 @@ L001:
 	getstatic	test_txt/n D
 	getstatic	test_txt/m D
 	dcmpg
-	ifne	L003
+	ifge	L003
 L003:
 	iconst_1
 	goto	L005
@@ -70,6 +70,9 @@ L005:
 	dconst_1
 	dadd
 	putstatic	test_txt/n D
+	getstatic	java/lang/System/out Ljava/io/PrintStream;
+	getstatic	test_txt/n D
+	invokevirtual	java/io/PrintStream.println(D)V
 	goto	L001
 L002:
 
