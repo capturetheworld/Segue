@@ -204,6 +204,7 @@ public class ProgramGenerator extends CodeGenerator
         // Emit code for the compound statement.
         emitLine();
         for (SegueParser.LineContext line : ctx.line()) compiler.visit(line);
+        compiler.visit(ctx.statement());
         
         emitMainEpilogue();
     }
@@ -368,19 +369,20 @@ public class ProgramGenerator extends CodeGenerator
         emitLine();
 
         // Function: Return the value in the implied function variable.
-        if (routineId.getKind() == FUNCTION) 
-        {
-            Typespec type = routineId.getType();
+        // if (routineId.getKind() == FUNCTION) 
+        // {
+        //     Typespec type = routineId.getType();
 
-            // Get the slot number of the function variable.
-            String varName = routineId.getName();
-            SymtabEntry varId = routineId.getRoutineSymtab().lookup(varName);
-            emitLoadLocal(type, varId.getSlotNumber());
-            emitReturnValue(type);
-        }
+        //     // Get the slot number of the function variable.
+        //     String varName = routineId.getName();
+        //     SymtabEntry varId = routineId.getRoutineSymtab().lookup(varName);
+        //     emitLoadLocal(type, varId.getSlotNumber());
+        //     emitReturnValue(type);
+        // }
 
         // Procedure: Just return.
-        else emit(RETURN);
+        //else emit(RETURN);
+        emit(RETURN);
     }
 
     /**

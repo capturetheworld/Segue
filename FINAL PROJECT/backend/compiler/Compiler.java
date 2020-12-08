@@ -4,6 +4,7 @@ import antlr4.*;
 
 import intermediate.symtab.*;
 import intermediate.symtab.Predefined;
+import intermediate.type.Typespec;
 
 /**
  * Compile Pascal to Jasmin assembly language.
@@ -272,313 +273,477 @@ public class Compiler extends SegueBaseVisitor<Object>
     */
     //segfault part 
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public Object visitProgram(SegueParser.ProgramContext ctx) {
+		createNewGenerators(code);
+        programCode.emitProgram(ctx);
+        return null;
+	}
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	//@Override public T visitLine(SegueParser.LineContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	//@Override public T visitLineList(SegueParser.LineListContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	//@Override public Object visitStatement(SegueParser.StatementContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public Object visitFunctiondef(SegueParser.FunctiondefContext ctx) {
+		createNewGenerators(programCode);
+        programCode.emitRoutine(ctx.functionID().entry);
+        return null;
+	}
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public Object visitFunctioncall(SegueParser.FunctioncallContext ctx) {
+		statementCode.emitCall(ctx.functionID().entry, ctx.argList());
+        return null;
+	}
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public Object visitAssignmentStatement(SegueParser.AssignmentStatementContext ctx) {
+		statementCode.emitAssignment(ctx);
+        return null;
+	}
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public Object visitIfStatement(SegueParser.IfStatementContext ctx) {
+		statementCode.emitIf(ctx);
+        return null;
+	}
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public Object visitWhileStatement(SegueParser.WhileStatementContext ctx) {
+		statementCode.emitWhile(ctx);
+        return null;
+	}
 
-    /**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Object visitProgram(SegueParser.ProgramContext ctx) { return visitChildren(ctx); }
+
+
+
+
+
+
+
+
+
+
+
+
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitLine(SegueParser.LineContext ctx) { return visitChildren(ctx); }
+	//@Override public T visitPrintStatement(SegueParser.PrintStatementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitStatement(SegueParser.StatementContext ctx) { return visitChildren(ctx); }
+	//@Override public T visitSynthStatement(SegueParser.SynthStatementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitAssignmentStatement(SegueParser.AssignmentStatementContext ctx) { return visitChildren(ctx); }
+	//@Override public T visitSynthFunction(SegueParser.SynthFunctionContext ctx) { return visitChildren(ctx); }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitIfStatement(SegueParser.IfStatementContext ctx) { return visitChildren(ctx); }
+	@Override public Object visitReturnStatement(SegueParser.ReturnStatementContext ctx) {
+		Typespec t;
+		if (ctx.booleanExpression() != null) {
+			visit(ctx.booleanExpression());
+			t = Predefined.booleanType;
+		} else {
+			visit(ctx.numericalExpression());
+			t = Predefined.doubleType;
+		}
+		programCode.emitReturnValue(t);
+		return null;
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitWhileStatement(SegueParser.WhileStatementContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitFunctionID(SegueParser.FunctionIDContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitPrintStatement(SegueParser.PrintStatementContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitFunctionSymbol(SegueParser.FunctionSymbolContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitPrintArguments(SegueParser.PrintArgumentsContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitParamList(SegueParser.ParamListContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitSynthStatement(SegueParser.SynthStatementContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitParam(SegueParser.ParamContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitSynthFunction(SegueParser.SynthFunctionContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitArgList(SegueParser.ArgListContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitNumericalExpression(SegueParser.NumericalExpressionContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitArg(SegueParser.ArgContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitTerm(SegueParser.TermContext ctx) { return visitChildren(ctx); }
+	@Override public Object visitNumericalExpression(SegueParser.NumericalExpressionContext ctx) {
+		expressionCode.emitNumericalExpression(ctx);
+        return null;
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitFactor(SegueParser.FactorContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitTerm(SegueParser.TermContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitPrefixOp(SegueParser.PrefixOpContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitFactor(SegueParser.FactorContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitSuffixOp(SegueParser.SuffixOpContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitPrefixOp(SegueParser.PrefixOpContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitNumIdentifier(SegueParser.NumIdentifierContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitSuffixOp(SegueParser.SuffixOpContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitNumSymbol(SegueParser.NumSymbolContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitSignOp(SegueParser.SignOpContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitBooleanExpression(SegueParser.BooleanExpressionContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitNumIdentifier(SegueParser.NumIdentifierContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitBooleanTerm(SegueParser.BooleanTermContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitNumSymbol(SegueParser.NumSymbolContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitBooleanSingleton(SegueParser.BooleanSingletonContext ctx) { return visitChildren(ctx); }
+	@Override public Object visitBooleanExpression(SegueParser.BooleanExpressionContext ctx) {
+		expressionCode.emitBooleanExpression(ctx);
+        return null;
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitNotSymbol(SegueParser.NotSymbolContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitBooleanTerm(SegueParser.BooleanTermContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitBoolIdentifier(SegueParser.BoolIdentifierContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitBooleanSingleton(SegueParser.BooleanSingletonContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitBoolSymbol(SegueParser.BoolSymbolContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitNotStatement(SegueParser.NotStatementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitSynthSetFunction(SegueParser.SynthSetFunctionContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitNotSymbol(SegueParser.NotSymbolContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitSynthChannelFunction(SegueParser.SynthChannelFunctionContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitBoolIdentifier(SegueParser.BoolIdentifierContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitSynthNoteFunction(SegueParser.SynthNoteFunctionContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitBoolSymbol(SegueParser.BoolSymbolContext ctx) { return visitChildren(ctx); }
+
+
+
+
+
+
+
+
+
+
+
+
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitSynthStartFunction(SegueParser.SynthStartFunctionContext ctx) { return visitChildren(ctx); }
+	//@Override public T visitSynthSetFunction(SegueParser.SynthSetFunctionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitSynthNoteSet(SegueParser.SynthNoteSetContext ctx) { return visitChildren(ctx); }
+	//@Override public T visitSynthChannelFunction(SegueParser.SynthChannelFunctionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitSynthNoteLerp(SegueParser.SynthNoteLerpContext ctx) { return visitChildren(ctx); }
+	//@Override public T visitSynthNoteFunction(SegueParser.SynthNoteFunctionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitSynthPointStatement(SegueParser.SynthPointStatementContext ctx) { return visitChildren(ctx); }
+	//@Override public T visitSynthStartFunction(SegueParser.SynthStartFunctionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitSynthMidiPitch(SegueParser.SynthMidiPitchContext ctx) { return visitChildren(ctx); }
+	//@Override public T visitSynthNoteSet(SegueParser.SynthNoteSetContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitSynthVolume(SegueParser.SynthVolumeContext ctx) { return visitChildren(ctx); }
+	//@Override public T visitSynthNoteLerp(SegueParser.SynthNoteLerpContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitSynthVibratoAmplitude(SegueParser.SynthVibratoAmplitudeContext ctx) { return visitChildren(ctx); }
+	//@Override public T visitSynthPointStatement(SegueParser.SynthPointStatementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitSynthVibratoFrequency(SegueParser.SynthVibratoFrequencyContext ctx) { return visitChildren(ctx); }
+	//@Override public T visitSynthMidiPitch(SegueParser.SynthMidiPitchContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitRelOp(SegueParser.RelOpContext ctx) { return visitChildren(ctx); }
+	//@Override public T visitSynthVolume(SegueParser.SynthVolumeContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitBoolOp(SegueParser.BoolOpContext ctx) { return visitChildren(ctx); }
+	//@Override public T visitSynthVibratoAmplitude(SegueParser.SynthVibratoAmplitudeContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitAddOp(SegueParser.AddOpContext ctx) { return visitChildren(ctx); }
+	//@Override public T visitSynthVibratoFrequency(SegueParser.SynthVibratoFrequencyContext ctx) { return visitChildren(ctx); }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitMulOp(SegueParser.MulOpContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitRelOp(SegueParser.RelOpContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitBooleanConstant(SegueParser.BooleanConstantContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitBoolOp(SegueParser.BoolOpContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitNumberConstant(SegueParser.NumberConstantContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitAddOp(SegueParser.AddOpContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitUnsignedNumber(SegueParser.UnsignedNumberContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitMulOp(SegueParser.MulOpContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitUnsignedintegerConstant(SegueParser.UnsignedintegerConstantContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitBooleanConstant(SegueParser.BooleanConstantContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitUnsigneddoubleConstant(SegueParser.UnsigneddoubleConstantContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitNumberConstant(SegueParser.NumberConstantContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Object visitSign(SegueParser.SignContext ctx) { return visitChildren(ctx); }
+	//@Override public Object visitUnsignedNumber(SegueParser.UnsignedNumberContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	//@Override public Object visitUnsignedintegerConstant(SegueParser.UnsignedintegerConstantContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	//@Override public Object visitUnsigneddoubleConstant(SegueParser.UnsigneddoubleConstantContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	//@Override public Object visitSign(SegueParser.SignContext ctx) { return visitChildren(ctx); }
 }

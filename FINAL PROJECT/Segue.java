@@ -64,7 +64,7 @@ public class Segue {
 
         // Pass 2: Semantic operations.
         Path p = Paths.get(sourceFileName);
-        String programName = p.getFileName().toString();
+        String programName = p.getFileName().toString().replace(".", "_");
 
         System.out.printf("\nPASS 2 Semantics:\n");
         Semantics pass2 = new Semantics(programName);
@@ -76,7 +76,7 @@ public class Segue {
             System.out.println("Object file not created or modified.");
             return;
         }
-        /* 
+        
         // Pass 3: Compile the Pascal program.
         System.out.printf("\nPASS 3 Compilation: ");
         SymtabEntry programId = pass2.getProgramId();
@@ -85,7 +85,7 @@ public class Segue {
         
 
         System.out.printf("Object file \"%s\" created.\n", pass3.getObjectFileName());
-        */
+        
 
     }
 }

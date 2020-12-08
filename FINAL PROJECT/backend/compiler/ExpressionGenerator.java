@@ -80,7 +80,7 @@ public class ExpressionGenerator extends CodeGenerator
             emitNumericalExpression(ctx.numericalExpression());
         }
         else if(ctx.numberConstant() != null){
-
+            
             emitLoadDoubleConstant(ctx.numberConstant());
         }
         else if(ctx.numIdentifier() != null){
@@ -140,10 +140,9 @@ public class ExpressionGenerator extends CodeGenerator
     }
 
     public void emitBooleanExpression(SegueParser.BooleanExpressionContext ctx){
-        
-        if(ctx.booleanTerm() != null){
+        if(ctx.booleanTerm().size() > 0){
             if(ctx.booleanTerm().size() > 1){
-
+                
                 emitBooleanTerm(ctx.booleanTerm(0));
                 emitBooleanTerm(ctx.booleanTerm(1));
 
@@ -180,10 +179,10 @@ public class ExpressionGenerator extends CodeGenerator
                 emit(GOTO, exitLabel);
 
                 emitLabel(exitLabel);
+            } else {
+                emitBooleanTerm(ctx.booleanTerm(0));
             }
-        }
-        else {
-
+        } else {
             Label trueLabel = new Label();
             Label falseLabel = new Label();
             Label exitLabel = new Label();
@@ -193,8 +192,8 @@ public class ExpressionGenerator extends CodeGenerator
             emit(DCMPG);
 
             String op = ctx.relOp().getText();
-            if      (op.equals("=" )) emit(IFEQ, trueLabel);
-            else if (op.equals("<>")) emit(IFNE, trueLabel);
+            if      (op.equals("==" )) emit(IFEQ, trueLabel);
+            else if (op.equals("!=")) emit(IFNE, trueLabel);
             else if (op.equals("<" )) emit(IFLT, trueLabel);
             else if (op.equals("<=")) emit(IFLE, trueLabel);
             else if (op.equals(">" )) emit(IFGT, trueLabel);
@@ -693,7 +692,7 @@ public class ExpressionGenerator extends CodeGenerator
      * @parm intCtx the IntegerConstantContext.
      */
     public void emitLoadDoubleConstant(SegueParser.NumberConstantContext realCtx)
-    {
+    {   
         Double value = Double.parseDouble(realCtx.getText());
         emitLoadConstant(value);
     }

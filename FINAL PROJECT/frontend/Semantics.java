@@ -599,6 +599,7 @@ public class Semantics extends SegueBaseVisitor<Object>
 
         routineId.setType(Predefined.undefinedType);
         visit(ctx.lineList());
+        //for (SegueParser.LineContext line : ctx.lineList().line()) visit (line);
         idCtx.type = routineId.getType();
         routineId.appendLineNumber(ctx.start.getLine());
         
@@ -664,6 +665,8 @@ public class Semantics extends SegueBaseVisitor<Object>
             if (current != temp) error.flag(RETURN_TYPE_MISMATCH, ctx);
         }
         symtabStack.getLocalSymtab().getOwner().setType(current);
+
+        visitChildren(ctx);
         return null;
     }
 
@@ -679,6 +682,7 @@ public class Semantics extends SegueBaseVisitor<Object>
                 if (ctx.functioncall().type != temp) error.flag(INCOMPATIBLE_ASSIGNMENT, ctx);
             }
         }
+        visitChildren(ctx);
         return null;
     }
     /*
@@ -997,6 +1001,7 @@ public class Semantics extends SegueBaseVisitor<Object>
                 error.flag(TYPE_MISMATCH, argCtx);
             }
         }
+        visitChildren(listCtx);
     }
 
     /**
@@ -1358,8 +1363,7 @@ public class Semantics extends SegueBaseVisitor<Object>
             
             variableId.appendLineNumber(lineNumber);        
             ctx.type = Predefined.doubleType;
-        
-
+            
         return null;
     }
 

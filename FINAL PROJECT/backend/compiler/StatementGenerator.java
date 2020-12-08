@@ -85,7 +85,7 @@ public class StatementGenerator extends CodeGenerator
                 SegueParser.FunctioncallContext rhs = ctx.functioncall();
                 compiler.visit(rhs);
             }
-
+            
             emitStoreValue(varId, Predefined.doubleType);
             
 
@@ -408,6 +408,7 @@ public class StatementGenerator extends CodeGenerator
                 compiler.visit(arg);
             }
         }
+
         String name = routineId.getSymtab().getOwner().getName();
 
         name += "/";
