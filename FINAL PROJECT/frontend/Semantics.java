@@ -594,6 +594,7 @@ public class Semantics extends SegueBaseVisitor<Object>
             for (SymtabEntry parmId : parameterIds)
             {
                 parmId.setSlotNumber(symtab.nextSlotNumber());
+                if(parmId.getType() == Predefined.doubleType) symtab.nextSlotNumber();
             }
         }
 
@@ -1339,6 +1340,7 @@ public class Semantics extends SegueBaseVisitor<Object>
                 if (symtab.getNestingLevel() > 1)
                 {
                     variableId.setSlotNumber(symtab.nextSlotNumber());
+                    symtab.nextSlotNumber();
                 }
                 
                 ctx.entry = variableId;

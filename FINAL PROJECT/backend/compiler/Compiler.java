@@ -312,8 +312,8 @@ public class Compiler extends SegueBaseVisitor<Object>
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public Object visitFunctiondef(SegueParser.FunctiondefContext ctx) {
-		createNewGenerators(programCode);
-        programCode.emitRoutine(ctx.functionID().entry);
+		//createNewGenerators(programCode);
+        //programCode.emitRoutine(ctx.functionID().entry);
         return null;
 	}
 	/**
@@ -375,7 +375,10 @@ public class Compiler extends SegueBaseVisitor<Object>
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	//@Override public T visitPrintStatement(SegueParser.PrintStatementContext ctx) { return visitChildren(ctx); }
+	@Override public Object visitPrintStatement(SegueParser.PrintStatementContext ctx) {
+		statementCode.emitPrintLn(ctx);
+		return null;
+	}
 	/**
 	 * {@inheritDoc}
 	 *

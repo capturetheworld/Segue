@@ -263,8 +263,9 @@ public class ProgramGenerator extends CodeGenerator
         emit(RETURN);
         emitLine();
 
-        emitDirective(LIMIT_LOCALS, localVariables.count());
-        emitDirective(LIMIT_STACK,  localStack.capacity());
+        emitDirective(LIMIT_LOCALS, localVariables.count() + 4);
+        //emitDirective(LIMIT_STACK,  localStack.capacity());
+        emitDirective(LIMIT_STACK,  32);
         emitDirective(END_METHOD);
         
         close();  // the object file
@@ -391,8 +392,9 @@ public class ProgramGenerator extends CodeGenerator
     private void emitRoutineEpilogue()
     {
         emitLine();
-        emitDirective(LIMIT_LOCALS, localVariables.count());
-        emitDirective(LIMIT_STACK,  localStack.capacity());
+        emitDirective(LIMIT_LOCALS, localVariables.count() + 4);
+        //emitDirective(LIMIT_STACK,  localStack.capacity());
+        emitDirective(LIMIT_STACK,  32);
         emitDirective(END_METHOD);
     }
 }

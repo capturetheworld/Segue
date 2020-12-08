@@ -365,7 +365,6 @@ public class CodeGenerator
     {
         if      (value == 0.0f) emit(DCONST_0);
         else if (value == 1.0f) emit(DCONST_1);
-        else if (value == 2.0f) emit(DCONST_2);
         else                   {
             emit(LDC, value);
             emit(F2D);

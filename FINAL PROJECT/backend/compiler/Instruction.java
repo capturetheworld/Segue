@@ -13,7 +13,7 @@ public enum Instruction
     // Load constant
     ICONST_0(1), ICONST_1(1), ICONST_2(1), ICONST_3(1), 
     ICONST_4(1), ICONST_5(1), ICONST_M1(1),
-    DCONST_0(1), DCONST_1(1), DCONST_2(1), ACONST_NULL(1),
+    DCONST_0(1), DCONST_1(1), ACONST_NULL(1),
     BIPUSH(1), SIPUSH(1), LDC(1),
 
     // Load value or address

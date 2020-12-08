@@ -2,6 +2,7 @@
 .super java/lang/Object
 
 .field private static _sysin Ljava/util/Scanner;
+.field private static m D
 .field private static n D
 
 ;
@@ -49,7 +50,28 @@
 	ldc	9.0
 	f2d
 	putstatic	test_txt/n D
+	ldc	15.0
+	f2d
+	putstatic	test_txt/m D
+L001:
 	getstatic	test_txt/n D
+	getstatic	test_txt/m D
+	dcmpg
+	ifne	L003
+L003:
+	iconst_1
+	goto	L005
+L004:
+	iconst_0
+	goto	L005
+L005:
+	ifeq	L002
+	getstatic	test_txt/n D
+	dconst_1
+	dadd
+	putstatic	test_txt/n D
+	goto	L001
+L002:
 
 	invokestatic	java/time/Instant/now()Ljava/time/Instant;
 	astore_2
@@ -72,6 +94,6 @@
 
 	return
 
-.limit locals 6
-.limit stack 8
+.limit locals 10
+.limit stack 32
 .end method

@@ -371,7 +371,7 @@ public class StatementGenerator extends CodeGenerator {
                 emitLoadConstant("false");
                 emitLabel(exitLabel);
 
-                emit(INVOKENONVIRTUAL, "java/io/PrintStream.println:(Ljava/lang/String;)V");
+                emit(INVOKEVIRTUAL, "java/io/PrintStream.println(Ljava/lang/String;)V");
 
             } else {
                 // double
@@ -381,7 +381,7 @@ public class StatementGenerator extends CodeGenerator {
                 // emit(GETSTATIC, "java/lang/System/out Ljava/io/PrintStream;");
                 compiler.visit(ctx.arg().numericalExpression());
 
-                emit(INVOKENONVIRTUAL, "java/io/PrintStream.println:(D)V");
+                emit(INVOKEVIRTUAL, "java/io/PrintStream.println(D)V");
 
             }
 
@@ -405,7 +405,7 @@ public class StatementGenerator extends CodeGenerator {
                 emitLoadConstant("false");
                 emitLabel(exitLabel);
 
-                emit(INVOKENONVIRTUAL, "java/io/PrintStream.println:(Ljava/lang/String;)V");
+                emit(INVOKEVIRTUAL, "java/io/PrintStream.println(Ljava/lang/String;)V");
 
             } else if (ctx.functioncall().functionID().type == Predefined.doubleType) {
 
@@ -416,7 +416,7 @@ public class StatementGenerator extends CodeGenerator {
                 // emit(GETSTATIC, "java/lang/System/out Ljava/io/PrintStream;");
                 compiler.visit(ctx.functioncall());
 
-                emit(INVOKENONVIRTUAL, "java/io/PrintStream.println:(D)V");
+                emit(INVOKEVIRTUAL, "java/io/PrintStream.println(D)V");
 
             } else {
                 // returns nothing
