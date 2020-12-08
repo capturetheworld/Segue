@@ -166,6 +166,12 @@ public interface SegueVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSignOp(SegueParser.SignOpContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link SegueParser#rand}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRand(SegueParser.RandContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link SegueParser#numIdentifier}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -226,6 +232,12 @@ public interface SegueVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSynthSetFunction(SegueParser.SynthSetFunctionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link SegueParser#synthStartFunction}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSynthStartFunction(SegueParser.SynthStartFunctionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link SegueParser#synthChannelFunction}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -237,12 +249,6 @@ public interface SegueVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitSynthNoteFunction(SegueParser.SynthNoteFunctionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SegueParser#synthStartFunction}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSynthStartFunction(SegueParser.SynthStartFunctionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SegueParser#synthNoteSet}.
 	 * @param ctx the parse tree

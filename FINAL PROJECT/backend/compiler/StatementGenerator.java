@@ -427,6 +427,26 @@ public class StatementGenerator extends CodeGenerator {
 
     }
 
+    public void emitSynthSetFunction(SegueParser.SynthSetFunctionContext ctx) {
+        compiler.visit(ctx.numericalExpression());
+        emit(INVOKESTATIC, "com/cs153/synthesizer/Synthesizer.setSlotDuration(D)V");
+    }
+
+    public void emitSynthStartFunction (SegueParser.SynthStartFunctionContext ctx) {
+        emit(ICONST_0);
+        emit(INVOKESTATIC, "com/cs153/synthesizer/Synthesizer.start(Z)V");
+    }
+
+    public void emitSynthChannelFunction (SegueParser.SynthChannelFunctionContext ctx) {
+        compiler.visit(ctx.numericalExpression(0));
+        compiler.visit(ctx.numericalExpression(1));
+        emit(INVOKESTATIC, "com/cs153/synthesizer/Synthesizer.setChannelType(DD)V");
+    }
+
+    public void emitSynthNoteFunction(SegueParser.SynthNoteFunctionContext ctx) {
+        if ()
+    }
+
     // /**
     // // * Emit code for a WRITE statement.
     // // * @param ctx the WriteStatementContext.

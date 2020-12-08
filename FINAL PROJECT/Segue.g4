@@ -63,12 +63,14 @@ arg: booleanExpression | numericalExpression;
 
 numericalExpression : term (addOp term)*;
 term : factor (mulOp factor)*;
-factor : '(' numericalExpression ')' | numberConstant | numIdentifier | prefixOp | suffixOp;
+factor : '(' numericalExpression ')' | numberConstant | numIdentifier | prefixOp | suffixOp | rand;
 
 prefixOp : signOp numIdentifier;
 suffixOp : numIdentifier signOp;
 
 signOp : ('++' | '--');
+
+rand: '%' ('r' | 'R');
 
 numIdentifier locals [ Typespec type = null, SymtabEntry entry = null ]
         : numSymbol IDENTIFIER;
@@ -95,16 +97,20 @@ boolSymbol    : '$';
 
 
 synthSetFunction : SET '(' numericalExpression ')';
-synthChannelFunction : CHANNEL '[' numericalExpression ']' '.' SET '(' numericalExpression ')';
-synthNoteFunction : NOTE '[' numericalExpression ']' '.' (synthNoteSet | synthNoteLerp);
 synthStartFunction : START '(' ')';
+
+synthChannelFunction : CHANNEL '[' numericalExpression ']' '.' SET '(' numericalExpression ')';
+
+synthNoteFunction : NOTE '[' numericalExpression ']' '.' (synthNoteSet | synthNoteLerp);
+
 synthNoteSet : SET '(' (numericalExpression ',')? numericalExpression (',' synthPointStatement)? ')';
 synthNoteLerp : LERP '(' numericalExpression (',' synthPointStatement)? ')';
 synthPointStatement: '{' (synthMidiPitch | numericalExpression)? (',' synthVolume)?  (',' synthVibratoAmplitude)? (',' synthVibratoFrequency)? '}';
-synthMidiPitch : 'm' numericalExpression;
-synthVolume : 'v' numericalExpression;
-synthVibratoAmplitude : 'a' numericalExpression;
-synthVibratoFrequency : 'f' numericalExpression;
+
+synthMidiPitch : ('m' | 'M') numericalExpression;
+synthVolume : ('v' | 'V') numericalExpression;
+synthVibratoAmplitude : ('a' | 'A') numericalExpression;
+synthVibratoFrequency : ('f' | 'F') numericalExpression;
 
 
 
@@ -162,7 +168,6 @@ NOTE : N O T E;
 LERP : L E R P;
 START : S T A R T;
 RETURN : R E T U R N;
-
 
 
 

@@ -270,7 +270,24 @@ public class Compiler extends SegueBaseVisitor<Object>
         statementCode.emitReadln(ctx);
         return null;
     }
-    */
+	*/
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     //segfault part 
 
 	/**
@@ -596,14 +613,20 @@ public class Compiler extends SegueBaseVisitor<Object>
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	//@Override public T visitSynthSetFunction(SegueParser.SynthSetFunctionContext ctx) { return visitChildren(ctx); }
+	@Override public Object visitSynthSetFunction(SegueParser.SynthSetFunctionContext ctx) {
+		statementCode.emitSynthSetFunction(ctx);
+		return null;
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	//@Override public T visitSynthChannelFunction(SegueParser.SynthChannelFunctionContext ctx) { return visitChildren(ctx); }
+	@Override public Object visitSynthChannelFunction(SegueParser.SynthChannelFunctionContext ctx) {
+		statementCode.emitSynthChannelFunction(ctx);
+		return null;
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -617,7 +640,10 @@ public class Compiler extends SegueBaseVisitor<Object>
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	//@Override public T visitSynthStartFunction(SegueParser.SynthStartFunctionContext ctx) { return visitChildren(ctx); }
+	@Override public Object visitSynthStartFunction(SegueParser.SynthStartFunctionContext ctx) {
+		statementCode.emitSynthStartFunction(ctx);
+		return null;
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -639,6 +665,8 @@ public class Compiler extends SegueBaseVisitor<Object>
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	//@Override public T visitSynthPointStatement(SegueParser.SynthPointStatementContext ctx) { return visitChildren(ctx); }
+	
+	
 	/**
 	 * {@inheritDoc}
 	 *
