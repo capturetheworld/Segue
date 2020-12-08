@@ -1,6 +1,57 @@
-#N =9.0
-#M = 15
-WHILE(#N >= #M) {
-    #N = #N + 1
-    print(#N)
+#a1 = 3
+
+#a2 = 6
+
+#b1 = 9.22
+
+#b2 = 7.1
+
+
+@SquareRoot(#n){
+    #x = #n
+    #y = 1
+    #e = 0.000001
+    while (#x - #y > #e) {
+        #x = (#x + #y) / 2
+        #y = #n / #x
+    }
+    return #x
 }
+
+@Slope(#x1, #x2, #y1, #y2){
+
+    return (#y2-#y1)/(#x2-#x1)
+  
+}
+
+@TriangleArea(#base, #height){
+
+    return 0.5 * #base * #height
+  
+}
+
+@TrapezoidArea(#base1, #base2, #height){
+
+    return 0.5 * (#base1+#base2) * #height
+  
+}
+
+@CircleArea(#radius){
+
+    return (3.14159265358979 * (#radius * #radius))
+  
+}
+
+
+print(@Slope(#a1, #a2, #b1, #b2))
+print(@TriangleArea(#a2, #a1))
+print(@TrapezoidArea(#a2, #a1, #a1))
+print(@CircleArea(#b1))
+print(@SquareRoot(8192739812)) 
+
+~-0.7066667874654134
+~9.0
+~13.5
+~267.06178783433137
+~4.000000000000051
+

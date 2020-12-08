@@ -47,4 +47,11 @@ print(@Slope(#a1, #a2, #b1, #b2))
 print(@TriangleArea(#a2, #a1))
 print(@TrapezoidArea(#a2, #a1, #a1))
 print(@CircleArea(#b1))
+print(@SquareRoot(16)) 
+
+~-0.7066667874654134
+~9.0
+~13.5
+~267.06178783433137
+~4.000000000000051
 

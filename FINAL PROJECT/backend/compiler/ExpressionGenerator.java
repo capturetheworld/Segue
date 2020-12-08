@@ -200,6 +200,7 @@ public class ExpressionGenerator extends CodeGenerator
             else if (op.equals(">" )) emit(IFGT, trueLabel);
             else if (op.equals(">=")) emit(IFGE, trueLabel);
 
+            emit(GOTO,falseLabel);
             emitLabel(trueLabel);
             emit(ICONST_1);
             emit(GOTO, exitLabel);
