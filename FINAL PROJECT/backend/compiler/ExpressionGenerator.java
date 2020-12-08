@@ -136,6 +136,8 @@ public class ExpressionGenerator extends CodeGenerator
 
             }
 
+        } else if (ctx.rand() != null) {
+            emit(INVOKESTATIC, "java/lang/Math.random()D");
         }
     }
 
