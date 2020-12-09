@@ -41,7 +41,7 @@ public enum Instruction
     IINC(0),  IAND(-1), IOR(-1),  IXOR(-1),
 
     // Type conversion and checking
-    I2F(0), I2C(0), I2D(0), F2I(0), F2D(0), D2F(0),
+    I2F(0), I2C(0), I2D(0), F2I(0), F2D(0), D2F(0), D2I(0),
     CHECKCAST(0),
 
     // Objects and arrays

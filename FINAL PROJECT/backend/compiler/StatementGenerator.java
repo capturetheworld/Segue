@@ -439,12 +439,83 @@ public class StatementGenerator extends CodeGenerator {
 
     public void emitSynthChannelFunction (SegueParser.SynthChannelFunctionContext ctx) {
         compiler.visit(ctx.numericalExpression(0));
+        emit(D2I);
         compiler.visit(ctx.numericalExpression(1));
-        emit(INVOKESTATIC, "com/cs153/synthesizer/Synthesizer.setChannelType(DD)V");
+        emit(D2I);
+        emit(INVOKESTATIC, "com/cs153/synthesizer/Synthesizer.setChannelType(II)V");
     }
 
     public void emitSynthNoteFunction(SegueParser.SynthNoteFunctionContext ctx) {
-        if ()
+        compiler.visit(ctx.numericalExpression());
+        emit(D2I);
+        if (ctx.synthNoteSet() != null) {
+            if (ctx.synthNoteSet().numericalExpression().size() > 1) {
+                compiler.visit(ctx.synthNoteSet().numericalExpression(0));
+                compiler.visit(ctx.synthNoteSet().numericalExpression(1));
+                emit(INVOKESTATIC, "com/cs153/synthesizer/Synthesizer.play(IDD)Lcom/cs153/synthesizer/Note;");
+            } else {
+                compiler.visit(ctx.synthNoteSet().numericalExpression(0));
+                emit(INVOKESTATIC, "com/cs153/synthesizer/Synthesizer.play(ID)Lcom/cs153/synthesizer/Note;");
+            }
+            if(ctx.synthNoteSet().synthPointStatement() != null) {
+                emitSynthPointFunction(ctx.synthNoteSet().synthPointStatement(), false);
+            }
+            emit(POP);
+        }
+        if (ctx.synthNoteLerp() != null) {
+            compiler.visit(ctx.synthNoteLerp().numericalExpression());
+            emit(INVOKESTATIC, "com/cs153/synthesizer/Synthesizer.play(ID)Lcom/cs153/synthesizer/Note;");
+            if(ctx.synthNoteLerp().synthPointStatement() != null) {
+                emitSynthPointFunction(ctx.synthNoteLerp().synthPointStatement(), true);
+            }
+            emit(POP);
+        }
+    }
+
+    public void emitSynthPointFunction(SegueParser.SynthPointStatementContext ctx, boolean doLerp) {
+        if(doLerp) {
+            if (ctx.synthMidiPitch() != null) {
+                compiler.visit(ctx.synthMidiPitch().numericalExpression());
+                emit(INVOKEVIRTUAL, "com/cs153/synthesizer/Note.lerpMidiNote(D)Lcom/cs153/synthesizer/Note;");
+            }
+            if (ctx.numericalExpression() != null) {
+                compiler.visit(ctx.numericalExpression());
+                emit(INVOKEVIRTUAL, "com/cs153/synthesizer/Note.lerpFrequency(D)Lcom/cs153/synthesizer/Note;");
+            }
+            if (ctx.synthVolume() != null) {
+                compiler.visit(ctx.synthVolume().numericalExpression());
+                emit(INVOKEVIRTUAL, "com/cs153/synthesizer/Note.lerpVolume(D)Lcom/cs153/synthesizer/Note;");
+            }
+            if (ctx.synthVibratoAmplitude() != null) {
+                compiler.visit(ctx.synthVibratoAmplitude().numericalExpression());
+                emit(INVOKEVIRTUAL, "com/cs153/synthesizer/Note.lerpVibratoA(D)Lcom/cs153/synthesizer/Note;");
+            }
+            if (ctx.synthVibratoFrequency() != null) {
+                compiler.visit(ctx.synthVibratoFrequency().numericalExpression());
+                emit(INVOKEVIRTUAL, "com/cs153/synthesizer/Note.lerpVibratoF(D)Lcom/cs153/synthesizer/Note;");
+            }
+        } else {
+            if (ctx.synthMidiPitch() != null) {
+                compiler.visit(ctx.synthMidiPitch().numericalExpression());
+                emit(INVOKEVIRTUAL, "com/cs153/synthesizer/Note.midiNote(D)Lcom/cs153/synthesizer/Note;");
+            }
+            if (ctx.numericalExpression() != null) {
+                compiler.visit(ctx.numericalExpression());
+                emit(INVOKEVIRTUAL, "com/cs153/synthesizer/Note.frequency(D)Lcom/cs153/synthesizer/Note;");
+            }
+            if (ctx.synthVolume() != null) {
+                compiler.visit(ctx.synthVolume().numericalExpression());
+                emit(INVOKEVIRTUAL, "com/cs153/synthesizer/Note.volume(D)Lcom/cs153/synthesizer/Note;");
+            }
+            if (ctx.synthVibratoAmplitude() != null) {
+                compiler.visit(ctx.synthVibratoAmplitude().numericalExpression());
+                emit(INVOKEVIRTUAL, "com/cs153/synthesizer/Note.vibratoA(D)Lcom/cs153/synthesizer/Note;");
+            }
+            if (ctx.synthVibratoFrequency() != null) {
+                compiler.visit(ctx.synthVibratoFrequency().numericalExpression());
+                emit(INVOKEVIRTUAL, "com/cs153/synthesizer/Note.vibratoF(D)Lcom/cs153/synthesizer/Note;");
+            }
+        }
     }
 
     // /**

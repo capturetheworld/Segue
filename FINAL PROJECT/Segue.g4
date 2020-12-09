@@ -105,7 +105,11 @@ synthNoteFunction : NOTE '[' numericalExpression ']' '.' (synthNoteSet | synthNo
 
 synthNoteSet : SET '(' (numericalExpression ',')? numericalExpression (',' synthPointStatement)? ')';
 synthNoteLerp : LERP '(' numericalExpression (',' synthPointStatement)? ')';
-synthPointStatement: '{' (synthMidiPitch | numericalExpression)? (',' synthVolume)?  (',' synthVibratoAmplitude)? (',' synthVibratoFrequency)? '}';
+
+synthPointStatement:      '{' (synthMidiPitch | numericalExpression) (',' synthVolume)?  (',' synthVibratoAmplitude)? (',' synthVibratoFrequency)? '}'
+                        | '{' synthVolume  (',' synthVibratoAmplitude)? (',' synthVibratoFrequency)? '}'
+                        | '{' synthVibratoAmplitude (',' synthVibratoFrequency)? '}'
+                        | '{' synthVibratoFrequency '}';
 
 synthMidiPitch : ('m' | 'M') numericalExpression;
 synthVolume : ('v' | 'V') numericalExpression;
