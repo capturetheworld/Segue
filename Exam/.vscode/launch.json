@@ -10,7 +10,7 @@
             "type": "antlr-debug",
             "request": "launch",
             "input": "test.txt",
-            "grammar": "Segue.g4",
+            "grammar": "BDL.g4",
             "startRule": "program",
             "printParseTree": false,
             "visualParseTree": true

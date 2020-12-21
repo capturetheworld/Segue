@@ -1,0 +1,49 @@
+$boolean = TRUE
+
+#dogs = 8
+#cats = 23
+#employees = 40
+#temperature = 25
+
+$getSick = false
+
+
+@WorkOrNot(#employees,  #cats, #dogs, #temperature){
+    #animals = #cats + #dogs
+    $wontWork = FALSE
+    IF(#temperature <= 10){
+        $wontWork = TRUE
+        
+
+    }
+    ELSE{
+        IF(#animals <= 8){
+            $wontWork = TRUE
+        }
+        ELSE{
+            IF(#employees == 0){
+                $wontWork = TRUE
+             }
+            ELSE{}
+        }
+    } 
+}
+
+#temp = 20
+#allCats = 10
+#allDogs = 14
+WHILE(#temp > 8){
+    IF(#temp <= 17){
+        #allCats--
+        #allDogs--
+    }
+
+    ELSE{ }
+    @WorkOrNot(#allCats, #allDogs, #temp,#employess)
+
+    #temp--
+}
+
+
+
+

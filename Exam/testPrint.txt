@@ -1,0 +1,32 @@
+#s = 20
+$boolean = TRUE
+
+
+#double3 = 7.00 + 24
+@SquareMinus(#x, #s){
+    #result = 0
+
+    IF(#r == #s){
+    #result = -9
+
+    }   
+    ELSE{
+	    IF(#r < #s){
+		    #result = (#s * #s) - (#r * #r)
+	          }
+	    ELSE{
+            #result =  (#r * #r) - (#s * #s)
+	    }
+    }
+        RETURN #result
+        
+}
+
+#s =5
+#x = 6
+SquareMinus(#s, #x)
+print(#s)
+print($s)
+print($double3)
+print($boolean)
+print(SquareMinus(#s, #x))

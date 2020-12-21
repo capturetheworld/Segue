@@ -1,0 +1,13 @@
+
+@doubleit (#in) {
+    return 2*#in
+}
+
+@multiplyit (#in,#in2) {
+    return #in2*#in
+}
+
+
+
+
+println(@multiplyit(3,4))
